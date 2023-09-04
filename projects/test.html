@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>进制转换器</title>
+  <link rel="shortcut icon" href="images/site.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h3>进制转换器</h3>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="inputNumber" type="text" class="validate">
+        <label for="inputNumber">输入数字</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <select id="fromBase">
+          <option value="2">二进制</option>
+          <option value="8">八进制</option>
+          <option value="10" selected>十进制</option>
+          <option value="16">十六进制</option>
+        </select>
+        <label>转换前进制</label>
+      </div>
+      <div class="input-field col s6">
+        <select id="toBase">
+          <option value="2">二进制</option>
+          <option value="8">八进制</option>
+          <option value="10" selected>十进制</option>
+          <option value="16">十六进制</option>
+        </select>
+        <label>转换后进制</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s6">
+        <button class="btn waves-effect waves-light" onclick="convert()">转换</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="outputNumber" type="text" class="validate" readonly>
+        <label for="outputNumber">转换结果</label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      var instances = M.FormSelect.init(elems);
+    });
+
+    function convert() {
+      var inputNumber = document.getElementById('inputNumber').value;
+      var fromBase = parseInt(document.getElementById('fromBase').value);
+      var toBase = parseInt(document.getElementById('toBase').value);
+
+      var decimalNumber = parseInt(inputNumber, fromBase);
+      var outputNumber = decimalNumber.toString(toBase);
+
+      document.getElementById('outputNumber').value = outputNumber;
+    }
+  </script>
+</body>
+</html>

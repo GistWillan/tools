@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>单位换算器</title>
+  <link rel="shortcut icon" href="images/site.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
+</head>
+<body>
+  <div class="container">
+    <h1>单位换算器</h1>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="inputValue" type="number" class="validate">
+        <label for="inputValue">输入值(从厘米起算)</label>
+      </div>
+      <div class="input-field col s6">
+        <select id="unitType">
+          <option value="cm">厘米 (cm)</option>
+          <option value="inch">英寸 (inch)</option>
+          <option value="m">米 (m)</option>
+          <option value="ft">英尺 (ft)</option>
+          <option value="km">千米 (km)</option>
+          <option value="mile">英里 (mile)</option>
+        </select>
+        <label>单位类型</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <h5>结果:</h5>
+        <p id="result"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var input = document.getElementById('inputValue');
+      var unitType = document.getElementById('unitType');
+      var result = document.getElementById('result');
+
+      input.addEventListener('input', function() {
+        convertUnits();
+      });
+
+      unitType.addEventListener('change', function() {
+        convertUnits();
+      });
+
+      function convertUnits() {
+        var inputValue = parseFloat(input.value);
+        var selectedUnit = unitType.value;
+        var convertedValue;
+
+        switch (selectedUnit) {
+          case 'cm':
+            convertedValue = inputValue;
+            break;
+          case 'inch':
+            convertedValue = inputValue * 0.393701;
+            break;
+          case 'm':
+            convertedValue = inputValue * 100;
+            break;
+          case 'ft':
+            convertedValue = inputValue * 30.48;
+            break;
+          case 'km':
+            convertedValue = inputValue * 100000;
+            break;
+          case 'mile':
+            convertedValue = inputValue * 160934.4;
+            break;
+          default:
+            convertedValue = 0;
+            break;
+        }
+
+        result.innerHTML = convertedValue.toFixed(2) + ' ' + selectedUnit;
+      }
+    });
+  </script>
+</body>
+</html>
