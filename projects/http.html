@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP 状态码查询</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            color: #007acc;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>HTTP 状态码查询</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="输入状态码搜索">
+            <i class="material-icons search-icon" onclick="searchStatusCode()">search</i>
+        </div>
+        <ul id="statusCodeList">
+            <!-- HTTP 状态码列表将通过 JavaScript 动态添加 -->
+        </ul>
+    </div>
+
+    <script>
+        // HTTP 状态码数据，可以根据需要添加更多状态码
+        const statusCodes = [
+    { code: 100, description: 'Continue - 继续' },
+    { code: 101, description: 'Switching Protocols - 切换协议' },
+    { code: 102, description: 'Processing - 处理中' },
+    { code: 200, description: 'OK - 请求成功' },
+    { code: 201, description: 'Created - 已创建' },
+    { code: 202, description: 'Accepted - 已接受' },
+    { code: 203, description: 'Non-Authoritative Information - 非权威信息' },
+    { code: 204, description: 'No Content - 无内容' },
+    { code: 205, description: 'Reset Content - 重置内容' },
+    { code: 206, description: 'Partial Content - 部分内容' },
+    { code: 207, description: 'Multi-Status - 多状态' },
+    { code: 208, description: 'Already Reported - 已报告' },
+    { code: 226, description: 'IM Used - IM已使用' },
+    { code: 300, description: 'Multiple Choices - 多种选择' },
+    { code: 301, description: 'Moved Permanently - 永久重定向' },
+    { code: 302, description: 'Found - 找到' },
+    { code: 303, description: 'See Other - 查看其它' },
+    { code: 304, description: 'Not Modified - 未修改' },
+    { code: 305, description: 'Use Proxy - 使用代理' },
+    { code: 306, description: 'Switch Proxy - 切换代理' },
+    { code: 307, description: 'Temporary Redirect - 临时重定向' },
+    { code: 308, description: 'Permanent Redirect - 永久重定向' },
+    { code: 400, description: 'Bad Request - 请求无效' },
+    { code: 401, description: 'Unauthorized - 未授权' },
+    { code: 402, description: 'Payment Required - 需要付款' },
+    { code: 403, description: 'Forbidden - 禁止访问' },
+    { code: 404, description: 'Not Found - 未找到' },
+    { code: 405, description: 'Method Not Allowed - 方法不允许' },
+    { code: 406, description: 'Not Acceptable - 不可接受' },
+    { code: 407, description: 'Proxy Authentication Required - 需要代理身份验证' },
+    { code: 408, description: 'Request Timeout - 请求超时' },
+    { code: 409, description: 'Conflict - 冲突' },
+    { code: 410, description: 'Gone - 已删除' },
+    { code: 411, description: 'Length Required - 需要内容长度' },
+    { code: 412, description: 'Precondition Failed - 先决条件失败' },
+    { code: 413, description: 'Payload Too Large - 请求实体过大' },
+    { code: 414, description: 'URI Too Long - URI过长' },
+    { code: 415, description: 'Unsupported Media Type - 不支持的媒体类型' },
+    { code: 416, description: 'Range Not Satisfiable - 范围不符合要求' },
+    { code: 417, description: 'Expectation Failed - 预期失败' },
+    { code: 418, description: "I'm a teapot - 我是茶壶" },
+    { code: 421, description: 'Misdirected Request - 请求被发送到错误的服务器' },
+    { code: 422, description: 'Unprocessable Entity - 无法处理的实体' },
+    { code: 423, description: 'Locked - 锁定' },
+    { code: 424, description: 'Failed Dependency - 依赖关系失败' },
+    { code: 425, description: 'Too Early - 过早' },
+    { code: 426, description: 'Upgrade Required - 需要升级' },
+    { code: 428, description: 'Precondition Required - 先决条件要求' },
+    { code: 429, description: 'Too Many Requests - 请求过多' },
+    { code: 431, description: 'Request Header Fields Too Large - 请求头字段过大' },
+    { code: 451, description: 'Unavailable For Legal Reasons - 因法律原因不可用' },
+    { code: 500, description: 'Internal Server Error - 服务器内部错误' },
+    { code: 501, description: 'Not Implemented - 未实现' },
+    { code: 502, description: 'Bad Gateway - 网关错误' },
+    { code: 503, description: 'Service Unavailable - 服务不可用' },
+    { code: 504, description: 'Gateway Timeout - 网关超时' },
+    { code: 505, description: 'HTTP Version Not Supported - HTTP版本不支持' },
+    { code: 506, description: 'Variant Also Negotiates - 变种也协商' },
+    { code: 507, description: 'Insufficient Storage - 存储不足' },
+    { code: 508, description: 'Loop Detected - 检测到循环' },
+    { code: 510, description: 'Not Extended - 未扩展' },
+    { code: 511, description: 'Network Authentication Required - 需要网络身份验证' }
+];
+
+// 其余代码保持不变
+
+
+        // 获取元素
+        const searchInput = document.getElementById('searchInput');
+        const statusCodeList = document.getElementById('statusCodeList');
+
+        // 初始化页面显示状态码列表
+        function initStatusCodeList() {
+            statusCodes.forEach(statusCode => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${statusCode.code}</strong>: ${statusCode.description}`;
+                statusCodeList.appendChild(listItem);
+            });
+        }
+
+        // 根据用户输入搜索状态码
+        function searchStatusCode() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const listItems = statusCodeList.querySelectorAll('li');
+
+            listItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // 初始化页面
+        initStatusCodeList();
+    </script>
+</body>
+</html>
