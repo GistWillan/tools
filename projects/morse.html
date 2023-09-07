@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>摩斯电码转换器</title>
-    <link rel="shortcut icon" href="images/site.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -185,21 +184,6 @@
 
             return plainWords.join(' ');
         }
-
-
-    const inputText = document.getElementById('inputText');
-    const operationRadios = document.querySelectorAll('input[name="operation"]');
-
-    operationRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            if (radio.value === 'encrypt') {
-                inputText.setAttribute('placeholder', '明文文本'); // 使用 setAttribute 来设置 placeholder
-            } else {
-                inputText.setAttribute('placeholder', '摩斯电码');
-            }
-        });
-    });
-
 
     </script>
 
