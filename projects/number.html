@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机数生成器</title>
+    <link rel="shortcut icon" href="images/number.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 20px;
+        }
+
+/* CSS样式 */
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; /* 如果需要水平居中 */
+}
+
+
+        .btn:hover {
+            background-color: #005ca3;
+        }
+
+        h4 {
+            margin-top: 20px;
+            color: #007acc;
+        }
+
+        #randomNumber {
+            font-size: 36px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="teal-text">随机数生成器</h4>
+
+        <!-- 最小值输入 -->
+        <div class="input-field">
+            <input type="number" id="minValue">
+            <label for="minValue">最小值</label>
+        </div>
+
+        <!-- 最大值输入 -->
+        <div class="input-field">
+            <input type="number" id="maxValue">
+            <label for="maxValue">最大值</label>
+        </div>
+
+<!-- 生成随机数按钮 -->
+<div style="display: flex; justify-content: center;">
+    <button class="btn waves-effect waves-light" onclick="generateRandomNumber()">
+        生成随机数
+        <i class="material-icons right">casino</i>
+    </button>
+</div>
+
+<!-- 显示生成的随机数 -->
+<div class="card" style="text-align: center;">
+    <p id="randomNumber"></p>
+</div>
+
+<!-- 复制按钮 -->
+<div style="display: flex; justify-content: center;">
+    <button class="btn waves-effect waves-light" id="copyButton" onclick="copyRandomNumber()" style="display: none;">
+        复制随机数
+        <i class="material-icons right">content_copy</i>
+    </button>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // 生成随机数函数
+function generateRandomNumber() {
+    const minValue = parseInt(document.getElementById('minValue').value);
+    const maxValue = parseInt(document.getElementById('maxValue').value);
+
+    if (isNaN(minValue) || isNaN(maxValue)) {
+        alert('请输入有效的最小值和最大值。');
+        return;
+    }
+
+    const randomNum = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+    const randomNumberElement = document.getElementById('randomNumber');
+    const copyButton = document.getElementById('copyButton');
+
+    randomNumberElement.textContent = `随机数：${randomNum}`;
+    copyButton.style.display = 'block'; // 显示复制按钮
+}
+
+        // 复制随机数函数
+function copyRandomNumber() {
+    const randomNumText = document.getElementById('randomNumber').textContent;
+    
+    const textarea = document.createElement('textarea');
+    textarea.value = randomNumText;
+    
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    alert('随机数已复制到剪贴板！');
+}
+
+    </script>
+</body>
+</html>
