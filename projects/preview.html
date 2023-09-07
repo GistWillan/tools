@@ -63,6 +63,9 @@
     <div id="container">
         <h1>HTML 预览</h1>
         <textarea id="htmlInput" placeholder="在这里输入 HTML 代码"></textarea>
+            <div id="container">
+        <h1>HTML 预览</h1>
+        <textarea id="htmlInput" placeholder="在这里输入 HTML 代码"></textarea>
         <div class="btn-container">
             <button class="btn" onclick="previewHTML()">预览</button>
             <button class="btn" onclick="clearInput()">清除</button>
@@ -71,6 +74,8 @@
             <button class="btn" onclick="pasteFromClipboard()">粘贴</button>
             <a class="btn" id="downloadLink" style="display: none;">下载</a>
         </div>
+        <iframe id="previewFrame"></iframe>
+    </div>
         <iframe id="previewFrame"></iframe>
     </div>
 
@@ -115,6 +120,21 @@
             }).catch(err => {
                 alert(`无法从剪贴板粘贴：${err.message}`);
             });
+        }
+
+        function downloadHTML() {
+            const htmlInput = document.getElementById('htmlInput').value;
+            const blob = new Blob([htmlInput], { type: 'text/html' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.getElementById('downloadLink');
+
+            // 设置下载链接
+            a.href = url;
+            a.download = 'preview.html';
+            a.style.display = 'block';
+
+            // 隐藏之前的下载按钮
+            document.querySelector('.btn-container button[data-download]').style.display = 'none';
         }
     </script>
 </body>
