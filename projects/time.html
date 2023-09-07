@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界时钟</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+/* 样式整个页面的背景颜色和字体颜色 */
+body {
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+/* 卡片的样式 */
+.card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 选择时区下拉菜单的样式 */
+.input-field select {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* 按钮的样式 */
+.btn {
+    background-color: #007acc;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+/* 按钮悬停效果 */
+.btn:hover {
+    background-color: #005ca3;
+}
+
+/* 页面标题的样式 */
+h1.center-align {
+    font-size: 52px;
+    margin-top: 20px;
+    color: #007acc;
+}
+
+/* 时间显示的样式，将其水平居中对齐 */
+#currentTime {
+    font-size: 72px;
+    margin: 20px auto; /* 设置垂直外边距为20px，水平外边距为auto */
+    color: #007acc;
+    text-align: center; /* 将文本水平居中对齐 */
+}
+
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-align">世界时钟</h1>
+
+        <!-- 选择时区的下拉菜单 -->
+        <div class="input-field">
+            <select id="timezoneSelector">
+                <option value="Asia/Shanghai">北京时间</option>
+                <option value="America/New_York">纽约时间</option>
+                <option value="Europe/London">伦敦时间</option>
+                <!-- 添加更多时区选项 -->
+            </select>
+            <label>选择时区</label>
+        </div>
+
+        <!-- 显示时间的卡片 -->
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title" id="currentTime"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // 初始化下拉菜单
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+
+// 更新时间函数
+function updateTime() {
+    const selectedTimezone = $('#timezoneSelector').val();
+    const options = {
+        timeZone: selectedTimezone,
+        hour12: false, // 使用24小时制
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    };
+    const currentTime = new Date().toLocaleString('en-US', options);
+    $('#currentTime').text(currentTime);
+}
+
+// 初次加载页面时更新时间
+updateTime();
+
+// 每秒更新时间
+setInterval(updateTime, 1000);
+
+    </script>
+</body>
+</html>
