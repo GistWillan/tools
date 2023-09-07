@@ -67,6 +67,8 @@
             <button class="btn" onclick="previewHTML()">预览</button>
             <button class="btn" onclick="clearInput()">清除</button>
             <button class="btn" onclick="toggleFullScreen()">全屏</button>
+            <button class="btn" onclick="downloadHTML()">下载</button>
+            <button class="btn" onclick="pasteFromClipboard()">粘贴</button>
             <a class="btn" id="downloadLink" style="display: none;">下载</a>
         </div>
         <iframe id="previewFrame"></iframe>
@@ -106,6 +108,13 @@
             a.href = url;
             a.download = 'preview.html';
             a.style.display = 'block';
+        }
+ function pasteFromClipboard() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('htmlInput').value = text;
+            }).catch(err => {
+                alert(`无法从剪贴板粘贴：${err.message}`);
+            });
         }
     </script>
 </body>
