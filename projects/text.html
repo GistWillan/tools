@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字加密解密</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card-panel {
+            padding: 20px;
+        }
+
+        #result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="center-align">文字加密解密</h4>
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card-panel">
+                    <h5>加密</h5>
+                    <div class="input-field">
+                        <input type="text" id="encryptInput">
+                        <label for="encryptInput">输入要加密的文本</label>
+                    </div>
+                    <p>选择加密方式:</p>
+                    <p>
+                        <label>
+                            <input name="encryptionType" type="radio" value="base64" checked>
+                            <span>Base64</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="encryptionType" type="radio" value="url">
+                            <span>URL (UTF8)</span>
+                        </label>
+                    </p>
+                    <button class="btn waves-effect waves-light" onclick="encrypt()">加密</button>
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="card-panel">
+                    <h5>解密</h5>
+                    <div class="input-field">
+                        <input type="text" id="decryptInput">
+                        <label for="decryptInput">输入要解密的文本</label>
+                    </div>
+                    <p>选择解密方式:</p>
+                    <p>
+                        <label>
+                            <input name="decryptionType" type="radio" value="base64" checked>
+                            <span>Base64</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="decryptionType" type="radio" value="url">
+                            <span>URL (UTF8)</span>
+                        </label>
+                    </p>
+                    <button class="btn waves-effect waves-light" onclick="decrypt()">解密</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5>结果</h5>
+                    <p id="result">这里将显示加密或解密后的结果。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function encrypt() {
+            const inputText = document.getElementById('encryptInput').value;
+            const encryptionType = document.querySelector('input[name="encryptionType"]:checked').value;
+
+            let encryptedText = '';
+
+            if (encryptionType === 'base64') {
+                encryptedText = btoa(inputText);
+            } else if (encryptionType === 'url') {
+                encryptedText = encodeURIComponent(inputText);
+            }
+
+            document.getElementById('result').textContent = `加密结果: ${encryptedText}`;
+        }
+
+        function decrypt() {
+            const inputText = document.getElementById('decryptInput').value;
+            const decryptionType = document.querySelector('input[name="decryptionType"]:checked').value;
+
+            let decryptedText = '';
+
+            if (decryptionType === 'base64') {
+                try {
+                    decryptedText = atob(inputText);
+                } catch (error) {
+                    decryptedText = '解密失败，请检查输入文本是否有效的Base64字符串。';
+                }
+            } else if (decryptionType === 'url') {
+                try {
+                    decryptedText = decodeURIComponent(inputText);
+                } catch (error) {
+                    decryptedText = '解密失败，请检查输入文本是否有效的URL编码字符串。';
+                }
+            }
+
+            document.getElementById('result').textContent = `解密结果: ${decryptedText}`;
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
