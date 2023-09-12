@@ -48,6 +48,9 @@
         <input id="outputNumber" type="text" class="active" readonly>
         <label for="outputNumber" class="active">转换结果</label>
       </div>
+      <div class="col s6">
+        <button class="btn waves-effect waves-light" onclick="copyOutput()">复制</button>
+      </div>
     </div>
   </div>
 
@@ -67,14 +70,14 @@
 
       document.getElementById('outputNumber').value = outputNumber;
     }
+    
+    function copyOutput() {
+      var outputNumber = document.getElementById('outputNumber');
+      outputNumber.select();
+      document.execCommand("copy");
+      M.toast({html: '已复制到剪贴板'});
+    }
   </script>
-
-<script>
-  // 获取标签元素
-  var outputLabel = document.getElementById("outputLabel");
-
-  // 添加"active"类
-  outputLabel.classList.add("active");
-</script>
 </body>
 </html>
+
