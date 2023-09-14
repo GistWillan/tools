@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI计算器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card-panel {
+            padding: 20px;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="center-align">BMI计算器</h4>
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="card-panel">
+                    <h5>输入信息</h5>
+                    <div class="input-field">
+                        <input type="number" id="weight" min="0" step="0.01">
+                        <label for="weight">体重（千克）</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="number" id="height" min="0" step="0.01">
+                        <label for="height">身高（米）</label>
+                    </div>
+                    <button class="btn waves-effect waves-light" onclick="calculateBMI()">计算BMI</button>
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="card-panel">
+                    <h5>结果</h5>
+                    <div id="result">
+                        <p>您的BMI为: <span id="bmiValue"></span></p>
+                        <p>健康状态: <span id="bmiStatus"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+                alert('请输入有效的体重和身高！');
+                return;
+            }
+
+            const bmi = weight / (height * height);
+            const bmiValue = document.getElementById('bmiValue');
+            const bmiStatus = document.getElementById('bmiStatus');
+
+            bmiValue.textContent = bmi.toFixed(2);
+
+            if (bmi < 18.5) {
+                bmiStatus.textContent = '偏瘦';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                bmiStatus.textContent = '正常';
+            } else if (bmi >= 24.9 && bmi < 29.9) {
+                bmiStatus.textContent = '超重';
+            } else {
+                bmiStatus.textContent = '肥胖';
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
