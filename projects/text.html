@@ -6,6 +6,7 @@
     <title>文字加密解密</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
+        
         body {
             font-family: Arial, sans-serif;
         }
@@ -13,11 +14,29 @@
         .container {
             margin-top: 20px;
         }
-
-        .card-panel {
-            padding: 20px;
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
         }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
+        /* 添加动画效果 */
+    .card-panel {
+        padding: 20px;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        animation: fade-in 0.5s ease;
+    }
+
+    /* 悬停时应用阴影和缩放动画 */
+    .card-panel:hover {
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        transform: scale(1.02);
+    }
         #result {
             font-weight: bold;
         }
@@ -47,6 +66,12 @@
                             <span>URL (UTF8)</span>
                         </label>
                     </p>
+                    <p>
+                        <label>
+                            <input name="encryptionType" type="radio" value="sha256">
+                            <span>SHA-256</span>
+                        </label>
+                    </p>
                     <button class="btn waves-effect waves-light" onclick="encrypt()">加密</button>
                 </div>
             </div>
@@ -70,6 +95,12 @@
                             <span>URL (UTF8)</span>
                         </label>
                     </p>
+                    <p>
+                        <label>
+                            <input name="decryptionType" type="radio" value="sha256">
+                            <span>SHA-256</span>
+                        </label>
+                    </p>
                     <button class="btn waves-effect waves-light" onclick="decrypt()">解密</button>
                 </div>
             </div>
@@ -84,6 +115,8 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         function utf8ToBase64(str) {
             const encoder = new TextEncoder('utf-8');
@@ -111,6 +144,8 @@
                 encryptedText = utf8ToBase64(inputText);
             } else if (encryptionType === 'url') {
                 encryptedText = encodeURIComponent(inputText);
+            } else if (encryptionType === 'sha256') {
+                encryptedText = CryptoJS.SHA256(inputText).toString();
             }
 
             document.getElementById('result').textContent = `加密结果: ${encryptedText}`;
@@ -134,12 +169,12 @@
                 } catch (error) {
                     decryptedText = '解密失败，请检查输入文本是否有效的URL编码字符串。';
                 }
+            } else if (decryptionType === 'sha256') {
+                decryptedText = 'SHA-256 不支持解密操作。';
             }
 
             document.getElementById('result').textContent = `解密结果: ${decryptedText}`;
         }
     </script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
