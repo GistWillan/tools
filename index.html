@@ -16,11 +16,13 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
+      animation: fade-in 0.5s ease-out;
     }
 
     .collection-item {
       border: 1px solid #e0e0e0;
       border-radius: 4px;
+      animation: fade-in 0.5s ease-out;
     }
 
     .collection-item:hover {
@@ -30,6 +32,17 @@
     .collection-item a {
       color: #212121;
       text-decoration: none;
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -84,10 +97,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
-  <footer class="grey-text text-darken-3" style="text-align: center;">
+<footer class="grey-text text-darken-3" style="text-align: center;">
   <div class="container">
     <p>&copy; 2023 GistWillan </p>
   </div>
 </footer>
-
 </html>
