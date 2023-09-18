@@ -14,7 +14,21 @@
             color: #333;
             font-family: 'Roboto', sans-serif;
         }
+@keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
+        /* 应用渐入动画效果的元素 */
+        .animated-element {
+            animation: fade-in 0.5s ease; /* 动画持续时间和缓动函数可以根据需要调整 */
+        }
         .container {
             margin-top: 20px;
         }
@@ -24,16 +38,23 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             background-color: #fff;
             padding: 20px;
+            opacity: 0; /* 初始设置为不可见 */
+            transform: translateY(-10px); /* 初始上移一些距离 */
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-/* CSS样式 */
-.btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto; /* 如果需要水平居中 */
-}
+        /* 悬停时显示渐入动画 */
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
 
         .btn:hover {
             background-color: #005ca3;
@@ -67,64 +88,67 @@
             <label for="maxValue">最大值</label>
         </div>
 
-<!-- 生成随机数按钮 -->
-<div style="display: flex; justify-content: center;">
-    <button class="btn waves-effect waves-light" onclick="generateRandomNumber()">
-        生成随机数
-        <i class="material-icons right">casino</i>
-    </button>
-</div>
+        <!-- 生成随机数按钮 -->
+        <div style="display: flex; justify-content: center;">
+            <button class="btn waves-effect waves-light" onclick="generateRandomNumber()">
+                生成随机数
+                <i class="material-icons right">casino</i>
+            </button>
+        </div>
 
-<!-- 显示生成的随机数 -->
-<div class="card" style="text-align: center;">
-    <p id="randomNumber"></p>
-</div>
-
-<!-- 复制按钮 -->
-<div style="display: flex; justify-content: center;">
-    <button class="btn waves-effect waves-light" id="copyButton" onclick="copyRandomNumber()" style="display: none;">
-        复制随机数
-        <i class="material-icons right">content_copy</i>
-    </button>
-</div>
-
+        <!-- 显示生成的随机数 -->
+        <div class="card">
+            <p id="randomNumber"></p>
+            <!-- 复制按钮 -->
+            <div style="display: flex; justify-content: center;">
+                <button class="btn waves-effect waves-light" id="copyButton" onclick="copyRandomNumber()">
+                    复制随机数
+                    <i class="material-icons right">content_copy</i>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         // 生成随机数函数
-function generateRandomNumber() {
-    const minValue = parseInt(document.getElementById('minValue').value);
-    const maxValue = parseInt(document.getElementById('maxValue').value);
+        function generateRandomNumber() {
+            const minValue = parseInt(document.getElementById('minValue').value);
+            const maxValue = parseInt(document.getElementById('maxValue').value);
 
-    if (isNaN(minValue) || isNaN(maxValue)) {
-        alert('请输入有效的最小值和最大值。');
-        return;
-    }
+            if (isNaN(minValue) || isNaN(maxValue)) {
+                alert('请输入有效的最小值和最大值。');
+                return;
+            }
 
-    const randomNum = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
-    const randomNumberElement = document.getElementById('randomNumber');
-    const copyButton = document.getElementById('copyButton');
+            const randomNum = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+            const randomNumberElement = document.getElementById('randomNumber');
+            const copyButton = document.getElementById('copyButton');
 
-    randomNumberElement.textContent = `随机数：${randomNum}`;
-    copyButton.style.display = 'block'; // 显示复制按钮
-}
+            randomNumberElement.textContent = `随机数：${randomNum}`;
+            copyButton.style.display = 'block'; // 显示复制按钮
+
+            // 添加渐入动画的类
+            setTimeout(function() {
+                document.querySelector('.card').classList.add('visible');
+            }, 10);
+        }
 
         // 复制随机数函数
-function copyRandomNumber() {
-    const randomNumText = document.getElementById('randomNumber').textContent;
-    
-    const textarea = document.createElement('textarea');
-    textarea.value = randomNumText;
-    
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+        function copyRandomNumber() {
+            const randomNumText = document.getElementById('randomNumber').textContent;
 
-    alert('随机数已复制到剪贴板！');
-}
+            const textarea = document.createElement('textarea');
+            textarea.value = randomNumText;
 
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            alert('随机数已复制到剪贴板！');
+        }
     </script>
 </body>
 </html>
