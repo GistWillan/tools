@@ -9,14 +9,42 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            animation: fadeIn 0.5s ease-in-out; /* 加快渐入动画速度 */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
         .container {
             margin-top: 20px;
+            animation: slideIn 0.5s ease-in-out; /* 加快滑入动画速度 */
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .card-panel {
             padding: 20px;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* 添加选中动画效果 */
+        }
+
+        .card-panel:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
         }
 
         #result {
