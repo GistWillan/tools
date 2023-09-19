@@ -22,19 +22,33 @@
       background-color: #fff;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      animation: fade-in 0.5s ease-out; /* 加快渐入动画速度 */
     }
 
     .input-field {
       margin-bottom: 20px;
+      animation: fade-in 0.5s ease-out; /* 添加渐入动画效果 */
     }
 
     .result {
       margin-top: 20px;
       font-weight: bold;
+      animation: fade-in 0.5s ease-out; /* 添加渐入动画效果 */
     }
 
     .btn {
       margin-right: 10px;
+      animation: fade-in 0.5s ease-out; /* 添加渐入动画效果 */
+    }
+
+    /* 渐入动画的关键帧 */
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
