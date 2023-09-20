@@ -8,12 +8,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
+        @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
         body {
             font-family: 'Roboto', sans-serif;
             text-align: center;
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
+            animation: fadeIn 1s ease-in-out; /* 添加渐变动画效果 */
         }
 
         h1 {
@@ -35,17 +44,36 @@
             font-size: 18px;
         }
 
-        #convertButton {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-        }
+#convertButton, #copyButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    display: inline-block; /* 使按钮居中 */
+    text-align: center; /* 文本水平居中 */
+    line-height: 1; /* 文本垂直居中 */
+    transition: background-color 0.3s, color 0.3s; /* 添加按钮颜色过渡效果 */
+    cursor: pointer;
+    overflow: hidden;
+}
 
-        #copyButton {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-        }
+#convertButton:hover, #copyButton:hover {
+    background-color: #007acc; /* 鼠标悬停时的背景颜色 */
+    color: #fff; /* 鼠标悬停时的文本颜色 */
+}
+
+/* 渐入动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#convertButton, #copyButton {
+    animation: fadeIn 0.5s ease-in-out; /* 使用渐入动画 */
+}
 
         .error {
             color: red;
