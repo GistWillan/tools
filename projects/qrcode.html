@@ -10,9 +10,15 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background: linear-gradient(to bottom, rgba(240, 240, 240, 0.5), #f2f2f2);
             margin: 0;
             padding: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.visible {
+            opacity: 1;
         }
 
         .container {
@@ -35,12 +41,14 @@
 
         h4 {
             margin-bottom: 20px;
+            color: #007acc; /* 符合 Material Design 的主题色 */
         }
 
         #qrcode {
             width: 200px;
             height: 200px;
-            margin: 20px auto; /* 居中显示 */
+            margin: 20px auto;
+            display: block; /* 使二维码居中显示 */
         }
 
         input[type="text"] {
@@ -52,7 +60,7 @@
 
         button {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #007acc; /* 符合 Material Design 的主题色 */
             color: #fff;
             border: none;
             cursor: pointer;
@@ -61,11 +69,11 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* 鼠标悬停时的颜色 */
         }
     </style>
 </head>
-<body>
+<body class="ready">
     <div class="container">
         <div class="card-panel">
             <h4>二维码生成器</h4>
@@ -84,6 +92,10 @@
                 height: 128
             });
         }
+
+        window.addEventListener('load', () => {
+            document.body.classList.add('visible');
+        });
     </script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
