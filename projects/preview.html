@@ -17,6 +17,16 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            animation: fade-in 0.5s ease;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         #container {
@@ -25,10 +35,25 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             width: 80%;
+            text-align: center;
+        }
+
+        #preview-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
 
         h1 {
             color: #007acc;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 20px;
+            margin-top: 10px;
         }
 
         textarea {
@@ -68,8 +93,12 @@
             <button class="btn" onclick="clearInput()">清除</button>
             <button class="btn" onclick="toggleFullScreen()">全屏</button>
             <a class="btn" id="downloadLink" style="display: none;">下载</a>
+            <button class="btn" onclick="pasteFromClipboard()">粘贴</button>
         </div>
-        <iframe id="previewFrame"></iframe>
+        <div id="preview-box">
+            <h2>预览区</h2>
+            <iframe id="previewFrame"></iframe>
+        </div>
     </div>
 
     <script>
@@ -77,7 +106,6 @@
             const htmlInput = document.getElementById('htmlInput').value;
             const previewFrame = document.getElementById('previewFrame');
             
-            // 将输入的 HTML 代码设置为 iframe 的内容
             previewFrame.contentDocument.open();
             previewFrame.contentDocument.write(htmlInput);
             previewFrame.contentDocument.close();
@@ -96,6 +124,14 @@
             } else {
                 document.exitFullscreen();
             }
+        }
+
+        function pasteFromClipboard() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('htmlInput').value = text;
+            }).catch(err => {
+                console.error('Failed to read from clipboard: ', err);
+            });
         }
 
         function downloadHTML() {
