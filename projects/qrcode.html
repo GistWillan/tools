@@ -13,12 +13,7 @@
             background: linear-gradient(to bottom, rgba(240, 240, 240, 0.5), #f2f2f2);
             margin: 0;
             padding: 0;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        body.visible {
-            opacity: 1;
+            overflow: hidden; /* 隐藏溢出内容 */
         }
 
         .container {
@@ -27,6 +22,9 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in 0.5s ease-out forwards, slide-up 0.5s ease-out forwards; /* 添加渐变和滑动动画 */
         }
 
         .card-panel {
@@ -71,9 +69,29 @@
         button:hover {
             background-color: #0056b3; /* 鼠标悬停时的颜色 */
         }
+
+        /* 渐变动画 */
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* 滑动动画 */
+        @keyframes slide-up {
+            0% {
+                transform: translateY(20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
-<body class="ready">
+<body>
     <div class="container">
         <div class="card-panel">
             <h4>二维码生成器</h4>
@@ -93,8 +111,10 @@
             });
         }
 
+        // 当页面加载完成时，添加visible类以显示页面
         window.addEventListener('load', () => {
-            document.body.classList.add('visible');
+            const container = document.querySelector('.container');
+            container.classList.add('visible');
         });
     </script>
     
