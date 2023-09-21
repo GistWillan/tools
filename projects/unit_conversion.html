@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems);
-  });
-</script>
-<style>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      var instances = M.FormSelect.init(elems);
+    });
+  </script>
+  <style>
     body {
       display: flex;
       align-items: center;
@@ -42,9 +42,11 @@
     @keyframes fade-in {
       from {
         opacity: 0;
+        transform: translateY(-10px);
       }
       to {
         opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
