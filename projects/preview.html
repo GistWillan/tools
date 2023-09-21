@@ -17,7 +17,16 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            animation: fade-in 0.5s ease;
+            animation: slide-down 0.5s ease, fade-in 0.5s ease;
+        }
+
+        @keyframes slide-down {
+            from {
+                transform: translateY(-10px);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         @keyframes fade-in {
@@ -63,6 +72,7 @@
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            animation: slide-down 0.5s ease, fade-in 0.5s ease;
         }
 
         iframe {
@@ -81,6 +91,7 @@
 
         .btn-container .btn {
             margin-right: 10px;
+            animation: slide-down 0.5s ease, fade-in 0.5s ease;
         }
     </style>
 </head>
