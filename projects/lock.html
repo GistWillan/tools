@@ -3,211 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>密码生成器</title>
-    <link rel="shortcut icon" href="images/lock.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>二维码生成器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <style>
         body {
-            background-color: #f0f0f0;
-            color: #333;
             font-family: Arial, sans-serif;
-            text-align: center;
-            opacity: 0; /* 初始设置为不可见 */
-            transition: opacity 0.5s ease; /* 添加渐变效果 */
-        }
-
-        body.visible {
-        opacity: 1; /* 显示网页内容 */
+            background: linear-gradient(to bottom, rgba(240, 240, 240, 0.5), #f2f2f2);
+            margin: 0;
+            padding: 0;
+            opacity: 0; /* 初始不可见 */
+            animation: fadeIn 0.5s ease-in-out forwards; /* 渐入动画 */
         }
 
         .container {
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+        .card-panel {
             padding: 20px;
-            margin-top: 20px;
-        }
-
-/* CSS样式 */
-.btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto; /* 如果需要水平居中 */
-}
-
-
-
-        .btn:hover {
-            background-color: #005ca3;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            opacity: 0; /* 初始不可见 */
+            animation: fadeIn 0.5s ease-in-out forwards; /* 渐入动画 */
         }
 
         h4 {
-            margin-top: 20px;
-            color: #007acc;
+            margin-bottom: 20px;
+            color: #007acc; /* 符合 Material Design 的主题色 */
         }
 
-        #password {
-            font-size: 24px;
-            margin-top: 20px;
+        #qrcode {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            display: block; /* 使二维码居中显示 */
+            opacity: 0; /* 初始不可见 */
+            animation: fadeIn 0.5s ease-in-out forwards; /* 渐入动画 */
         }
 
-        #copyButton {
-            background-color: #333;
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0; /* 初始不可见 */
+            animation: fadeIn 0.5s ease-in-out forwards; /* 渐入动画 */
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007acc; /* 符合 Material Design 的主题色 */
             color: #fff;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            margin-top: 10px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            opacity: 0; /* 初始不可见 */
+            animation: fadeIn 0.5s ease-in-out forwards; /* 渐入动画 */
         }
 
-        #copyButton:hover {
-            background-color: #555;
+        button:hover {
+            background-color: #0056b3; /* 鼠标悬停时的颜色 */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h4>密码生成器</h4>
-
-        <!-- 选择密码长度 -->
-        <div class="input-field">
-            <select id="passwordLength">
-                <option value="8">8个字符</option>
-                <option value="12">12个字符</option>
-                <option value="16">16个字符</option>
-                <option value="20">20个字符</option>
-            </select>
-            <label>选择密码长度</label>
-        </div>
-
-        <!-- 选择字符类型 -->
-<div class="input-field left-align">
-    <p>
-        <label>
-            <input type="checkbox" id="includeUppercase" />
-            <span>包含大写字母</span>
-        </label>
-    </p>
-</div>
-
-<div class="input-field left-align">
-    <p>
-        <label>
-            <input type="checkbox" id="includeLowercase" />
-            <span>包含小写字母</span>
-        </label>
-    </p>
-</div>
-
-<div class="input-field left-align">
-    <p>
-        <label>
-            <input type="checkbox" id="includeNumbers" />
-            <span>包含数字</span>
-        </label>
-    </p>
-</div>
-
-<div class="input-field left-align">
-    <p>
-        <label>
-            <input type="checkbox" id="includeSpecialChars" />
-            <span>包含特殊字符</span>
-        </label>
-    </p>
-</div>
-
-
-
-<!-- 生成密码按钮 -->
-<div style="text-align: center;">
-    <button class="btn waves-effect waves-light" onclick="generatePassword()">
-        生成密码
-        <i class="material-icons right">calculate</i>
-    </button>
-</div>
-
-
-
-        <!-- 显示生成的密码 -->
-        <div class="card">
-            <p id="password"></p>
-            <button id="copyButton" onclick="copyPassword()">复制密码</button>
+        <div class="card-panel">
+            <h4>二维码生成器</h4>
+            <input type="text" id="qrText" placeholder="输入要生成二维码的文本">
+            <button class="waves-effect waves-light btn" onclick="generateQRCode()">生成二维码</button>
+            <div id="qrcode"></div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        // 页面加载后，添加渐变动画
+        function generateQRCode() {
+            const qrText = document.getElementById('qrText').value;
+            const qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: qrText,
+                width: 128,
+                height: 128
+            });
+        }
+
+        // 当页面加载完成时，移除body上的类以触发渐入动画
         window.addEventListener('load', () => {
-            document.body.classList.add('visible');
+            document.body.classList.remove('invisible');
         });
-
-        // 初始化选择框
-        document.addEventListener('DOMContentLoaded', function () {
-            const passwordLengthElems = document.querySelectorAll('select');
-            const passwordLengthInstances = M.FormSelect.init(passwordLengthElems);
-        });
-
-        // 生成密码函数
-        function generatePassword() {
-            const passwordLength = document.getElementById('passwordLength').value;
-            const includeUppercase = document.getElementById('includeUppercase').checked;
-            const includeLowercase = document.getElementById('includeLowercase').checked;
-            const includeNumbers = document.getElementById('includeNumbers').checked;
-            const includeSpecialChars = document.getElementById('includeSpecialChars').checked;
-            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const numberChars = '0123456789';
-            const specialChars = '!@#$%^&*()_+[]{}|;:,.<>?';
-
-            let availableChars = '';
-
-            if (includeUppercase) {
-                availableChars += uppercaseChars;
-            }
-
-            if (includeLowercase) {
-                availableChars += lowercaseChars;
-            }
-
-            if (includeNumbers) {
-                availableChars += numberChars;
-            }
-
-            if (includeSpecialChars) {
-                availableChars += specialChars;
-            }
-
-            let password = '';
-            for (let i = 0; i < passwordLength; i++) {
-                const randomIndex = Math.floor(Math.random() * availableChars.length);
-                password += availableChars.charAt(randomIndex);
-            }
-
-            document.getElementById('password').textContent = password;
-        }
-
-        // 复制密码函数
-        function copyPassword() {
-            const passwordText = document.getElementById('password').textContent;
-            const textarea = document.createElement('textarea');
-            textarea.value = passwordText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('密码已复制到剪贴板！');
-        }
     </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
