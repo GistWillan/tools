@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>个人练手项目</title>
+  <link rel="shortcut icon" href="images/index.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fade-in 0.5s ease-out forwards;
+      flex: 1;
+      margin: 10px;
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .header h1 {
+      color: #007acc;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #777;
+      font-size: 18px;
+    }
+
+    .projects {
+      margin-top: 20px;
+    }
+
+    .project-item {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      transform-origin: center bottom;
+    }
+
+    .project-item:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-5px);
+    }
+
+    .project-link {
+      color: #007acc;
+      text-decoration: none;
+      font-size: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background-color: transparent;
+    }
+
+    .project-link:hover {
+      background-color: #f0f0f0;
+      color: #007acc;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #888;
+      opacity: 0;
+      animation: fade-in 0.5s ease-out forwards;
+    }
+
+    .github-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .github-link a {
+      text-decoration: none;
+      color: #007acc;
+      font-weight: bold;
+    }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 768px) {
+      body {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .container {
+        flex: 1;
+        margin: 10px;
+        box-sizing: border-box;
+      }
+
+      .left-column {
+        flex: 1;
+      }
+
+      .right-column {
+        flex: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container left-column">
+    <div class="header">
+      <h1>个人练手项目</h1>
+      <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
+      <p>在这里，我将展示我的个人练手项目，并分享一些有趣的内容。</p>
+    </div>
+    <div class="footer">
+      <p>&copy; 2023 GistWillan</p>
+    </div>
+    <div class="github-link">
+      <a href="https://github.com/GistWillan" target="_blank">查看我的GitHub</a>
+    </div>
+  </div>
+
+  <div class="container right-column">
+    <div class="projects">
+      <div class="project-item">
+        <a class="project-link" href="projects/time.html" target="_blank">世界时间</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/tomato.html" target="_blank">番茄时钟</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/preview.html" target="_blank">HTML预览</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/http.html" target="_blank">HTTP状态码</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/bmi.html" target="_blank">BMI计算器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/date.html" target="_blank">日期计算器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/test.html" target="_blank">进制转换器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/unit_conversion.html" target="_blank">单位转换器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/lock.html" target="_blank">密码生成器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/text.html" target="_blank">文字加密解密</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/qrcode.html" target="_blank">二维码生成器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/number.html" target="_blank">随机数生成器</a>
+      </div>
+      <div class="project-item">
+        <a class="project-link" href="projects/morse.html" target="_blank">摩斯电码转换器</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
