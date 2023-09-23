@@ -31,6 +31,8 @@
       flex: 1;
       margin: 10px;
       box-sizing: border-box;
+      position: sticky; /* 让左侧栏目保持固定位置 */
+      top: 10px; /* 距离顶部的距离 */
     }
 
     .header {
@@ -103,6 +105,13 @@
       font-weight: bold;
     }
 
+    .style-link {
+      text-decoration: none;
+      color: #007acc;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
     @keyframes fade-in {
       0% {
         opacity: 0;
@@ -137,17 +146,15 @@
   </style>
 </head>
 <body>
-  <div class="container left-column">
+  <div class="container left-column" id="leftColumn">
     <div class="header">
       <h1>个人练手项目</h1>
       <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
       <p>在这里，我将展示我的个人练手项目，并分享一些有趣的内容。</p>
     </div>
     <div class="footer">
-      <p>&copy; 2023 GistWillan</p>
-    </div>
-    <div class="github-link">
       <a href="https://github.com/GistWillan" target="_blank">查看我的GitHub</a>
+      <a class="style-link" href="https://gistwillan.github.io/practice">样式1</a> <!-- 添加样式1的链接 -->
     </div>
   </div>
 
@@ -156,6 +163,7 @@
       <div class="project-item">
         <a class="project-link" href="projects/time.html" target="_blank">世界时间</a>
       </div>
+       </div>
       <div class="project-item">
         <a class="project-link" href="projects/tomato.html" target="_blank">番茄时钟</a>
       </div>
@@ -196,5 +204,15 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    // 监听滚动事件，实现左边栏目的跟踪绑定动画
+    window.addEventListener('scroll', function() {
+      const leftColumn = document.getElementById('leftColumn');
+      const scrollY = window.scrollY;
+
+      // 根据滚动距离更新左侧栏目的位置
+      leftColumn.style.transform = `translateY(${scrollY}px)`;
+    });
+  </script>
 </body>
 </html>
