@@ -46,10 +46,12 @@
             justify-content: center;
             align-items: center;
             margin: 0 auto; /* 如果需要水平居中 */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* 添加背景颜色和上下浮动的过渡效果 */
         }
 
         .btn:hover {
             background-color: #005ca3;
+            transform: translateY(-3px); /* 鼠标悬停时上浮 */
         }
 
         h4 {
@@ -70,10 +72,23 @@
             padding: 10px 20px;
             margin-top: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* 添加背景颜色和上下浮动的过渡效果 */
         }
 
         #copyButton:hover {
             background-color: #555;
+            transform: translateY(-3px); /* 鼠标悬停时上浮 */
+        }
+
+        /* 复制按钮选中动画 */
+        #copyButton:active {
+            transform: translateY(0);
+        }
+
+        /* 复选框选中动画 */
+        input[type="checkbox"]:checked + span::before {
+            border-right: 2px solid #007acc;
+            border-bottom: 2px solid #007acc;
         }
     </style>
 </head>
