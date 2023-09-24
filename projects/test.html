@@ -14,6 +14,8 @@
       justify-content: center;
       height: 100vh;
       background-color: #f5f5f5;
+      opacity: 0;
+      animation: slide-in 0.5s ease-out forwards; /* 添加从上往下的渐入动画效果 */
     }
 
     .container {
@@ -22,7 +24,6 @@
       background-color: #fff;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      animation: slide-down 0.5s ease-out, fade-in 0.5s ease-out; /* 添加从上往下的渐入动画效果 */
     }
 
     .input-field input[type="text"],
@@ -43,7 +44,7 @@
     }
 
     /* 从上往下的渐入动画的关键帧 */
-    @keyframes slide-down {
+    @keyframes slide-in {
       from {
         opacity: 0;
         transform: translateY(-20px);
