@@ -12,21 +12,21 @@
             padding-top: 50px;
         }
 
-        /* 渐入动画样式 */
-        @keyframes fadeIn {
-            from {
+        /* 改进的渐入动画样式 */
+        @keyframes slideDown {
+            0% {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-50px);
             }
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* 应用渐入动画到指定元素 */
+        /* 应用改进的动画到指定元素 */
         #animationTarget {
-            animation: fadeIn 0.5s ease-out;
+            animation: slideDown 0.3s ease-in-out;
         }
 
         #timer {
@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-    <!-- 添加一个具有渐入动画效果的 div -->
+    <!-- 添加一个具有改进的渐入动画效果的 div -->
     <div id="animationTarget" class="container">
         <h1>番茄时钟</h1>
         <div class="card-panel">
