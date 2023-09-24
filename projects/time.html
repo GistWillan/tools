@@ -88,6 +88,13 @@
             </select>
             <label>选择时区</label>
         </div>
+    <div class="input-field">
+    <select id="timeFormatSelector">
+        <option value="12">12小时制</option>
+        <option value="24" selected>24小时制</option>
+    </select>
+    <label>选择时间制式</label>
+</div>
 
         <!-- 显示时间的卡片 -->
         <div class="card">
@@ -105,18 +112,37 @@
             $('select').formSelect();
         });
 
+        // 新增一个函数，用于将"AM"和"PM"翻译成中文
+        function translateTimeFormat(timeFormat) {
+            if (timeFormat === 'AM') {
+                return '上午';
+            } else if (timeFormat === 'PM') {
+                return '下午';
+            }
+            return timeFormat; // 如果不是"AM"或"PM"，则返回原值
+        }
+
         // 更新时间函数
         function updateTime() {
             const selectedTimezone = $('#timezoneSelector').val();
-            const options = {
+            const selectedTimeFormat = $('#timeFormatSelector').val(); // 获取用户选择的时间制式
+            let options = {
                 timeZone: selectedTimezone,
-                hour12: false, // 使用24小时制
+                hour12: selectedTimeFormat === "12", // 根据用户选择设置小时制式
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
             };
             const currentTime = new Date().toLocaleString('en-US', options);
-            $('#currentTime').text(currentTime);
+
+            // 获取小时制式，并翻译成中文
+            const timeParts = currentTime.split(' ');
+            const timeFormat = timeParts.pop(); // 获取最后一个部分，即"AM"或"PM"
+            const translatedTimeFormat = translateTimeFormat(timeFormat);
+            timeParts.push(translatedTimeFormat); // 将翻译后的时间制式放回时间字符串
+            const translatedTime = timeParts.join(' '); // 重新组合时间字符串
+
+            $('#currentTime').text(translatedTime);
         }
 
         // 初次加载页面时更新时间
@@ -124,6 +150,7 @@
 
         // 每秒更新时间
         setInterval(updateTime, 1000);
+
     </script>
 </body>
 </html>
