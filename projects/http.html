@@ -14,20 +14,25 @@
             margin: 0;
             padding: 0;
         }
- /* 添加渐入动画 */
+
+        /* 添加非线性渐入动画 */
         @keyframes fade-in {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px);
             }
-            to {
+            50% {
+                opacity: 0.5;
+                transform: translateY(10px);
+            }
+            100% {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
         #container {
-            animation: fade-in 0.5s ease;
+            animation: fade-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
@@ -84,7 +89,7 @@
     <script>
         // HTTP 状态码数据，可以根据需要添加更多状态码
         const statusCodes = [
-    { code: 100, description: 'Continue - 继续' },
+            { code: 100, description: 'Continue - 继续' },
     { code: 101, description: 'Switching Protocols - 切换协议' },
     { code: 102, description: 'Processing - 处理中' },
     { code: 200, description: 'OK - 请求成功' },
@@ -146,10 +151,7 @@
     { code: 508, description: 'Loop Detected - 检测到循环' },
     { code: 510, description: 'Not Extended - 未扩展' },
     { code: 511, description: 'Network Authentication Required - 需要网络身份验证' }
-];
-
-// 其余代码保持不变
-
+        ];
 
         // 获取元素
         const searchInput = document.getElementById('searchInput');
