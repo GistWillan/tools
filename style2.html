@@ -27,7 +27,7 @@
       border-radius: 8px;
       opacity: 0;
       transform: translateY(-20px);
-      animation: fade-in 0.5s ease-out forwards;
+      animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
       flex: 1;
       margin: 10px;
       box-sizing: border-box;
@@ -94,17 +94,6 @@
       animation: fade-in 0.5s ease-out forwards;
     }
 
-    .github-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .github-link a {
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-    }
-
     .style-link {
       text-decoration: none;
       color: #007acc;
@@ -123,30 +112,20 @@
       }
     }
 
-    @media (min-width: 768px) {
-      body {
-        flex-direction: row;
-        align-items: flex-start;
+    @keyframes pop-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
       }
-
-      .container {
-        flex: 1;
-        margin: 10px;
-        box-sizing: border-box;
-      }
-
-      .left-column {
-        flex: 1;
-      }
-
-      .right-column {
-        flex: 2;
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
     }
   </style>
 </head>
 <body>
-  <div class="container left-column" id="leftColumn">
+  <div class="container" id="leftColumn">
     <div class="header">
       <h1>个人练手项目</h1>
       <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
@@ -154,17 +133,16 @@
     </div>
     <div class="footer">
       <a href="https://github.com/GistWillan" target="_blank">查看我的GitHub</a>
-      <a class="style-link" href="https://gistwillan.github.io/practice">样式1</a> <!-- 添加样式1的链接 -->
+      <a class="style-link" href="https://gistwillan.github.io/practice">样式1</a>
     </div>
   </div>
 
-  <div class="container right-column">
+  <div class="container">
     <div class="projects">
       <div class="project-item">
         <a class="project-link" href="projects/time.html" target="_blank">世界时间</a>
       </div>
-       </div>
-      <div class="project-item">
+       <div class="project-item">
         <a class="project-link" href="projects/tomato.html" target="_blank">番茄时钟</a>
       </div>
       <div class="project-item">
@@ -204,15 +182,5 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    // 监听滚动事件，实现左边栏目的跟踪绑定动画
-    window.addEventListener('scroll', function() {
-      const leftColumn = document.getElementById('leftColumn');
-      const scrollY = window.scrollY;
-
-      // 根据滚动距离更新左侧栏目的位置
-      leftColumn.style.transform = `translateY(${scrollY}px)`;
-    });
-  </script>
 </body>
 </html>
