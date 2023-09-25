@@ -2,9 +2,7 @@
 <html>
 <head>
   <title>GistWillan的个人练手项目</title>
-  <link rel="shortcut icon" href="images/index.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
      crossorigin="anonymous"></script>
   <style>
@@ -13,22 +11,49 @@
       margin: 0;
       padding: 0;
       background-color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
     }
 
+    @keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
     .container {
-      max-width: 800px;
-      margin: 0;
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 20px;
       background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
-      opacity: 0;
-      animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-      transform-origin: center bottom;
     }
 
     .header {
@@ -47,47 +72,48 @@
       font-size: 18px;
     }
 
-    .projects {
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
       margin-top: 20px;
     }
 
-    .project-item {
-      margin: 10px 0;
-      padding: 10px;
+    .app-item {
+      background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      background-color: #fff;
+      padding: 20px;
+      text-align: center;
       transition: background-color 0.3s ease, transform 0.3s ease;
-      transform-origin: center bottom;
     }
 
-    .project-item:hover {
+    .app-item:hover {
       background-color: #f0f0f0;
       transform: translateY(-5px);
     }
 
-    .project-link {
+    .app-icon {
+      font-size: 48px;
       color: #007acc;
-      text-decoration: none;
-      font-size: 20px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 5px;
-      background-color: transparent;
+      margin-bottom: 10px;
     }
 
-    .project-link:hover {
-      background-color: #f0f0f0;
-      color: #007acc;
+    .app-name {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .app-description {
+      font-size: 14px;
+      color: #777;
     }
 
     .footer {
       text-align: center;
       margin-top: 20px;
       color: #888;
-      opacity: 0;
-      animation: fade-in 0.5s ease-out forwards;
     }
 
     .footer a {
@@ -97,26 +123,9 @@
       margin-left: 10px;
     }
 
-    @keyframes fade-in {
-      0% {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes pop-in {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+    /* 隐藏链接下划线 */
+    .app-item a {
+      text-decoration: none;
     }
   </style>
 </head>
@@ -127,54 +136,105 @@
       <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
       <p>在这里，我将展示我的个人练手项目，并分享一些有趣的内容。</p>
     </div>
-    <div class="projects">
-      <div class="project-item">
-        <a class="project-link" href="projects/time.html" target="_blank">世界时间</a>
+    <div class="app-grid">
+      <div class="app-item">
+        <a href="projects/time.html">
+          <div class="app-icon">🌏</div>
+          <div class="app-name">世界时间</div>
+          <div class="app-description">展示世界各地的当前时间</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/tomato.html" target="_blank">番茄时钟</a>
+      <div class="app-item">
+        <a href="projects/tomato.html">
+          <div class="app-icon">⏰</div>
+          <div class="app-name">番茄时钟</div>
+          <div class="app-description">提高工作效率</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/preview.html" target="_blank">HTML预览</a>
+      <div class="app-item">
+        <a href="projects/preview.html">
+          <div class="app-icon">👀</div>
+          <div class="app-name">HTML预览</div>
+          <div class="app-description">实时HTML代码预览</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/http.html" target="_blank">HTTP状态码</a>
+      <div class="app-item">
+        <a href="projects/http.html">
+          <div class="app-icon">🌐</div>
+          <div class="app-name">HTTP状态码</div>
+          <div class="app-description">快速查询HTTP状态</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/bmi.html" target="_blank">BMI计算器</a>
+      <div class="app-item">
+        <a href="projects/bmi.html">
+          <div class="app-icon">🧍‍♂️</div>
+          <div class="app-name">BMI计算器</div>
+          <div class="app-description">计算体质指数</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/date.html" target="_blank">日期计算器</a>
+      <div class="app-item">
+        <a href="projects/date.html">
+          <div class="app-icon">📅</div>
+          <div class="app-name">日期计算器</div>
+          <div class="app-description">计算日期间隔</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/test.html" target="_blank">进制转换器</a>
+      <div class="app-item">
+        <a href="projects/test.html">
+          <div class="app-icon">🔢</div>
+          <div class="app-name">进制转换器</div>
+          <div class="app-description">数制转换工具</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/unit_conversion.html" target="_blank">单位转换器</a>
+      <div class="app-item">
+        <a href="projects/unit_conversion.html">
+          <div class="app-icon">📏</div>
+          <div class="app-name">单位转换器</div>
+          <div class="app-description">单位换算工具</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/lock.html" target="_blank">密码生成器</a>
+      <div class="app-item">
+        <a href="projects/lock.html">
+          <div class="app-icon">🔐</div>
+          <div class="app-name">密码生成器</div>
+          <div class="app-description">随机密码生成</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/text.html" target="_blank">文字加密解密</a>
+      <div class="app-item">
+        <a href="projects/text.html">
+          <div class="app-icon">🔐</div>
+          <div class="app-name">文字加密解密</div>
+          <div class="app-description">文字加密解密</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/qrcode.html" target="_blank">二维码生成器</a>
+      <div class="app-item">
+        <a href="projects/qrcode.html">
+          <div class="app-icon">📷</div>
+          <div class="app-name">二维码生成器</div>
+          <div class="app-description">快速生成二维码</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/number.html" target="_blank">随机数生成器</a>
+      <div class="app-item">
+        <a href="projects/number.html">
+          <div class="app-icon">🎲</div>
+          <div class="app-name">随机数生成器</div>
+          <div class="app-description">生成随机数</div>
+        </a>
       </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/morse.html" target="_blank">摩斯电码转换器</a>
+      <div class="app-item">
+        <a href="projects/morse.html">
+          <div class="app-icon">📻</div>
+          <div class="app-name">摩斯电码转换器</div>
+          <div class="app-description">文字转换摩斯电码</div>
+        </a>
       </div>
     </div>
     <div class="footer">
       <p>&copy; 2023 GistWillan</p>
-      <a href="https://github.com/GistWillan" target="_blank">GitHub</a>
-      <a href="https://gistwillan.github.io/practice/style2.html" target="_self">样式2</a>
+      <a href="https://gistwillan.github.io/practice/about.html">关于</a>
+      <a href="https://github.com/gistwillan">我的GitHub</a>
+      <a href="https://gistwillan.github.io/practice/style2.html">简约风格</a>
     </div>
   </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
