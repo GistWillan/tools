@@ -25,6 +25,7 @@
 ## 联系我
 
 - 我的GitHub: [https://github.com/gistwillan](https://github.com/gistwillan)
-- 有关此项目的更多信息，请访问我的网站：[样式1](https://gistwillan.github.io/practice)
+- 我的邮箱: [邮箱](mailtio:gistwillan@gmail.com)
+- 有关此项目的更多信息，请访问我的网站：[点击跳转](https://gistwillan.github.io/practice)
 
 &copy; 2023 GistWillan
