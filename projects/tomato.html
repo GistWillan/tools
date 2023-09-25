@@ -12,8 +12,8 @@
             padding-top: 50px;
         }
 
-        /* 改进的渐入动画样式 */
-        @keyframes slideDown {
+        /* 添加改进的渐入动画样式 */
+        @keyframes slideIn {
             0% {
                 opacity: 0;
                 transform: translateY(-50px);
@@ -25,8 +25,8 @@
         }
 
         /* 应用改进的动画到指定元素 */
-        #animationTarget {
-            animation: slideDown 0.3s ease-in-out;
+        .animated {
+            animation: slideIn 0.3s ease-in-out;
         }
 
         #timer {
@@ -52,8 +52,8 @@
     </style>
 </head>
 <body>
-    <!-- 添加一个具有改进的渐入动画效果的 div -->
-    <div id="animationTarget" class="container">
+    <!-- 添加具有改进的渐入动画效果的 div -->
+    <div class="container animated">
         <h1>番茄时钟</h1>
         <div class="card-panel">
             <div id="timer" class="teal-text text-darken-3">25:00</div>
