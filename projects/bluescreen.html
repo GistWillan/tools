@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 11常见蓝屏代码参考表</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+        }
+
+        @keyframes pop-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            color: #007acc;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007acc;
+            color: #fff;
+        }
+
+        td {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Windows 11常见蓝屏代码参考表</h1>
+        <table>
+            <tr>
+                <th>错误代码</th>
+                <th>描述</th>
+            </tr>
+<tr>
+                <td>0x0000000A</td>
+                <td>IRQL_NOT_LESS_OR_EQUAL - 表示发生了内核或驱动程序的错误，可能导致系统崩溃。</td>
+            </tr>
+            <tr>
+                <td>0x0000001E</td>
+                <td>KMODE_EXCEPTION_NOT_HANDLED - 表示内核模式发生异常，通常是由于驱动程序问题引起的。</td>
+            </tr>
+            <tr>
+                <td>0x0000003B</td>
+                <td>SYSTEM_SERVICE_EXCEPTION - 表示系统服务遇到了问题，可能是由于驱动程序或硬件问题引起的。</td>
+            </tr>
+            <tr>
+                <td>0x0000007E</td>
+                <td>SYSTEM_THREAD_EXCEPTION_NOT_HANDLED - 表示系统线程发生异常，通常由于驱动程序问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x000000D1</td>
+                <td>DRIVER_IRQL_NOT_LESS_OR_EQUAL - 表示驱动程序引发的问题，可能导致系统不稳定。</td>
+            </tr>
+            <tr>
+                <td>0x00000133</td>
+                <td>DPC_WATCHDOG_VIOLATION - 表示延迟处理程序（DPC）监视超时，通常与驱动程序相关。</td>
+            </tr>
+            <tr>
+                <td>0x00000139</td>
+                <td>KERNEL_SECURITY_CHECK_FAILURE - 表示内核安全检查失败，可能由于内核数据损坏或恶意软件引起。</td>
+            </tr>
+            <tr>
+                <td>0x00000141</td>
+                <td>VIDEO_TDR_FAILURE - 表示显示驱动程序响应超时，通常与显卡或驱动程序相关。</td>
+            </tr>
+            <tr>
+                <td>0x00000124</td>
+                <td>WHEA_UNCORRECTABLE_ERROR - 表示硬件错误，可能与CPU、内存或其他硬件相关。</td>
+            </tr>
+            <tr>
+                <td>0x00000150</td>
+                <td>MEMORY_MANAGEMENT - 表示内存管理错误，可能由于内存模块或驱动程序问题引起。</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
