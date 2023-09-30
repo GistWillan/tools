@@ -84,6 +84,42 @@
                 <td>0x0000003B</td>
                 <td>SYSTEM_SERVICE_EXCEPTION - 表示系统服务遇到了问题，可能是由于驱动程序或硬件问题引起的。</td>
             </tr>
+                <tr>
+                <td>0x0000004A</td>
+                <td>IRQL_GT_ZERO_AT_SYSTEM_SERVICE - 表示内核或系统服务发生错误，可能导致系统崩溃。</td>
+            </tr>
+            <tr>
+                <td>0x00000050</td>
+                <td>PAGE_FAULT_IN_NONPAGED_AREA - 表示发生了内存错误，通常是由于硬件或驱动程序问题引起的。</td>
+            </tr>
+            <tr>
+                <td>0x0000007F</td>
+                <td>UNEXPECTED_KERNEL_MODE_TRAP - 表示内核模式遇到了意外情况，通常由于硬件或驱动程序问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x000000C2</td>
+                <td>BAD_POOL_CALLER - 表示发生了内存池错误，通常是由于驱动程序问题引起的。</td>
+            </tr>
+            <tr>
+                <td>0x000000EF</td>
+                <td>CRITICAL_PROCESS_DIED - 表示关键进程已终止，可能由于系统文件损坏或硬件问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x000000F4</td>
+                <td>CRITICAL_OBJECT_TERMINATION - 表示关键对象已终止，通常由于硬件或存储设备问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x00000109</td>
+                <td>CRITICAL_STRUCTURE_CORRUPTION - 表示发生了关键结构损坏，可能由于驱动程序或硬件问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x000001E3</td>
+                <td>RESOURCE_NOT_OWNED - 表示尝试释放未拥有的资源，通常由于驱动程序问题引起。</td>
+            </tr>
+            <tr>
+                <td>0x0000021A</td>
+                <td>STATUS_SYSTEM_PROCESS_TERMINATED - 表示系统进程已终止，通常是由于系统文件损坏引起的。</td>
+            </tr>
             <tr>
                 <td>0x0000007E</td>
                 <td>SYSTEM_THREAD_EXCEPTION_NOT_HANDLED - 表示系统线程发生异常，通常由于驱动程序问题引起。</td>
