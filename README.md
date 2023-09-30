@@ -18,6 +18,7 @@
 - [二维码生成器](projects/qrcode.html): 快速生成二维码的工具。
 - [随机数生成器](projects/number.html): 生成随机数的工具。
 - [摩斯电码转换器](projects/morse.html): 文字转换为摩斯电码的工具。
+- [Windows11蓝屏代码参考](projects/bluescreen.html)：常见蓝屏代码参考表。
 
 ## 关于我
 
