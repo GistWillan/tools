@@ -21,9 +21,34 @@
       background-color: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
+      opacity: 0; /* 初始不可见 */
       animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
 
+    /* 添加苹果风格的非线性入场动画 */
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pop-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* 其他样式保持不变 */
     .header {
       text-align: center;
       padding: 20px 0;
