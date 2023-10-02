@@ -105,13 +105,15 @@
       gap: 20px;
     }
 
+    /* 隐藏链接样式和添加链接样式 */
     .nav-item {
       display: inline-block;
       padding: 10px 20px;
       border-radius: 20px;
       background-color: var(--tertiary-color);
       cursor: pointer;
-      text-decoration: none; /* 隐藏链接样式 */
+      text-decoration: none; /* 隐藏链接下划线 */
+      color: var(--quaternary-color); /* 设定链接颜色 */
     }
 
     .nav-item:hover {
@@ -214,9 +216,10 @@
         <img src="images/logo.png" alt="logo" class="logo">
         <!-- 导航区域 -->
         <div class="nav">
-          <div class="nav-item">首页</div>
-          <div class="nav-item projects">项目</div>
-          <div class="nav-item">关于</div>
+          <!-- 添加链接 -->
+          <a href="#" class="nav-item">首页</a>
+          <a href="#project1" class="nav-item projects">项目</a>
+          <a href="#" class="nav-item">关于</a>
         </div>
     </div>
     
@@ -242,8 +245,11 @@
          <h3 class="card-title highlight">项目一</h3>
          <!-- 卡片内容 -->
          <p class="card-text">这是我做的第一个项目，它是一个简单的计算器，可以进行基本的数学运算。</p>
-         <!-- 添加跳转按钮 -->
-         <a class="jump-button" href="#project1">跳转</a>
+         <!-- 添加按钮容器 -->
+         <div class="button-container">
+           <!-- 添加跳转按钮 -->
+           <a class="jump-button" href="#project1">跳转</a>
+         </div>
        </div>
 
        <!-- 卡片区域 -->
@@ -254,8 +260,11 @@
          <h3 class="card-title highlight">项目二</h3>
          <!-- 卡片内容 -->
          <p class="card-text">这是我做的第二个项目，它是一个简单的日历，可以显示当前的日期和时间。</p>
-         <!-- 添加跳转按钮 -->
-         <a class="jump-button" href="#project2">跳转</a>
+         <!-- 添加按钮容器 -->
+         <div class="button-container">
+           <!-- 添加跳转按钮 -->
+           <a class="jump-button" href="#project2">跳转</a>
+         </div>
        </div>
 
        <!-- 卡片区域 -->
@@ -266,8 +275,11 @@
          <h3 class="card-title highlight">项目三</h3>
          <!-- 卡片内容 -->
          <p class="card-text">这是我做的第三个项目，它是一个简单的音乐播放器，可以播放本地或在线的音乐文件。</p>
-         <!-- 添加跳转按钮 -->
-         <a class="jump-button" href="#project3">跳转</a>
+         <!-- 添加按钮容器 -->
+         <div class="button-container">
+           <!-- 添加跳转按钮 -->
+           <a class="jump-button" href="#project3">跳转</a>
+         </div>
        </div>
      </div>
 
