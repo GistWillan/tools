@@ -16,19 +16,16 @@
             color: #333;
             font-family: Arial, sans-serif;
             text-align: center;
-            animation: slideDown 0.5s ease forwards; /* 添加从上往下非线性弹入动画 */
             opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
         }
 
-        /* 改进的渐入动画样式 */
-        @keyframes slideDown {
+        @keyframes fadeIn {
             0% {
                 opacity: 0;
-                transform: translateY(-50px);
             }
             100% {
                 opacity: 1;
-                transform: translateY(0);
             }
         }
 
@@ -48,13 +45,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto; /* 如果需要水平居中 */
-            transition: background-color 0.3s ease, transform 0.3s ease; /* 添加背景颜色和上下浮动的过渡效果 */
+            margin: 0 auto; /* 水平居中 */
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .btn:hover {
             background-color: #005ca3;
-            transform: translateY(-3px); /* 鼠标悬停时上浮 */
+            transform: translateY(-3px);
         }
 
         h4 {
@@ -75,12 +72,12 @@
             padding: 10px 20px;
             margin-top: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease; /* 添加背景颜色和上下浮动的过渡效果 */
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         #copyButton:hover {
             background-color: #555;
-            transform: translateY(-3px); /* 鼠标悬停时上浮 */
+            transform: translateY(-3px);
         }
 
         /* 复制按钮选中动画 */
