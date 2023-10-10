@@ -119,6 +119,28 @@
     .app-item a {
       text-decoration: none;
     }
+    /* 针对测试风格链接的样式 */
+    .test-style:hover {
+      border-radius: 8px; /* 添加圆角矩形效果 */
+      transform: scale(1.05); /* 添加放大效果 */
+      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    }
+
+    /* 提示文本样式 */
+    .tooltip {
+      display: none; /* 初始不可见 */
+      position: absolute;
+      background-color: #333;
+      color: white;
+      padding: 5px;
+      border-radius: 4px;
+      transform: translate(-50%, -150%); /* 定位到链接上方 */
+    }
+
+    /* 显示提示文本 */
+    .test-style:hover .tooltip {
+      display: block; /* 鼠标悬停时显示提示文本 */
+    }
   </style>
 </head>
 <body>
@@ -240,7 +262,7 @@
       <a href="about.html">关于</a>
       <a href="https://github.com/gistwillan">我的GitHub</a>
       <a href="style2.html">简约风格</a>
-      <a href="beta.html">测试风格</a>
+      <a class="test-style" href="beta.html">测试风格<span class="tooltip">仅为测试，不代表最终效果。</span></a>
     </div>
   </div>
 </body>
