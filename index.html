@@ -36,6 +36,22 @@
       }
     }
 
+    /* 新的非线性渐入动画，模拟苹果风格 */
+    @keyframes apple-style-tooltip {
+      0% {
+        transform: translateY(-20px) scale(0.8);
+        opacity: 0;
+      }
+      70% {
+        transform: translateY(0) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -121,40 +137,46 @@
     }
 
     /* 针对测试风格链接的样式 */
-    .test-style {
+    .test-style:hover {
       border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(0.95); /* 添加放大效果 */
-      transition: transform 0.3s ease; /* 添加过渡效果 */
+      transform: scale(1.05); /* 添加放大效果 */
+      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
     }
 
-    /* 针对简约风格链接的样式 */
-    .simple-style {
-      border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(0.95); /* 添加放大效果 */
-      transition: transform 0.3s ease; /* 添加过渡效果 */
-    }
-
-    /* 提示文本样式 */
-    .tooltip {
+    /* 提示文本样式 - 苹果风格动画 */
+    .apple-tooltip {
       display: none; /* 初始不可见 */
       position: absolute;
       background-color: #333;
       color: white;
       padding: 5px;
       border-radius: 4px;
-      transform: translate(-50%, -200%); /* 将提示文本上移 */
+      transform: translateY(-20px) scale(0.8);
     }
 
-    /* 显示提示文本 */
-    .simple-style:hover .tooltip,
-    .test-style:hover .tooltip {
+    /* 显示提示文本 - 苹果风格动画 */
+    .simple-style:hover .apple-tooltip {
       display: block; /* 鼠标悬停时显示提示文本 */
+      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    }
+
+    /* 针对简约风格链接的样式 */
+    .simple-style:hover {
+      border-radius: 8px; /* 添加圆角矩形效果 */
+      transform: scale(1.05); /* 添加放大效果 */
+      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    }
+
+    /* 显示提示文本 - 苹果风格动画 */
+    .test-style:hover .apple-tooltip {
+      display: block; /* 鼠标悬停时显示提示文本 */
+      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class "header">
+    <div class="header">
       <h1>个人练手项目</h1>
       <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
       <p>在这里，我将展示我的个人练手项目，并分享一些有趣的内容。</p>
@@ -168,12 +190,12 @@
         </a>
       </div>
       <div class="app-item">
-        <a href="projects/tomato.html">
-          <div class="app-icon">⏰</div>
-          <div class="app-name">番茄时钟</div>
-          <div class="app-description">提高工作效率</div>
-        </a>
-      </div>
+  <a href="projects/tomato.html">
+    <div class="app-icon">⏰</div>
+    <div class="app-name">番茄时钟</div>
+    <div class="app-description">提高工作效率</div>
+  </a>
+</div>
       <div class="app-item">
         <a href="projects/preview.html">
           <div class="app-icon">👀</div>
@@ -270,8 +292,8 @@
       <p>&copy; 2023 GistWillan</p>
       <a href="about.html">关于</a>
       <a href="https://github.com/gistwillan">我的GitHub</a>
-      <a class="simple-style" href="style2.html">简约风格<span class="tooltip">以一列一列的方式展现，没有emoji等元素。</span></a>
-      <a class="test-style" href="beta.html">测试风格<span class="tooltip">仅为测试，不代表最终效果。</span></a>
+      <a class="simple-style" href="style2.html">简约风格<span class="apple-tooltip">以一列一列的方式展现，没有emoji等元素。</span></a>
+      <a class="test-style" href="beta.html">测试风格<span class="apple-tooltip">仅为测试，不代表最终效果。</span></a>
     </div>
   </div>
 </body>
