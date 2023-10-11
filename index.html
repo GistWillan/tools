@@ -36,22 +36,6 @@
       }
     }
 
-    /* 新的非线性渐入动画，模拟苹果风格 */
-    @keyframes apple-style-tooltip {
-      0% {
-        transform: translateY(-20px) scale(0.8);
-        opacity: 0;
-      }
-      70% {
-        transform: translateY(0) scale(1.2);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-    }
-
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -63,19 +47,6 @@
       transform: translateY(-20px);
       animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
-    .tooltip {
-  display: none;
-  position: absolute;
-  background-color: #333;
-  color: white;
-  padding: 5px;
-  border-radius: 4px;
-  transform: translate(-50%, -110%); /* 上移至链接上方 */
-}
-
-.simple-style:hover .tooltip {
-  display: block; /* 鼠标悬停时显示提示文本 */
-}
 
     .header {
       text-align: center;
@@ -156,23 +127,6 @@
       transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
     }
 
-    /* 提示文本样式 - 苹果风格动画 */
-    .apple-tooltip {
-      display: none; /* 初始不可见 */
-      position: absolute;
-      background-color: #333;
-      color: white;
-      padding: 5px;
-      border-radius: 4px;
-      transform: translateY(-20px) scale(0.8);
-    }
-
-    /* 显示提示文本 - 苹果风格动画 */
-    .simple-style:hover .apple-tooltip {
-      display: block; /* 鼠标悬停时显示提示文本 */
-      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-    }
-
     /* 针对简约风格链接的样式 */
     .simple-style:hover {
       border-radius: 8px; /* 添加圆角矩形效果 */
@@ -180,10 +134,21 @@
       transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
     }
 
-    /* 显示提示文本 - 苹果风格动画 */
-    .test-style:hover .apple-tooltip {
+    /* 提示文本样式 */
+    .tooltip {
+      display: none; /* 初始不可见 */
+      position: absolute;
+      background-color: #333;
+      color: white;
+      padding: 5px;
+      border-radius: 4px;
+      transform: translate(-50%, -200%); /* 将提示文本上移 */
+    }
+
+    /* 显示提示文本 */
+    .simple-style:hover .tooltip,
+    .test-style:hover .tooltip {
       display: block; /* 鼠标悬停时显示提示文本 */
-      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
   </style>
 </head>
