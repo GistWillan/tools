@@ -63,6 +63,19 @@
       transform: translateY(-20px);
       animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
+    .tooltip {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  transform: translate(-50%, -110%); /* 上移至链接上方 */
+}
+
+.simple-style:hover .tooltip {
+  display: block; /* 鼠标悬停时显示提示文本 */
+}
 
     .header {
       text-align: center;
