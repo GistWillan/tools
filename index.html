@@ -121,17 +121,17 @@
     }
 
     /* 针对测试风格链接的样式 */
-    .test-style:hover {
+    .test-style {
       border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(1.05); /* 添加放大效果 */
-      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+      transform: scale(0.95); /* 添加放大效果 */
+      transition: transform 0.3s ease; /* 添加过渡效果 */
     }
 
     /* 针对简约风格链接的样式 */
-    .simple-style:hover {
+    .simple-style {
       border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(1.05); /* 添加放大效果 */
-      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+      transform: scale(0.95); /* 添加放大效果 */
+      transition: transform 0.3s ease; /* 添加过渡效果 */
     }
 
     /* 提示文本样式 */
@@ -154,7 +154,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">
+    <div class "header">
       <h1>个人练手项目</h1>
       <p>欢迎来到我的个人练手项目主页！这是一个简单的示例网页。</p>
       <p>在这里，我将展示我的个人练手项目，并分享一些有趣的内容。</p>
@@ -168,13 +168,12 @@
         </a>
       </div>
       <div class="app-item">
-  <a href="projects/tomato.html">
-    <div class="app-icon">⏰</div>
-    <div class="app-name">番茄时钟</div>
-    <div class="app-description">提高工作效率</div>
-  </a>
-</div>
-
+        <a href="projects/tomato.html">
+          <div class="app-icon">⏰</div>
+          <div class="app-name">番茄时钟</div>
+          <div class="app-description">提高工作效率</div>
+        </a>
+      </div>
       <div class="app-item">
         <a href="projects/preview.html">
           <div class="app-icon">👀</div>
