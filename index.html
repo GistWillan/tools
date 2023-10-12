@@ -139,7 +139,7 @@
     /* 针对测试风格链接的样式 */
     .test-style:hover {
       border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(1.05); /* 添加放大效果 */
+      transform: translateY(-5px); /* 稍微上移 */
       transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
     }
 
@@ -155,7 +155,7 @@
     }
 
     /* 显示提示文本 - 苹果风格动画 */
-    .simple-style:hover .apple-tooltip {
+    .simple-style:hover .apple-tooltip, .test-style:hover .apple-tooltip {
       display: block; /* 鼠标悬停时显示提示文本 */
       animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
@@ -163,14 +163,8 @@
     /* 针对简约风格链接的样式 */
     .simple-style:hover {
       border-radius: 8px; /* 添加圆角矩形效果 */
-      transform: scale(1.05); /* 添加放大效果 */
+      transform: translateY(-5px); /* 稍微上移 */
       transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
-    }
-
-    /* 显示提示文本 - 苹果风格动画 */
-    .test-style:hover .apple-tooltip {
-      display: block; /* 鼠标悬停时显示提示文本 */
-      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
   </style>
 </head>
