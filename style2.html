@@ -29,7 +29,6 @@
       opacity: 0;
       animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
       transform-origin: center bottom;
-      clip-path: circle(0% at 50% 100%);
     }
 
     .header {
@@ -119,15 +118,6 @@
         transform: scale(1);
       }
     }
-
-    @keyframes clip-path {
-      0% {
-        clip-path: circle(0% at 50% 100%);
-      }
-      100% {
-        clip-path: circle(100% at 50% 100%);
-      }
-    }
   </style>
 </head>
 <body>
@@ -186,7 +176,7 @@
     </div>
     <div class="footer">
       <p>&copy; 2023 GistWillan</p>
-      <a href="about.html" target="_self">关于</a>
+      <a herf="about.html" target="_self">关于</a>
       <a href="https://github.com/GistWillan" target="_blank">GitHub</a>
       <a href="index.html" target="_self">普通风格</a>
       <a href="beta.html" target="_self">测试风格</a>
@@ -194,14 +184,5 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var container = document.querySelector('.container');
-      container.style.animationName = 'clip-path';
-      container.style.animationDuration = '0.5s';
-      container.style.animationTimingFunction = 'cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-      container.style.animationFillMode = 'forwards';
-    });
-  </script>
 </body>
 </html>
