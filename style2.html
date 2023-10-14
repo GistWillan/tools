@@ -118,6 +118,29 @@
         transform: scale(1);
       }
     }
+        /* 针对测试风格链接的样式 */
+    .test-style:hover {
+      border-radius: 8px; /* 添加圆角矩形效果 */
+      transform: translateY(-5px); /* 稍微上移 */
+      transition: border-radius 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    }
+
+    /* 提示文本样式 - 苹果风格动画 */
+    .apple-tooltip {
+      display: none; /* 初始不可见 */
+      position: absolute;
+      background-color: #333;
+      color: white;
+      padding: 5px;
+      border-radius: 4px;
+      transform: translateY(-20px) scale(0.8);
+    }
+
+    /* 显示提示文本 - 苹果风格动画 */
+    .simple-style:hover .apple-tooltip, .test-style:hover .apple-tooltip {
+      display: block; /* 鼠标悬停时显示提示文本 */
+      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    }
   </style>
 </head>
 <body>
@@ -179,7 +202,7 @@
       <a herf="about.html" target="_self">关于</a>
       <a href="https://github.com/GistWillan" target="_blank">GitHub</a>
       <a href="index.html" target="_self">普通风格</a>
-      <a href="beta.html" target="_self">测试风格</a>
+      <a class="test-style" href="beta.html">测试风格<span class="apple-tooltip">仅为测试，不代表最终效果。</span></a>
     </div>
   </div>
 
