@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
     <title>二维码生成器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -86,10 +86,34 @@
         @keyframes slide-up {
             0% {
                 transform: translateY(20px);
+                opacity: 0;
             }
             100% {
                 transform: translateY(0);
+                opacity: 1;
             }
+        }
+
+        /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
+        @media screen and (max-width: 768px) {
+          .container {
+            height: auto; /* 自适应高度 */
+            padding: 20px; /* 增加内边距 */
+          }
+          .card-panel {
+            width: 100%; /* 充满屏幕宽度 */
+            max-width: none; /* 取消最大宽度限制 */
+          }
+          h4 {
+            font-size: 24px; /* 缩小标题字体 */
+          }
+          input, button {
+            font-size: 14px; /* 缩小输入框和按钮字体 */
+          }
+          #qrcode {
+            width: 150px; /* 缩小二维码大小 */
+            height: 150px;
+          }
         }
     </style>
 </head>
