@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
     <title>BMI计算器</title>
     <link rel="shortcut icon" href="images/site.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -52,6 +52,30 @@
         #result {
             text-align: center;
             margin-top: 20px;
+        }
+
+        /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
+        @media screen and (max-width: 768px) {
+          .container {
+            max-width: 90%; /* 缩小容器宽度 */
+          }
+          .row {
+            margin-left: -5px; /* 减少行间距 */
+            margin-right: -5px;
+          }
+          .col {
+            padding-left: 5px; /* 减少列间距 */
+            padding-right: 5px;
+          }
+          .card-panel {
+            padding: 10px; /* 减少卡片内边距 */
+          }
+          h4, h5 {
+            font-size: 18px; /* 缩小标题字体 */
+          }
+          input, button, p, span {
+            font-size: 14px; /* 缩小正文字体 */
+          }
         }
     </style>
 </head>
