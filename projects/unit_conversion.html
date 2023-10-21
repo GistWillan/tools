@@ -1,46 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>单位换算器</title>
   <link rel="shortcut icon" href="images/site.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('select');
-      var instances = M.FormSelect.init(elems);
-    });
-  </script>
   <style>
     body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-
     .container {
       max-width: 400px;
       padding: 20px;
       background-color: #fff;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      animation: fade-in 0.5s ease-out; /* 添加渐入动画效果 */
+      animation: fade-in 0.5s ease-out;
     }
-
-    .input-field,
-    .col.s6 > select,
-    .col.s12 > h5,
-    .col.s12 > p {
-      animation: fade-in 0.5s ease-out; /* 添加渐入动画效果 */
+    .input-field, .select-wrapper, .col.s12 > h5, .col.s12 > p {
+      animation: fade-in 0.5s ease-out;
     }
-
-    /* 渐入动画的关键帧 */
     @keyframes fade-in {
       from {
         opacity: 0;
@@ -55,7 +40,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>单位换算器</h1>
+    <h1 class="header center-align">单位换算器</h1>
     <div class="row">
       <div class="input-field col s6">
         <input id="inputValue" type="number" class="validate">
@@ -75,31 +60,35 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <h5>结果:</h5>
-        <p id="result"></p>
+        <h5 class="center-align">结果:</h5>
+        <p id="result" class="center-align"></p>
       </div>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      var instances = M.FormSelect.init(elems);
+      
       var input = document.getElementById('inputValue');
       var unitType = document.getElementById('unitType');
       var result = document.getElementById('result');
-
+  
       input.addEventListener('input', function() {
         convertUnits();
       });
-
+  
       unitType.addEventListener('change', function() {
         convertUnits();
       });
-
+  
       function convertUnits() {
         var inputValue = parseFloat(input.value);
         var selectedUnit = unitType.value;
         var convertedValue;
-
+  
         switch (selectedUnit) {
           case 'cm':
             convertedValue = inputValue;
@@ -123,8 +112,8 @@
             convertedValue = 0;
             break;
         }
-
-        result.innerHTML = convertedValue.toFixed(2) + ' ' + selectedUnit;
+  
+        result.textContent = convertedValue.toFixed(2) + ' ' + selectedUnit;
       }
     });
   </script>
