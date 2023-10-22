@@ -19,6 +19,7 @@
 - [随机数生成器](projects/number.html): 生成随机数的工具。
 - [摩斯电码转换器](projects/morse.html): 文字转换为摩斯电码的工具。
 - [剪切板文本管理器](projects/pasteboard.html)：管理剪切文本。
+- [Markdown文本编辑器](projects/markdown.html): 可保存以及预览Markdown文本
 - [Windows11蓝屏代码参考](projects/bluescreen.html)：常见蓝屏代码参考表。
 
 ## 关于我
