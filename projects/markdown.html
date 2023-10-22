@@ -1,261 +1,109 @@
+<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <title>Markdown编辑器</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
-    /* Material Design colors */
-    :root {
-      --primary-color: #6200ee;
-      --primary-variant-color: #3700b3;
-      --secondary-color: #03dac6;
-      --background-color: #ffffff;
-      --surface-color: #ffffff;
-      --error-color: #b00020;
-      --on-primary-color: #ffffff;
-      --on-secondary-color: #000000;
-      --on-background-color: #000000;
-      --on-surface-color: #000000;
-      --on-error-color: #ffffff;
-    }
-    /* Apple nonlinear animation */
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-.editor {
-  animation-name: fadeIn;
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-    /* Markdown editor style */
-    .editor {
-      width: 80%;
-      margin: 20px auto;
-      border: 1px solid var(--primary-variant-color);
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .editor-header {
+    body {
+      background-color: #f5f5f5;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      background-color: var(--primary-color);
-      color: var(--on-primary-color);
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    .editor-title {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .editor-buttons {
+    .container {
+      max-width: 1000px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
       display: flex;
+      animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
     }
 
-    .editor-button {
-      width: 40px;
-      height: 40px;
-      margin-left: 10px;
+    .editor {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .preview {
+      flex: 1;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border-left: 1px solid #ddd;
+      overflow: auto;
+    }
+
+    #markdownInput {
+      width: 100%;
+      height: 100%;
       border: none;
-      border-radius: 50%;
-      background-color: var(--primary-variant-color);
-      color: var(--on-primary-color);
-      cursor: pointer;
-    }
-
-    .editor-button:hover {
-      transform: scale(1.1);
-    }
-
-    .editor-button:focus {
-      outline: none;
-    }
-
-    .editor-content {
-      display: flex;
-      height: 400px;
-    }
-
-    .editor-input {
-      width: 50%;
-      padding: 10px;
-      border-right: 1px solid var(--primary-variant-color);
-      font-family: monospace;
-      font-size: 16px;
       resize: none;
     }
 
-    .editor-output {
-      width: 50%;
-      padding: 10px;
-      overflow-y: auto;
+    .save-button {
+      background-color: #007acc;
     }
 
-    /* Markdown output style */
-    h1, h2, h3, h4, h5, h6 {
-      margin-top: 20px;
-      margin-bottom: 10px;
+    @keyframes pop-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="editor">
+      <h5>Markdown编辑器</h5>
+      <textarea id="markdownInput" placeholder="在这里输入Markdown文本"></textarea>
+      <a id="saveButton" class="waves-effect waves-light btn save-button">保存</a>
+    </div>
+    <div class="preview">
+      <h5>预览</h5>
+      <div id="markdownPreview"></div>
+    </div>
+  </div>
 
-    h1 {
-      font-size: 32px;
-    }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize Materialize components
+      M.AutoInit();
 
-    h2 {
-      font-size: 24px;
-    }
+      // Render Markdown preview
+      function renderPreview() {
+        var markdownInput = $('#markdownInput').val();
+        var md = window.markdownit();
+        var html = md.render(markdownInput);
+        $('#markdownPreview').html(html);
+      }
 
-    h3 {
-      font-size: 18px;
-    }
+      $('#markdownInput').on('input', renderPreview);
 
-    h4 {
-      font-size: 16px;
-    }
-
-    h5 {
-      font-size: 14px;
-    }
-
-    h6 {
-      font-size: 12px;
-    }
-
-    p, li {
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    a {
-      color: var(--secondary-color);
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    code, pre {
-      font-family :monospace ;
-       background-color :#f0f0f0 ;
-     }
-    
-     pre {
-       padding :10 px ;
-       overflow-x :auto ;
-       border-radius :4 px ;
-     }
-    
-     /* Apple nonlinear animation */
-     @keyframes fadeIn {
-       from {opacity :0 ;}
-       to {opacity :1 ;}
-     }
-    
-     .editor {
-       animation-name :fadeIn ;
-       animation-duration :2 s ;
-       animation-timing-function :cubic-bezier (0.165 ,0.84 ,0.44 ,1) ;
-     }
-   </style>
- </head>
- <body>
-   <div class="editor">
-     <div class="editor-header">
-       <div class="editor-title">Markdown Editor</div>
-       <div class="editor-buttons">
-         <button class="editor-button" id="copy" onclick="copy()">📄</button>
-         <button class="editor-button" id="save" onclick="save()">💾</button>
-         <button class="editor-button" id="print" onclick="print()">🖨</button>
-       </div>
-     </div>
-     <div class="editor-content">
-       <textarea class="editor-input" id="input" oninput="convert()">
-# 这是一个标题
-
-这是一个段落，你可以在这里输入任何你想要的文本。
-
-## 这是一个二级标题
-
-你可以使用**粗体**，*斜体*，~~删除线~~等格式。
-
-你还可以插入链接或者图片：
-
-!Logo(/logo.png)
-
-你可以创建无序列表：
-
-- 项目一
-- 项目二
-- 项目三
-
-或者有序列表：
-
-1. 第一项
-2. 第二项
-3. 第三项
-
-你可以使用代码块来显示代码：
-
-```javascript
-console.log("Hello, world!");
-```
-
-你可以使用数学公式：
-E=mc2
-   </textarea>
-   <div class="editor-output" id="output"></div>
- </div>
-
-</div>
-<script src=“https://cdn.jsdelivr.net/npm/marked/marked.min.js”></script>
-<script src=“https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js”></script>
-<script src=“https://cdn.jsdelivr.net/npm/markdown-it-katex/dist/index.min.js”></script>
-<script>
-// Initialize markdown parser with katex support
-var md = window.markdownit();
-md.use(window.markdownitKatex);
- // Convert markdown input to HTML output
- function convert() {
-   var input = document.getElementById("input").value;
-   var output = document.getElementById("output");
-   output.innerHTML = md.render(input);
- }
-
- // Convert on page load
- convert();
-
- // Copy markdown input to clipboard
- function copy() {
-   var input = document.getElementById("input");
-   input.select();
-   document.execCommand("copy");
-   alert("Markdown copied to clipboard!");
- }
-
- // Save HTML output to file
- function save() {
-   var output = document.getElementById("output").innerHTML;
-   var blob = new Blob([output], {type: "text/html"});
-   var url = URL.createObjectURL(blob);
-   var link = document.createElement("a");
-   link.href = url;
-   link.download = "markdown.html";
-   link.click();
-   URL.revokeObjectURL(url);
-   alert("HTML file saved!");
- }
-
- // Print HTML output
- function print() {
-   var output = document.getElementById("output").innerHTML;
-   var win = window.open("", "Print");
-   win.document.write(output);
-   win.print();
-   win.close();
- }
-
-</script>
+      // Save functionality
+      $('#saveButton').click(function() {
+        var markdownContent = $('#markdownInput').val();
+        var blob = new Blob([markdownContent], { type: 'text/markdown' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'markdown.md';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    });
+  </script>
 </body>
 </html>
