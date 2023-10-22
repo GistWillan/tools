@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
     body {
-      background-color: #f5f5f5;
+      background-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -20,12 +20,17 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       border-radius: 4px;
       display: flex;
+      overflow: hidden;
       animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
     }
 
     .editor {
       flex: 1;
       padding: 20px;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
     }
 
     .preview {
@@ -43,8 +48,27 @@
       resize: none;
     }
 
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
     .save-button {
-      background-color: #007acc;
+  background-color: #007acc;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 10px 20px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  text-align: center; /* 居中文字 */
+  line-height: 40px; /* 调整按钮高度和文字行高以垂直居中 */
+}
+
+    .save-button:hover {
+      background-color: #0055a4;
     }
 
     @keyframes pop-in {
@@ -62,12 +86,14 @@
 <body>
   <div class="container">
     <div class="editor">
-      <h5>Markdown编辑器</h5>
+      <h5 style="color: #007acc;">Markdown编辑器</h5>
       <textarea id="markdownInput" placeholder="在这里输入Markdown文本"></textarea>
-      <a id="saveButton" class="waves-effect waves-light btn save-button">保存</a>
+      <div class="button-container">
+        <a id="saveButton" class="waves-effect waves-light btn save-button">保存</a>
+      </div>
     </div>
     <div class="preview">
-      <h5>预览</h5>
+      <h5 style="color: #007acc;">预览</h5>
       <div id="markdownPreview"></div>
     </div>
   </div>
