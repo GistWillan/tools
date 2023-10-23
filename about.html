@@ -95,6 +95,28 @@
       font-weight: bold;
       font-size: 16px; /* 缩小返回按钮字体 */
     }
+
+    /* 媒体查询用于适配移动设备 */
+    @media only screen and (max-width: 768px) {
+      .container {
+        padding: 20px; /* 在小屏幕上减少内边距 */
+      }
+      .header h1 {
+        font-size: 20px; /* 在小屏幕上缩小标题字体 */
+      }
+      .header p {
+        font-size: 14px; /* 在小屏幕上缩小正文字体 */
+      }
+      .about-content h2 {
+        font-size: 18px; /* 在小屏幕上缩小子标题字体 */
+      }
+      .about-content p {
+        font-size: 14px; /* 在小屏幕上缩小正文字体 */
+      }
+      .return-button a {
+        font-size: 14px; /* 在小屏幕上缩小返回按钮字体 */
+      }
+    }
   </style>
 </head>
 <body>
