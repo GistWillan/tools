@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视区宽度为设备宽度，初始缩放比例为1 -->
   <title>日期计算器</title>
   <link rel="shortcut icon" href="images/site.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap">
@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 400px;
+      max-width: 90vw; <!-- 设置容器最大宽度为90%的视区宽度 -->
       padding: 20px;
       background-color: #fff;
       border-radius: 4px;
@@ -60,6 +60,20 @@
       }
       to {
         transform: translateY(0);
+      }
+    }
+
+    @media screen and (max-width: 600px) { <!-- 设置媒介查询，当屏幕宽度小于600px时，应用以下样式 -->
+      .container {
+        max-width: 100vw; <!-- 设置容器最大宽度为100%的视区宽度 -->
+      }
+
+      .input-field {
+        margin-bottom: 10px; <!-- 设置输入框的下边距为10px -->
+      }
+
+      .result {
+        margin-top: 10px; <!-- 设置结果的上边距为10px -->
       }
     }
   </style>
