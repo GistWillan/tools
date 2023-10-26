@@ -56,6 +56,55 @@
         transform: translateY(0);
       }
     }
+
+    /* 使用 flexbox 创建响应式的列布局 */
+    .row {
+      display: flex;
+      flex-wrap: wrap; /* 允许多行 */
+    }
+
+    .col.s6 {
+      flex-basis: 50%; /* 初始宽度为50% */
+    }
+
+    /* 响应式布局 - 屏幕宽度小于600px时，设置列为100%宽度 */
+    @media screen and (max-width: 600px) {
+      .col.s6 {
+        flex-basis: 100%;
+      }
+    }
+
+    /* 调整字体大小和按钮样式 */
+    h3 {
+      font-size: 24px; /* 默认字体大小为24px */
+    }
+
+    button {
+      width: 100%; /* 按钮宽度为100% */
+    }
+
+    /* 响应式布局 - 屏幕宽度大于600px时，增加字体大小和按钮边距 */
+    @media screen and (min-width: 600px) {
+      h3 {
+        font-size: 32px; /* 字体大小为32px */
+      }
+
+      button {
+        width: auto; /* 按钮宽度自适应 */
+        margin-left: 10px; /* 按钮左边距为10px */
+        margin-right: 10px; /* 按钮右边距为10px */
+      }
+    }
+    
+    /* 将输入数字一栏移到左部分 */
+    .row:first-child {
+      position: relative; /* 设置父元素为相对定位 */
+    }
+
+    .row:first-child > div {
+      position: absolute; /* 设置子元素为绝对定位 */
+      left: 0; /* 设置子元素的左边距为0 */
+    }
   </style>
 </head>
 <body>
