@@ -13,6 +13,21 @@
             font-family: Arial, sans-serif;
             animation: fadeIn 0.5s ease-in-out; /* 加快渐入动画速度 */
         }
+        input[type="text"] {
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  font-size: 20px;
+  transition: all 0.5s ease-in-out;
+}
+
+input[type="text"]:focus {
+  border-bottom: 2px solid #f00;
+  transform: scale(1.1);
+  backface-visibility: hidden; /* 添加这一行 */
+}
 
         @keyframes fadeIn {
             0% {
