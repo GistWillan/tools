@@ -1,38 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
     <title>BMI计算器</title>
     <link rel="shortcut icon" href="images/site.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <script async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
+        crossorigin="anonymous"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             animation: fadeIn 0.5s ease-in-out; /* 加快渐入动画速度 */
         }
-        input[type="text"] {
-  width: 100%;
-  height: 40px;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  outline: none;
-  font-size: 20px;
-  transition: all 0.5s ease-in-out;
-}
-
-input[type="text"]:focus {
-  border-bottom: 2px solid #f00;
-  transform: scale(1.1);
-  backface-visibility: hidden; /* 添加这一行 */
-}
 
         @keyframes fadeIn {
             0% {
                 opacity: 0;
             }
+
             100% {
                 opacity: 1;
             }
@@ -48,6 +36,7 @@ input[type="text"]:focus {
                 transform: translateY(-20px);
                 opacity: 0;
             }
+
             100% {
                 transform: translateY(0);
                 opacity: 1;
@@ -69,31 +58,42 @@ input[type="text"]:focus {
             margin-top: 20px;
         }
 
-        /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
-        @media screen and (max-width: 768px) {
-          .container {
-            max-width: 90%; /* 缩小容器宽度 */
-          }
-          .row {
-            margin-left: -5px; /* 减少行间距 */
-            margin-right: -5px;
-          }
-          .col {
-            padding-left: 5px; /* 减少列间距 */
-            padding-right: 5px;
-          }
-          .card-panel {
-            padding: 10px; /* 减少卡片内边距 */
-          }
-          h4, h5 {
-            font-size: 18px; /* 缩小标题字体 */
-          }
-          input, button, p, span {
-            font-size: 14px; /* 缩小正文字体 */
-          }
+        /* 媒体查询：当屏幕宽度小于等于 992px 时应用这些样式 */
+        @media screen and (max-width: 992px) {
+            .container {
+                max-width: 90%; /* 缩小容器宽度 */
+            }
+
+            .card-panel {
+                padding: 10px; /* 减少卡片内边距 */
+            }
+
+            h4,
+            h5 {
+                font-size: 18px; /* 缩小标题字体 */
+            }
+
+            input,
+            button,
+            p,
+            span {
+                font-size: 16px; /* 缩小正文字体 */
+            }
+        }
+
+        /* 媒体查询：当屏幕宽度小于等于 600px 时应用这些样式 */
+        @media screen and (max-width: 600px) {
+            input[type="number"] {
+                font-size: 14px; /* 进一步缩小输入框字体 */
+            }
+
+            .card-panel {
+                padding: 8px; /* 进一步减少卡片内边距 */
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h4 class="center-align">BMI计算器</h4>
@@ -154,4 +154,5 @@ input[type="text"]:focus {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
+
 </html>
