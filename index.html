@@ -14,7 +14,7 @@
       background-color: #f5f5f5;
     }
 
-    /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
+        /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
     @media screen and (max-width: 768px) {
       .container {
         max-width: 90%;
@@ -30,6 +30,24 @@
       }
       .header p {
         font-size: 16px;
+      }
+    }
+    /* 添加移动端样式 */
+    @media screen and (max-width: 480px) {
+      .header h1 {
+        font-size: 20px;
+      }
+      .header p {
+        font-size: 14px;
+      }
+      .app-icon {
+        font-size: 36px;
+      }
+      .app-name {
+        font-size: 16px;
+      }
+      .app-description {
+        font-size: 12px;
       }
     }
 
