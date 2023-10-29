@@ -1,149 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
-    <title>二维码生成器</title>
+    <meta charset="utf-8">
+    <title>二维码生成网站</title>
+    <!-- 引入Materialize框架的样式表 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, rgba(240, 240, 240, 0.5), #f2f2f2);
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* 隐藏溢出内容 */
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fade-in 0.5s ease-out forwards, slide-up 0.5s ease-out forwards; /* 添加渐变和滑动动画 */
-        }
-
-        .card-panel {
-            padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        h4 {
-            margin-bottom: 20px;
-            color: #007acc; /* 符合 Material Design 的主题色 */
-        }
-
-        #qrcode {
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            display: block; /* 使二维码居中显示 */
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #007acc; /* 符合 Material Design 的主题色 */
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3; /* 鼠标悬停时的颜色 */
-        }
-
-        /* 渐变动画 */
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* 滑动动画 */
-        @keyframes slide-up {
-            0% {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* 媒体查询：当屏幕宽度小于等于 768px 时应用这些样式 */
-        @media screen and (max-width: 768px) {
-          .container {
-            height: auto; /* 自适应高度 */
-            padding: 20px; /* 增加内边距 */
-          }
-          .card-panel {
-            width: 100%; /* 充满屏幕宽度 */
-            max-width: none; /* 取消最大宽度限制 */
-          }
-          h4 {
-            font-size: 24px; /* 缩小标题字体 */
-          }
-          input, button {
-            font-size: 14px; /* 缩小输入框和按钮字体 */
-          }
-          #qrcode {
-            width: 150px; /* 缩小二维码大小 */
-            height: 150px;
-          }
-        }
-    </style>
+    <!-- 引入animate.css库的样式表 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
     <div class="container">
-        <div class="card-panel">
-            <h4>二维码生成器</h4>
-            <input type="text" id="qrText" placeholder="输入要生成二维码的文本">
-            <button class="waves-effect waves-light btn" onclick="generateQRCode()">生成二维码</button>
-            <div id="qrcode"></div>
+        <h1 class="center-align">二维码生成网站</h1>
+        <div class="row">
+            <div class="input-field col s12 m8 offset-m2">
+                <!-- 创建一个文本输入框，用于输入要生成二维码的文字 -->
+                <input id="text-input" type="text" placeholder="请输入要生成二维码的文字">
+                <label for="text-input">文字输入</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m8 offset-m2 center-align">
+                <!-- 创建一个按钮，用于触发二维码的生成 -->
+                <button id="generate-button" class="btn waves-effect waves-light">生成</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m8 offset-m2 center-align">
+                <!-- 创建一个容器，用于显示生成的二维码 -->
+                <div id="qrcode-container"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m8 offset-m2 center-align">
+                <!-- 创建一个隐藏的按钮，用于下载生成的二维码 -->
+                <button id="download-button" class="btn waves-effect waves-light" style="display: none;">下载</button>
+            </div>
         </div>
     </div>
-
+    <!-- 引入jQuery库 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入Materialize框架的JavaScript文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- 引入qrcode.js库 -->
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <!-- 编写自定义的JavaScript代码 -->
     <script>
-        function generateQRCode() {
-            const qrText = document.getElementById('qrText').value;
-            const qrcode = new QRCode(document.getElementById("qrcode"), {
-                text: qrText,
-                width: 128,
-                height: 128
+        // 定义一个变量，用于存储上次输入的文字
+        var lastText = "";
+        // 获取页面元素
+        var textInput = $("#text-input");
+        var generateButton = $("#generate-button");
+        var qrcodeContainer = $("#qrcode-container");
+        var downloadButton = $("#download-button");
+        // 为生成按钮添加点击事件监听器
+        generateButton.on("click", function() {
+            // 获取输入框中的文字
+            var text = textInput.val();
+            // 如果文字为空，弹出提示信息
+            if (text == "") {
+                M.toast({html: "请输入要生成二维码的文字"});
+                return;
+            }
+            // 如果文字与上次输入的相同，并且已经生成过二维码，不再重复生成
+            if (text == lastText && qrcodeContainer.children().length > 0) {
+                return;
+            }
+            // 更新上次输入的文字
+            lastText = text;
+            // 清空二维码容器中的内容
+            qrcodeContainer.empty();
+            // 隐藏下载按钮
+            downloadButton.hide();
+            // 创建一个新的二维码对象，传入要编码的文字和配置选项
+            var qrcode = new QRCode(qrcodeContainer[0], {
+                text: text,
+                width: 256,
+                height: 256,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
-        }
-
-        // 当页面加载完成时，添加visible类以显示页面
-        window.addEventListener('load', () => {
-            const container = document.querySelector('.container');
-            container.classList.add('visible');
+            // 为二维码容器添加一个非线性动画效果
+            qrcodeContainer.addClass("animate__animated animate__bounceIn");
+            // 为下载按钮添加一个点击事件监听器
+            downloadButton.on("click", function() {
+                // 获取二维码的图片数据
+                var imageData = qrcodeContainer.children("img")[0].src;
+                // 创建一个临时的超链接元素，用于触发下载操作
+                var link = document.createElement("a");
+                link.href = imageData;
+                link.download = "qrcode.png";
+                link.click();
+            });
+            // 显示下载按钮
+            downloadButton.show();
         });
     </script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
