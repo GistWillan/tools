@@ -32,23 +32,23 @@
         }
 
         #timer {
-            font-size: 48px; /* 减小字体大小 */
+            font-size: 32px; /* 减小字体大小 */
             margin: 20px;
         }
         #status {
-            font-size: 20px; /* 减小字体大小 */
+            font-size: 16px; /* 减小字体大小 */
         }
         #controls {
-            margin-top: 20px; /* 调整按钮顶部内边距 */
+            margin-top: 10px; /* 调整按钮顶部内边距 */
         }
         #settings {
-            font-size: 16px; /* 减小字体大小 */
+            font-size: 14px; /* 减小字体大小 */
             margin: 10px 20px; /* 调整设置顶部和左侧内边距 */
         }
         input[type="number"] {
             width: 40px;
             text-align: center;
-            font-size: 14px; /* 进一步减小输入框字体大小 */
+            font-size: 12px; /* 进一步减小输入框字体大小 */
             margin: 0 5px;
         }
     </style>
@@ -56,7 +56,7 @@
 <body>
     <!-- 添加具有改进的渐入动画效果的 div -->
     <div class="container animated">
-        <h1>番茄时钟</h1>
+        <h4>番茄时钟</h4>
         <div class="card-panel">
             <div id="timer" class="teal-text text-darken-3">25:00</div>
             <div id="status" class="teal-text text-darken-2">工作中</div>
@@ -64,13 +64,13 @@
                 <div class="determinate"></div>
             </div>
             <div id="controls">
-                <button id="startPause" class="waves-effect waves-light btn teal darken-4">开始</button>
-                <button id="reset" class="waves-effect waves-light btn red">复位</button>
+                <button id="startPause" class="waves-effect waves-light btn-small teal darken-4">开始</button>
+                <button id="reset" class="waves-effect waves-light btn-small red">复位</button>
             </div>
             <div id="settings">
                 <label>工作时间（分钟）: <input type="number" id="workDuration" value="25"></label>
                 <label>休息时间（分钟）: <input type="number" id="breakDuration" value="5"></label>
-                <a id="saveSettings" class="waves-effect waves-light btn teal darken-4">保存设置</a>
+                <a id="saveSettings" class="waves-effect waves-light btn-small teal darken-4">保存设置</a>
             </div>
             <div id="info" class="teal-text text-darken-3" style="display:none;">
                 请点击 "复位" 以使更改的时间生效。
