@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>随机用户名生成器</title>
+  <!-- 引入Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- 引入Google字体 -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- 引入自定义样式 -->
+  <style>
+    /* 设置网页标题的样式 */
+    h1 {
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 50px;
+    }
+    /* 设置网页内容的样式 */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    /* 设置选择类型的样式 */
+    .select-wrapper input.select-dropdown {
+      color: black;
+    }
+    /* 设置生成按钮的样式 */
+    .btn {
+      width: 100%;
+      margin-top: 20px;
+    }
+    /* 设置用户名显示的样式 */
+    .username {
+      font-size: 24px;
+      font-weight: bold;
+      color: black;
+      text-align: center;
+      margin-top: 20px;
+    }
+    /* 设置提示的样式 */
+    .tip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 5px;
+    }
+    /* 设置提示图标的样式 */
+    .tip-icon {
+      color: orange;
+      margin-right: 5px;
+    }
+    /* 设置提示文字的样式 */
+    .tip-text {
+      color: gray;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 网页标题 -->
+  <h1>随机用户名生成器</h1>
+  <!-- 网页内容 -->
+  <div class="container">
+    <!-- 选择类型 -->
+    <div class="input-field col s12">
+      <select id="type">
+        <option value="1" selected>英文</option>
+        <option value="2">中文</option>
+        <option value="3">中英混合</option>
+      </select>
+      <label>请选择用户名的类型</label>
+    </div>
+    <!-- 生成按钮 -->
+    <button class="btn waves-effect waves-light" id="generate" type="button" name="action">生成
+      <i class="material-icons right">send</i>
+    </button>
+    <!-- 用户名显示 -->
+    <div class="username" id="username"></div>
+    <!-- 提示 -->
+    <div class="tip">
+      <i class="material-icons tip-icon">info</i>
+      <span class="tip-text">提示：生成的用户名仅供参考，请谨慎使用。</span>
+    </div>
+  </div>
+  <!-- 引入jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- 引入Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- 引入anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <!-- 引入自定义脚本 -->
+  <script>
+    // 初始化选择类型
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+    // 定义生成用户名的函数
+    function generateUsername(type) {
+      // 定义英文字符的数组
+      var englishChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      // 定义中文字符的范围
+      var chineseStart = 0x4E00; // 中文起始编码
+      var chineseEnd = 0x9FA5; // 中文结束编码
+      var chineseRange = chineseEnd - chineseStart + 1; // 中文编码范围
+      // 定义用户名的长度
+      var length = 8;
+      // 定义用户名的变量
+      var username = "";
+      // 根据类型生成用户名
+      switch (type) {
+        case "1": // 英文
+          for (var i = 0; i < length; i++) {
+            // 随机选择一个英文字符
+            var index = Math.floor(Math.random() * englishChars.length);
+            var char = englishChars[index];
+            // 添加到用户名中
+            username += char;
+          }
+          break;
+        case "2": // 中文
+          for (var i = 0; i < length; i++) {
+            // 随机生成一个中文编码
+            var code = Math.floor(Math.random() * chineseRange + chineseStart);
+            // 转换为中文字符
+            var char = String.fromCharCode(code);
+            // 添加到用户名中
+            username += char;
+          }
+          break;
+        case "3": // 中英混合
+          for (var i = 0; i < length; i++) {
+            // 随机选择是英文还是中文
+            var choice = Math.random() < 0.5 ? "english" : "chinese";
+            // 根据选择生成字符
+            if (choice == "english") {
+              // 随机选择一个英文字符
+              var index = Math.floor(Math.random() * englishChars.length);
+              var char = englishChars[index];
+            } else {
+              // 随机生成一个中文编码
+              var code = Math.floor(Math.random() * chineseRange + chineseStart);
+              // 转换为中文字符
+              var char = String.fromCharCode(code);
+            }
+            // 添加到用户名中
+            username += char;
+          }
+          break;
+      }
+      // 返回用户名
+      return username;
+    }
+    // 获取生成按钮
+    var generateButton = document.getElementById("generate");
+    // 获取用户名显示
+    var usernameDisplay = document.getElementById("username");
+    // 为生成按钮添加点击事件
+    generateButton.addEventListener("click", function() {
+      // 获取选择类型的值
+      var type = document.getElementById("type").value;
+      // 调用生成用户名的函数
+      var username = generateUsername(type);
+      // 显示用户名
+      usernameDisplay.innerHTML = username;
+      // 添加非线性动画
+      anime({
+        targets: usernameDisplay,
+        scale: [0, 1],
+        duration: 1000,
+        easing: 'easeOutElastic(1, .8)'
+      });
+    });
+  </script>
+</body>
+</html>
