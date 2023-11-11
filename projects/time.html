@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,7 @@
     <link rel="shortcut icon" href="images/clock.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
     <style>
         /* 样式整个页面的背景颜色和字体颜色 */
         body {
@@ -69,6 +69,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             100% {
                 opacity: 1;
                 transform: translateY(0);
@@ -76,27 +77,32 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="center-align">世界时钟</h1>
 
         <!-- 选择时区的下拉菜单 -->
-        <div class="input-field">
-            <select id="timezoneSelector">
-                <option value="Asia/Shanghai">北京时间</option>
-                <option value="America/New_York">纽约时间</option>
-                <option value="Europe/London">伦敦时间</option>
-                <!-- 添加更多时区选项 -->
-            </select>
-            <label>选择时区</label>
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <select id="timezoneSelector">
+                    <option value="Asia/Shanghai">北京时间</option>
+                    <option value="America/New_York">纽约时间</option>
+                    <option value="Europe/London">伦敦时间</option>
+                    <option value="America/Los_Angeles">洛杉矶时间</option>
+                    <option value="Australia/Sydney">悉尼时间</option>
+                    <!-- 添加更多时区选项 -->
+                </select>
+                <label>选择时区</label>
+            </div>
+            <div class="input-field col s12 m6">
+                <select id="timeFormatSelector">
+                    <option value="12">12小时制</option>
+                    <option value="24" selected>24小时制</option>
+                </select>
+                <label>选择时间制式</label>
+            </div>
         </div>
-    <div class="input-field">
-    <select id="timeFormatSelector">
-        <option value="12">12小时制</option>
-        <option value="24" selected>24小时制</option>
-    </select>
-    <label>选择时间制式</label>
-</div>
 
         <!-- 显示时间的卡片 -->
         <div class="card">
@@ -155,5 +161,5 @@
 
     </script>
 </body>
+
 </html>
-``
