@@ -136,7 +136,7 @@
             const selectedTimeFormat = $('#timeFormatSelector').val(); // 获取用户选择的时间制式
             let options = {
                 timeZone: selectedTimezone,
-                hour12: selectedTimeFormat === "12", // 根据用户选择设置小时制式
+                hour12: selectedTimeFormat === "24", // 根据用户选择设置小时制式
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
