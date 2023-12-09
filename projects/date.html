@@ -130,26 +130,28 @@
       var targetMonth = target.getMonth() + 1;
       var targetDay = target.getDate();
       // 返回结果字符串
-      return "今天是" + year + "年" + month + "月" + day + "日，" + interval + "天后是" + targetYear + "年" + targetMonth + "月" + targetDay + "日。";
+      return `今天是${year}年${month}月${day}日，
+        ${interval < 0 ? '<br>' : ''}<span style="font-weight: bold; font-size: 24px;">${Math.abs(interval)}天后是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
     }
 
     // 更新并显示当前日期
     function updateCurrentDate() {
       var currentDateElement = $("#currentDate");
       var today = new Date();
-      var formattedDate = today.getFullYear() + "年" + (today.getMonth() + 1) + "月" + today.getDate() + "日";
-      currentDateElement.text("今天是" + formattedDate);
+      var formattedDate = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+      currentDateElement.html(`今天是${formattedDate}`);
     }
 
     // 定义一个函数，用于显示结果
     function showResult(result) {
       // 获取结果元素
       var resultElement = $("#result");
-      // 设置结果元素的文本
-      resultElement.text(result);
+      // 设置结果元素的 HTML
+      resultElement.html(result);
       // 显示结果元素，并添加动画效果
       resultElement.show().addClass("animated bounceIn");
     }
+
     // 定义一个函数，用于隐藏结果
     function hideResult() {
       // 获取结果元素
@@ -157,6 +159,7 @@
       // 隐藏结果元素，并移除动画效果
       resultElement.hide().removeClass("animated bounceIn");
     }
+
     // 当网页加载完成后，执行以下代码
     $(document).ready(function() {
       // 更新并显示当前日期
