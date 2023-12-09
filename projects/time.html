@@ -20,20 +20,30 @@
     h1 {
       font-family: "Roboto", "Helvetica", "Arial", sans-serif;
       font-weight: 300;
-      font-size: 36px;
+      font-size: 48px; /* 放大整体文字 */
       text-align: center;
       margin-top: 50px;
+      margin-bottom: 20px;
+    }
+    /* 设置当前日期的样式 */
+    .current-date {
+      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+      font-weight: 400;
+      font-size: 24px; /* 放大整体文字 */
+      text-align: center;
       margin-bottom: 20px;
     }
     /* 设置输入框的样式 */
     .input {
       width: 300px;
       margin: 0 auto;
+      text-align: center; /* 居中输入框 */
     }
     /* 设置按钮的样式 */
     .button {
       width: 300px;
       margin: 20px auto;
+      text-align: center; /* 居中按钮 */
     }
     /* 设置结果的样式 */
     .result {
@@ -83,6 +93,8 @@
 <body>
   <!-- 网页的标题 -->
   <h1>日期计算网页</h1>
+  <!-- 显示当前日期 -->
+  <div class="current-date" id="currentDate"></div>
   <!-- 网页的输入框 -->
   <div class="input">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -120,6 +132,15 @@
       // 返回结果字符串
       return "今天是" + year + "年" + month + "月" + day + "日，" + interval + "天后是" + targetYear + "年" + targetMonth + "月" + targetDay + "日。";
     }
+
+    // 更新并显示当前日期
+    function updateCurrentDate() {
+      var currentDateElement = $("#currentDate");
+      var today = new Date();
+      var formattedDate = today.getFullYear() + "年" + (today.getMonth() + 1) + "月" + today.getDate() + "日";
+      currentDateElement.text("今天是" + formattedDate);
+    }
+
     // 定义一个函数，用于显示结果
     function showResult(result) {
       // 获取结果元素
@@ -138,6 +159,9 @@
     }
     // 当网页加载完成后，执行以下代码
     $(document).ready(function() {
+      // 更新并显示当前日期
+      updateCurrentDate();
+
       // 获取计算按钮
       var calculateButton = $("#calculate");
       // 为计算按钮绑定点击事件
