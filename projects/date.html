@@ -131,7 +131,8 @@
       var targetDay = target.getDate();
       // 返回结果字符串
       return `今天是${year}年${month}月${day}日，
-        ${interval < 0 ? '<br>' : ''}<span style="font-weight: bold; font-size: 24px;">${Math.abs(interval)}天后是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
+        ${interval < 0 ? '<br>' : ''}
+        <span style="font-weight: bold; font-size: 24px; display: block;">${Math.abs(interval)}天后是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
     }
 
     // 更新并显示当前日期
