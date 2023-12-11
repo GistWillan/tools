@@ -59,9 +59,14 @@
             color: #007acc;
         }
 
-        #password {
+        /* 生成密码容器样式 */
+        .password-container {
             font-size: 24px;
             margin-top: 20px;
+            white-space: pre-wrap; /* 允许换行，保留空白符 */
+            word-wrap: break-word; /* 在单词内部断行 */
+            overflow-wrap: break-word; /* 兼容旧版本浏览器 */
+            max-width: 100%; /* 宽度不超过父容器 */
         }
 
         #copyButton {
@@ -98,13 +103,21 @@
 
         <!-- 选择密码长度 -->
         <div class="input-field">
-            <select id="passwordLength">
+            <select id="passwordLength" onchange="checkCustomLength()">
                 <option value="8">8个字符</option>
                 <option value="12">12个字符</option>
                 <option value="16">16个字符</option>
                 <option value="20">20个字符</option>
+                <option value="custom">自定义长度</option>
             </select>
             <label>选择密码长度</label>
+        </div>
+
+        <!-- 自定义密码长度输入框 -->
+        <div id="customLengthInput" class="input-field tooltipped" data-position="top" data-tooltip="输入自定义密码长度" style="display:none;">
+            <input type="number" id="customLength" min="1" max="256" placeholder="自定义长度">
+            <span class="helper-text" data-error="请输入有效数字"></span>
+            <p class="helper-text">推荐不要超过256位数字。</p>
         </div>
 
         <!-- 选择字符类型 -->
@@ -146,7 +159,7 @@
 
         <!-- 生成密码按钮 -->
         <div style="text-align: center;">
-            <button class="btn waves-effect waves-light" onclick="generatePassword()">
+            <button id="generateButton" class="btn waves-effect waves-light tooltipped" data-position="top" data-tooltip="生成密码" onclick="generatePassword()">
                 生成密码
                 <i class="material-icons right">calculate</i>
             </button>
@@ -154,7 +167,7 @@
 
         <!-- 显示生成的密码 -->
         <div class="card">
-            <p id="password"></p>
+            <div id="password" class="password-container"></div>
             <button id="copyButton" onclick="copyPassword()">复制密码</button>
         </div>
     </div>
@@ -162,8 +175,6 @@
     <div style="text-align: center; background-color: #ff0000; color: #fff; padding: 10px;">
         提示：生成的密码可能存在安全隐患，请谨慎使用！
     </div>
-
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -173,15 +184,22 @@
             document.querySelector('.container').style.opacity = 1;
         });
 
-        // 初始化选择框
+        // 初始化选择框和提示框
         document.addEventListener('DOMContentLoaded', function () {
-            const passwordLengthElems = document.querySelectorAll('select');
-            const passwordLengthInstances = M.FormSelect.init(passwordLengthElems);
+            const selects = document.querySelectorAll('select');
+            const selectInstances = M.FormSelect.init(selects);
+
+            const tooltips = document.querySelectorAll('.tooltipped');
+            const tooltipInstances = M.Tooltip.init(tooltips);
         });
 
         // 生成密码函数
         function generatePassword() {
-            const passwordLength = document.getElementById('passwordLength').value;
+            const passwordLengthSelect = document.getElementById('passwordLength');
+            const passwordLength = passwordLengthSelect.value === 'custom'
+                ? document.getElementById('customLength').value
+                : passwordLengthSelect.value;
+
             const includeUppercase = document.getElementById('includeUppercase').checked;
             const includeLowercase = document.getElementById('includeLowercase').checked;
             const includeNumbers = document.getElementById('includeNumbers').checked;
@@ -229,6 +247,23 @@
             document.body.removeChild(textarea);
             alert('密码已复制到剪贴板！');
         }
+
+        // 检查是否选择了自定义密码长度
+        function checkCustomLength() {
+            const passwordLengthSelect = document.getElementById('passwordLength');
+            const customLengthInput = document.getElementById('customLengthInput');
+
+            if (passwordLengthSelect.value === 'custom') {
+                customLengthInput.style.display = 'block';
+            } else {
+                customLengthInput.style.display = 'none';
+            }
+        }
+
+        // 页面加载后执行一次检查
+        document.addEventListener('DOMContentLoaded', function () {
+            checkCustomLength();
+        });
     </script>
 </body>
 </html>
