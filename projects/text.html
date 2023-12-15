@@ -37,6 +37,9 @@
         #result {
             font-weight: bold;
         }
+        #copyButton {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -143,6 +146,7 @@
                 <div class="card-panel">
                     <h5>结果</h5>
                     <p id="result">这里将显示加密或解密后的结果。</p>
+                    <button id="copyButton" class="btn waves-effect waves-light" onclick="copyToClipboard()">复制</button>
                 </div>
             </div>
         </div>
@@ -224,6 +228,21 @@
                 decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
             }
             document.getElementById('result').textContent = `解密结果: ${decryptedText}`;
+        }
+        function toggleCopyButton(show) {
+            const copyButton = document.getElementById('copyButton');
+            copyButton.style.display = show ? 'inline-block' : 'none';
+        }
+
+        function copyToClipboard() {
+            const resultText = document.getElementById('result').textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = resultText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            M.toast({html: '结果已复制到剪贴板'});
         }
     </script>
 </body>
