@@ -5,15 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文字加密解密</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
+     crossorigin="anonymous"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <style>
+
         body {
             font-family: Arial, sans-serif;
         }
         .container {
             margin-top: 20px;
         }
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         @keyframes fade-in {
             from {
                 opacity: 0;
@@ -24,7 +34,18 @@
                 transform: translateY(0);
             }
         }
+    }
         /* 添加动画效果 */
+    .card-panel {
+        padding: 20px;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        animation: fade-in 0.5s ease;
+    }
+    /* 悬停时应用阴影和缩放动画 */
+    .card-panel:hover {
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        transform: scale(1.02);
+    }
         .card-panel {
             padding: 20px;
             transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -66,6 +87,8 @@
                     </p>
                     <p>
                         <label>
+                            <input name="encryptionType" type="radio" value="sha256">
+                            <span>SHA-256</span>
                             <input name="encryptionType" type="radio" value="sha1">
                             <span>SHA-1</span>
                         </label>
@@ -89,30 +112,12 @@
                         </label>
                     </p>
                     <button class="btn waves-effect waves-light" onclick="encrypt()">加密</button>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card-panel">
-                    <h5>解密</h5>
-                    <div class="input-field">
-                        <input type="text" id="decryptInput">
-                        <label for="decryptInput">输入要解密的文本</label>
-                    </div>
-                    <p>选择解密方式:</p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="base64" checked>
-                            <span>Base64</span>
-                        </label>
+@@ -96,8 +112,26 @@ <h5>解密</h5>
                     </p>
                     <p>
                         <label>
-                            <input name="decryptionType" type="radio" value="url">
-                            <span>URL (UTF8)</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
+                            <input name="decryptionType" type="radio" value="sha256">
+                            <span>SHA-256</span>
                             <input name="decryptionType" type="radio" value="sha1">
                             <span>SHA-1</span>
                         </label>
@@ -136,41 +141,7 @@
                         </label>
                     </p>
                     <button class="btn waves-effect waves-light" onclick="decrypt()">解密</button>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5>结果</h5>
-                    <p id="result">这里将显示加密或解密后的结果。</p>
-                    <button id="copyButton" class="btn waves-effect waves-light" data-clipboard-target="#result" style="display: none;">复制</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        // 初始化 Clipboard.js
-        new ClipboardJS('#copyButton');
-
-        function showCopyButton() {
-            const resultText = document.getElementById('result').textContent.trim();
-            const copyButton = document.getElementById('copyButton');
-
-            if (resultText !== '') {
-                copyButton.style.display = 'block';
-            } else {
-                copyButton.style.display = 'none';
-            }
-        }
-
-        // 调用 showCopyButton() 函数以确保在页面加载时检查结果并显示/隐藏复制按钮
-        showCopyButton();
-        function utf8ToBase64(str) {
-            const encoder = new TextEncoder('utf-8');
+@@ -121,6 +155,7 @@ <h5>结果</h5>
             const data = encoder.encode(str);
             return btoa(String.fromCharCode(...data));
         }
@@ -178,9 +149,7 @@
         function base64ToUtf8(str) {
             const decoder = new TextDecoder('utf-8');
             const data = atob(str);
-            const dataArray = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                dataArray[i] = data.charCodeAt(i);
+@@ -130,23 +165,38 @@ <h5>结果</h5>
             }
             return decoder.decode(dataArray);
         }
@@ -194,6 +163,8 @@
                 encryptedText = utf8ToBase64(inputText);
             } else if (encryptionType === 'url') {
                 encryptedText = encodeURIComponent(inputText);
+            } else if (encryptionType === 'sha256') {
+                encryptedText = CryptoJS.SHA256(inputText).toString();
             } else if (encryptionType === 'sha1') {
                 encryptedText = CryptoJS.SHA1(inputText).toString();
             } else if (encryptionType === 'md5') {
@@ -219,15 +190,12 @@
             if (decryptionType === 'base64') {
                 try {
                     decryptedText = base64ToUtf8(inputText);
-                } catch (error) {
-                    decryptedText = '解密失败，请检查输入文本是否有效的Base64字符串。';
-                }
-            } else if (decryptionType === 'url') {
-                try {
-                    decryptedText = decodeURIComponent(inputText);
+@@ -159,8 +209,19 @@ <h5>结果</h5>
                 } catch (error) {
                     decryptedText = '解密失败，请检查输入文本是否有效的URL编码字符串。';
                 }
+            } else if (decryptionType === 'sha256') {
+                decryptedText = 'SHA-256 不支持解密操作。';
             } else if (decryptionType === 'sha1') {
                 decryptedText = 'SHA-1 不支持解密操作。';
             } else if (decryptionType === 'md5') {
