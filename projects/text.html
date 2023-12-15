@@ -6,6 +6,7 @@
     <title>文字加密解密</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -143,6 +144,7 @@
                 <div class="card-panel">
                     <h5>结果</h5>
                     <p id="result">这里将显示加密或解密后的结果。</p>
+                    <button id="copyButton" class="btn waves-effect waves-light" data-clipboard-target="#result" style="display: none;">复制</button>
                 </div>
             </div>
         </div>
@@ -150,6 +152,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        // 初始化 Clipboard.js
+        new ClipboardJS('#copyButton');
+
+        function showCopyButton() {
+            const resultText = document.getElementById('result').textContent.trim();
+            const copyButton = document.getElementById('copyButton');
+
+            if (resultText !== '') {
+                copyButton.style.display = 'block';
+            } else {
+                copyButton.style.display = 'none';
+            }
+        }
+
+        // 调用 showCopyButton() 函数以确保在页面加载时检查结果并显示/隐藏复制按钮
+        showCopyButton();
         function utf8ToBase64(str) {
             const encoder = new TextEncoder('utf-8');
             const data = encoder.encode(str);
