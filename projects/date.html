@@ -123,16 +123,27 @@
       var year = today.getFullYear();
       var month = today.getMonth() + 1;
       var day = today.getDate();
+      
       // 根据间隔日期，计算目标日期
       var target = new Date(today.getTime() + interval * 24 * 60 * 60 * 1000);
+      
       // 获取目标日期的年月日
       var targetYear = target.getFullYear();
       var targetMonth = target.getMonth() + 1;
       var targetDay = target.getDate();
+      
       // 返回结果字符串
-      return `今天是${year}年${month}月${day}日，
-        ${interval < 0 ? '<br>' : ''}
-        <span style="font-weight: bold; font-size: 24px; display: block;">${Math.abs(interval)}天后是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
+      var resultString = `今天是${year}年${month}月${day}日，`;
+
+      // 判断interval是否为负数
+      if (interval < 0) {
+        resultString += '<br><span style="font-weight: bold; font-size: 24px; display: block;">' +
+                        `${Math.abs(interval)}天前是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
+      } else {
+        resultString += `<span style="font-weight: bold; font-size: 24px; display: block;">${interval}天后是${targetYear}年${targetMonth}月${targetDay}日。</span>`;
+      }
+
+      return resultString;
     }
 
     // 更新并显示当前日期
