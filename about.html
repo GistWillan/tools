@@ -119,7 +119,8 @@
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .portfolio-item img {
@@ -128,7 +129,8 @@
         }
 
         .portfolio-item a:hover {
-            transform: scale(1.1) rotate(3deg);
+            transform: scale(1.1);
+            opacity: 0.9;
         }
 
         /* 媒体查询 */
