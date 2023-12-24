@@ -1,138 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>关于我们</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <link rel="shortcut icon" href="images/about.png">
-  <style>
-    /* 添加关于页面的样式 */
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="shortcut icon" href="images/about.png">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
 
-    .container {
-      max-width: 800px; /* 设置最大宽度 */
-      min-height: 100vh; /* 设置最小高度 */
-      margin: 0 auto; /* 水平居中 */
-      padding: 40px; /* 增加内边距 */
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      opacity: 0; /* 初始不可见 */
-      animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-    }
+        .container {
+            max-width: 800px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            opacity: 0;
+            animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
 
-    /* 添加苹果风格的非线性入场动画 */
-    @keyframes fade-in {
-      0% {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
 
-    @keyframes pop-in {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* 其他样式保持不变 */
-    .header {
-      text-align: center;
-      padding: 20px 0;
-    }
+        @keyframes pop-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
 
-    .header h1 {
-      color: #007acc;
-      font-size: 24px; /* 缩小标题字体 */
-      margin-bottom: 10px;
-    }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
-    .header p {
-      color: #777;
-      font-size: 16px; /* 缩小正文字体 */
-    }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
 
-    .about-content {
-      margin-top: 20px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background-color: #fff;
-    }
+        .header h1 {
+            color: #007acc;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-    .about-content h2 {
-      color: #333;
-      font-size: 20px; /* 缩小子标题字体 */
-      margin-bottom: 10px;
-    }
+        .header p {
+            color: #777;
+            font-size: 16px;
+        }
 
-    .about-content p {
-      color: #777;
-      font-size: 16px;
-    }
+        .about-content {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
 
-    .return-button {
-      text-align: center;
-      margin-top: 20px;
-    }
+        .about-content h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-    .return-button a {
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-      font-size: 16px; /* 缩小返回按钮字体 */
-    }
+        .about-content p {
+            color: #777;
+            font-size: 16px;
+        }
 
-    /* 媒体查询用于适配移动设备 */
-    @media only screen and (max-width: 768px) {
-      .container {
-        padding: 20px; /* 在小屏幕上减少内边距 */
-      }
-      .header h1 {
-        font-size: 20px; /* 在小屏幕上缩小标题字体 */
-      }
-      .header p {
-        font-size: 14px; /* 在小屏幕上缩小正文字体 */
-      }
-      .about-content h2 {
-        font-size: 18px; /* 在小屏幕上缩小子标题字体 */
-      }
-      .about-content p {
-        font-size: 14px; /* 在小屏幕上缩小正文字体 */
-      }
-      .return-button a {
-        font-size: 14px; /* 在小屏幕上缩小返回按钮字体 */
-      }
-    }
-  </style>
+        .return-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .return-button a {
+            text-decoration: none;
+            color: #007acc;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* 新增作品集样式 */
+        .portfolio {
+            margin-top: 40px;
+        }
+
+        .portfolio h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-item {
+            margin-bottom: 20px;
+            overflow: hidden; /* 用于遮盖链接动画溢出 */
+        }
+
+        .portfolio-item a {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            transition: transform 0.3s ease-out;
+        }
+
+        .portfolio-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .portfolio-item a:hover {
+            transform: scale(1.1);
+        }
+
+        /* 媒体查询 */
+        @media only screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .about-content h2 {
+                font-size: 18px;
+            }
+
+            .about-content p {
+                font-size: 14px;
+            }
+
+            .return-button a {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>关于我</h1>
-      <p>欢迎了解更多关于我的信息。</p>
+    <div class="container">
+        <div class="header">
+            <h1>关于我</h1>
+            <p>欢迎了解更多关于我的信息。</p>
+        </div>
+        <div class="about-content">
+            <h2>自我介绍</h2>
+            <p>我叫GistWillan，物联网技术应用专业。我对计算机的兴趣始于我小时候第一次接触计算机，那时我被计算机的神奇和潜力深深吸引。从那以后，我就一直在不断深挖这个领域的奥秘。</p>
+            <p>在校期间，我不仅仅是一个普通的学生，我也是一个积极的自学者和技术爱好者。除了参加课堂上的学习，我还花了很多时间研究计算机领域的各种主题，包括算法与数据结构、人工智能、网络安全等等。我还参加了各种编程比赛和项目，不仅仅是为了提高自己的技能，还因为我发现通过实际项目学习更为深入和有趣。</p>
+        </div>
+
+        <!-- 新增作品集部分 -->
+        <div class="portfolio">
+            <h2>我的其它网站</h2>
+            <div class="portfolio-item">
+                <a href="https://gistwillanblog.top">
+                    <img src="images/blog.png" alt="个人博客">
+                </a>
+            </div>
+            <div class="portfolio-item">
+                <a href="https://study.gistwillanblog.top">
+                    <img src="images/study.png" alt="学习笔记">
+                </a>
+            </div>
+            <div class="portfolio-item">
+                <a href="https://index.gistwillanblog.top">
+                    <img src="images/indexweb.png" alt="引导页">
+                </a>
+            </div>
+            <!-- 可以根据需要添加更多作品集项目 -->
+        </div>
+
+        <div class="return-button">
+            <a href="index.html">返回</a>
+        </div>
     </div>
-    <div class="about-content">
-      <h2>自我介绍</h2>
-      <p>我叫GistWillan，物联网技术应用专业。我对计算机的兴趣始于我小时候第一次接触计算机，那时我被计算机的神奇和潜力深深吸引。从那以后，我就一直在不断深挖这个领域的奥秘。</p>
-      <p>在校期间，我不仅仅是一个普通的学生，我也是一个积极的自学者和技术爱好者。除了参加课堂上的学习，我还花了很多时间研究计算机领域的各种主题，包括算法与数据结构、人工智能、网络安全等等。我还参加了各种编程比赛和项目，不仅仅是为了提高自己的技能，还因为我发现通过实际项目学习更为深入和有趣。</p>
-    </div>
-    <div class="return-button">
-      <a href="index.html">返回</a>
-    </div>
-  </div>
 </body>
+
 </html>
