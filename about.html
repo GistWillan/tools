@@ -112,12 +112,12 @@
         .portfolio-item {
             margin-bottom: 20px;
             overflow: hidden;
-            position: relative; /* 添加相对定位，使文字定位相对于图片 */
+            position: relative;
         }
 
         .portfolio-item-caption {
             position: absolute;
-            bottom: -25px; /* 调整这里的值，使文字再往上移动 */
+            bottom: 0;
             left: 0;
             width: 100%;
             text-align: center;
@@ -126,14 +126,26 @@
             color: #fff;
             opacity: 0;
             transition: opacity 0.3s ease;
+            transform: translateY(100%); /* 文字默认在底部，不显示 */
         }
 
 
         .portfolio-item:hover .portfolio-item-caption {
-            opacity: 1; /* 鼠标悬停时显示文字 */
+            opacity: 1;
+            transform: translateY(0); /* 鼠标悬停时显示文字 */
         }
 
         .portfolio-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+            opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .portfolio-item img {
+            transform: scale(1.1);
+            opacity: 0.9;
             max-width: 100%;
             height: auto;
             display: block; /* 解决图片底部空白问题 */
