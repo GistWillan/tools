@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关于我</title>
+    <title>关于我们</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="shortcut icon" href="images/about.png">
     <style>
@@ -117,56 +117,32 @@
 
         .portfolio-item-caption {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
             padding: 10px;
             background-color: rgba(0, 0, 0, 0.7);
             color: #fff;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            transform: translateY(100%); /* 文字默认在底部，不显示 */
+            transition: opacity 0.3s ease, font-size 0.3s ease;
+            font-size: 16px;
         }
-
 
         .portfolio-item:hover .portfolio-item-caption {
             opacity: 1;
-            transform: translateY(0); /* 鼠标悬停时显示文字 */
+            font-size: 20px;
         }
 
         .portfolio-item img {
             max-width: 100%;
             height: auto;
             display: block;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-            opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .portfolio-item img {
-            transform: scale(1.1);
-            opacity: 0.9;
-            max-width: 100%;
-            height: auto;
-            display: block; /* 解决图片底部空白问题 */
-        }
-
-
-        .portfolio-item a {
-            display: block;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
                         opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .portfolio-item img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .portfolio-item a:hover {
+        .portfolio-item:hover img {
             transform: scale(1.1);
             opacity: 0.9;
         }
@@ -215,24 +191,24 @@
         <!-- 新增作品集部分 -->
         <div class="portfolio">
             <h2>我的其它网站</h2>
-        <div class="portfolio-item">
-            <a href="https://gistwillanblog.top">
-                <img src="images/blog.png" alt="个人博客">
-                <div class="portfolio-item-caption">个人博客</div>
-            </a>
-        </div>
-        <div class="portfolio-item">
-            <a href="https://study.gistwillanblog.top">
-                <img src="images/study.png" alt="学习笔记">
-                <div class="portfolio-item-caption">学习笔记</div>
-            </a>
-        </div>
-        <div class="portfolio-item">
-            <a href="https://index.gistwillanblog.top">
-                <img src="images/indexweb.png" alt="引导页">
-                <div class="portfolio-item-caption">引导页</div>
-            </a>
-        </div>
+            <div class="portfolio-item">
+                <a href="https://gistwillanblog.top">
+                    <img src="images/blog.png" alt="个人博客">
+                    <div class="portfolio-item-caption">个人博客</div>
+                </a>
+            </div>
+            <div class="portfolio-item">
+                <a href="https://study.gistwillanblog.top">
+                    <img src="images/study.png" alt="学习笔记">
+                    <div class="portfolio-item-caption">学习笔记</div>
+                </a>
+            </div>
+            <div class="portfolio-item">
+                <a href="https://index.gistwillanblog.top">
+                    <img src="images/indexweb.png" alt="引导页">
+                    <div class="portfolio-item-caption">引导页</div>
+                </a>
+            </div>
             <!-- 可以根据需要添加更多作品集项目 -->
         </div>
 
