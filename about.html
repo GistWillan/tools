@@ -117,16 +117,17 @@
 
         .portfolio-item-caption {
             position: absolute;
-            bottom: 0;
+            bottom: -20px; /* 调整这里的值，使文字再往上移动 */
             left: 0;
             width: 100%;
             text-align: center;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+            background-color: rgba(0, 0, 0, 0.7);
             color: #fff;
-            opacity: 0; /* 默认隐藏，hover时显示 */
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
+
 
         .portfolio-item:hover .portfolio-item-caption {
             opacity: 1; /* 鼠标悬停时显示文字 */
