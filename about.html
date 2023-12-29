@@ -138,6 +138,11 @@
             max-width: 100%;
             height: auto;
             display: block;
+            transition: filter 0.3s ease; /* 添加模糊效果的过渡动画 */
+        }
+
+        .portfolio-item:hover img {
+            filter: blur(5px); /* 模糊效果 */
         }
 
         /* 媒体查询 */
