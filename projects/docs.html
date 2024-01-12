@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>在线文档编辑器</title>
+  <!-- 使用Material Design样式 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+  <div class="container">
+    <h3>在线文档编辑器</h3>
+    
+    <!-- 文档编辑区域 -->
+    <div class="row">
+      <div class="col s12">
+        <textarea id="document-content" class="materialize-textarea"></textarea>
+      </div>
+    </div>
+
+    <!-- 下载按钮 -->
+    <div class="row">
+      <div class="col s12">
+        <a id="download-button" class="waves-effect waves-light btn">下载文档</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 使用Material Design脚本 -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <script>
+    // 初始化Materialize组件
+    document.addEventListener('DOMContentLoaded', function() {
+      M.AutoInit();
+    });
+
+    // 下载按钮点击事件
+    document.getElementById('download-button').addEventListener('click', function() {
+      // 获取文档内容
+      var documentContent = document.getElementById('document-content').value;
+
+      // 创建Blob对象
+      var blob = new Blob([documentContent], { type: 'text/plain' });
+
+      // 创建下载链接
+      var downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.download = 'document.txt';
+
+      // 模拟点击下载链接
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      // 清理
+      document.body.removeChild(downloadLink);
+    });
+  </script>
+</body>
+</html>
