@@ -4,17 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>在线文档编辑器</title>
-  <!-- 使用Material Design样式 -->
+  <!-- 使用Materialize样式 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .btn {
+      width: 100%;
+    }
+    .textarea-container {
+      position: relative;
+    }
+    .textarea-container .character-counter {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: gray;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h3>在线文档编辑器</h3>
+    <h3 class="center-align">在线文档编辑器</h3>
     
     <!-- 文档编辑区域 -->
     <div class="row">
-      <div class="col s12">
-        <textarea id="document-content" class="materialize-textarea"></textarea>
+      <div class="col s12 textarea-container">
+        <textarea id="document-content" class="materialize-textarea" data-length="1000"></textarea>
+        <span class="character-counter"></span>
       </div>
     </div>
 
@@ -26,7 +55,7 @@
     </div>
   </div>
 
-  <!-- 使用Material Design脚本 -->
+  <!-- 使用Materialize脚本 -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
@@ -34,6 +63,9 @@
     // 初始化Materialize组件
     document.addEventListener('DOMContentLoaded', function() {
       M.AutoInit();
+
+      // 初始化字符计数器
+      $('textarea#document-content').characterCounter();
     });
 
     // 下载按钮点击事件
