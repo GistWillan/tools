@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
     <style>
         body {
             background-color: rgba(240, 240, 240, 0); /* 初始背景色透明 */
@@ -76,6 +75,27 @@
             margin-top: 20px;
             text-align: center;
         }
+
+        #history {
+            margin-top: 30px;
+        }
+
+        #history h5 {
+            color: #007acc;
+        }
+
+        #historyList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #historyList li {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -113,6 +133,20 @@
                 </button>
             </div>
         </div>
+
+        <!-- 历史记录开关 -->
+        <div style="margin-top: 20px;">
+            <label>
+                <input type="checkbox" id="historySwitch" />
+                <span>启用历史记录</span>
+            </label>
+        </div>
+
+        <!-- 随机数历史记录 -->
+        <div id="history">
+            <h5>历史记录</h5>
+            <ul id="historyList"></ul>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -122,6 +156,7 @@
         function generateRandomNumber() {
             const minValue = parseInt(document.getElementById('minValue').value);
             const maxValue = parseInt(document.getElementById('maxValue').value);
+            const historySwitch = document.getElementById('historySwitch').checked;
 
             if (isNaN(minValue) || isNaN(maxValue)) {
                 alert('请输入有效的最小值和最大值。');
@@ -131,9 +166,17 @@
             const randomNum = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
             const randomNumberElement = document.getElementById('randomNumber');
             const copyButton = document.getElementById('copyButton');
+            const historyList = document.getElementById('historyList');
 
             randomNumberElement.textContent = `随机数：${randomNum}`;
             copyButton.style.display = 'block'; // 显示复制按钮
+
+            if (historySwitch) {
+                // 添加历史记录
+                const historyItem = document.createElement('li');
+                historyItem.textContent = `随机数：${randomNum}`;
+                historyList.appendChild(historyItem);
+            }
 
             // 添加渐入动画的类
             setTimeout(function() {
