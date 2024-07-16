@@ -22,7 +22,7 @@
 - [剪切板文本管理器](projects/pasteboard.html)：管理剪切文本。
 - [Markdown文本编辑器](projects/markdown.html): 可保存以及预览Markdown文本
 - [Windows11蓝屏代码参考](projects/bluescreen.html)：常见蓝屏代码参考表。
-- [随机用户名生成器](projects/username.html):生成随机用户名。
+- [随机用户名生成器](projects/username.html)：生成随机用户名。
 
 ## 关于我
 
