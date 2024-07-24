@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GistWillan的在线工具站点</title>
   <link rel="shortcut icon" href="images/index.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -17,17 +17,18 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      opacity: 0;
+      animation: fade-in 1s ease-out forwards;
     }
 
     .container {
       max-width: 800px;
-      margin: 0;
+      margin: 20px;
       padding: 20px;
       background-color: #fff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       border-radius: 8px;
-      opacity: 0;
-      animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+      animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
       transform-origin: center bottom;
     }
 
@@ -45,6 +46,7 @@
     .header p {
       color: #777;
       font-size: 18px;
+      margin: 5px 0;
     }
 
     .projects {
@@ -53,9 +55,9 @@
 
     .project-item {
       margin: 10px 0;
-      padding: 10px;
+      padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       background-color: #fff;
       transition: background-color 0.3s ease, transform 0.3s ease;
       transform-origin: center bottom;
@@ -70,77 +72,56 @@
       color: #007acc;
       text-decoration: none;
       font-size: 20px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 5px;
-      background-color: transparent;
+      transition: color 0.3s ease;
     }
 
     .project-link:hover {
-      background-color: #f0f0f0;
-      color: #007acc;
+      color: #005ea6;
     }
 
     .footer {
       text-align: center;
       margin-top: 20px;
       color: #888;
-      opacity: 0;
-      animation: fade-in 0.5s ease-out forwards;
     }
 
     .footer a {
       text-decoration: none;
       color: #007acc;
       font-weight: bold;
-      margin-left: 10px;
+      margin: 0 10px;
+    }
+
+    .footer a:hover {
+      color: #005ea6;
     }
 
     @keyframes fade-in {
-      0% {
+      from {
         opacity: 0;
         transform: translateY(-20px);
       }
-      100% {
+      to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
     @keyframes pop-in {
-      0% {
+      from {
         opacity: 0;
         transform: scale(0.8);
       }
-      100% {
+      to {
         opacity: 1;
         transform: scale(1);
       }
     }
     
-    /* 移动设备样式 */
     @media screen and (max-width: 768px) {
       .container {
         max-width: 90%;
       }
-    }
-
-    /* 提示文本样式 - 苹果风格动画 */
-    .apple-tooltip {
-      display: none; /* 初始不可见 */
-      position: absolute;
-      background-color: #333;
-      color: white;
-      padding: 5px;
-      border-radius: 4px;
-      transform: translateY(-20px) scale(0.8);
-    }
-
-    /* 显示提示文本 - 苹果风格动画 */
-    .simple-style:hover .apple-tooltip, .test-style:hover .apple-tooltip {
-      display: block; /* 鼠标悬停时显示提示文本 */
-      animation: apple-style-tooltip 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
   </style>
 </head>
@@ -198,7 +179,7 @@
         <a class="project-link" href="projects/morse.html" target="_blank">摩斯电码转换器</a>
       </div>
       <div class="project-item">
-        <a class="project-link" href="projects/tt.html" target="_blank">时间戳转换网页</a>
+        <a class="project-link" href="projects/tt.html" target="_blank">时间戳转换器</a>
       </div>
       <div class="project-item">
         <a class="project-link" href="projects/pasteboard.html" target="_blank">剪切板文本管理器</a>
