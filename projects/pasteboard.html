@@ -11,9 +11,10 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      flex-direction: column;
     }
     .container {
-      max-width: 400px;
+      max-width: 600px; /* 加宽显示区域 */
       padding: 20px;
       background-color: #fff;
       border-radius: 4px;
@@ -29,6 +30,13 @@
         opacity: 1;
         transform: scale(1);
       }
+    }
+    .clear-cache-btn, .download-btn {
+      margin-top: 20px;
+    }
+    .collection-item {
+      resize: vertical; /* 使文本可拉长 */
+      overflow: auto;
     }
   </style>
 </head>
@@ -47,6 +55,12 @@
     <ul class="collection with-header" id="textList">
       <li class="collection-header"><h6>已保存的文本</h6></li>
     </ul>
+  </div>
+  <div class="center-align download-btn">
+    <a id="downloadButton" class="waves-effect waves-light btn blue">下载</a>
+  </div>
+  <div class="center-align clear-cache-btn">
+    <a id="clearCacheButton" class="waves-effect waves-light btn red">清除缓存</a>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -75,6 +89,23 @@
       $(document).on('click', '.delete-button', function() {
         $(this).parent().remove();
         localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
+      });
+
+      // 清除缓存
+      $('#clearCacheButton').click(function() {
+        localStorage.removeItem('savedTexts');
+        $('#textList').html('<li class="collection-header"><h6>已保存的文本</h6></li>');
+      });
+
+      // 下载文本为Excel文件
+      $('#downloadButton').click(function() {
+        var savedTexts = $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', '');
+        var rows = savedTexts.split('</li>').filter(row => row.trim() !== '').map(row => row.replace(/<[^>]+>/g, '').trim());
+        var csvContent = "data:text/csv;charset=utf-8,\uFEFF" + rows.map(row => row.split(' ').join(',')).join('\n'); // 添加BOM头以防止中文乱码
+        var link = document.createElement('a');
+        link.href = encodeURI(csvContent);
+        link.download = 'saved_texts.csv';
+        link.click();
       });
     });
   </script>
