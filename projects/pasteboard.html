@@ -53,11 +53,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     $(document).ready(function() {
+      // 加载已保存的文本
+      if (localStorage.getItem('savedTexts')) {
+        $('#textList').append(localStorage.getItem('savedTexts'));
+      }
+
       $('#saveButton').click(function() {
         var text = $('#text').val();
         if (text.trim() !== '') {
-          $('#textList').append('<li class="collection-item">' + text + '</li>');
+          var date = new Date().toLocaleString();
+          var listItem = '<li class="collection-item">' + text + ' <span class="right">' + date + '</span></li>';
+          $('#textList').append(listItem);
           $('#text').val('');
+
+          // 保存到localStorage
+          localStorage.setItem('savedTexts', $('#textList').html());
         }
       });
     });
