@@ -55,7 +55,7 @@
     $(document).ready(function() {
       // 加载已保存的文本
       if (localStorage.getItem('savedTexts')) {
-        $('#textList').append(localStorage.getItem('savedTexts'));
+        $('#textList').html('<li class="collection-header"><h6>已保存的文本</h6></li>' + localStorage.getItem('savedTexts'));
       }
 
       $('#saveButton').click(function() {
@@ -67,7 +67,7 @@
           $('#text').val('');
 
           // 保存到localStorage
-          localStorage.setItem('savedTexts', $('#textList').html());
+          localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
         }
       });
     });
