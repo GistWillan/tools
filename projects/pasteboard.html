@@ -62,13 +62,19 @@
         var text = $('#text').val();
         if (text.trim() !== '') {
           var date = new Date().toLocaleString();
-          var listItem = '<li class="collection-item">' + text + ' <span class="right">' + date + '</span></li>';
+          var listItem = '<li class="collection-item">' + text + ' <span class="right">' + date + '</span><a href="#" class="secondary-content delete-button"><i class="material-icons">delete</i></a></li>';
           $('#textList').append(listItem);
           $('#text').val('');
 
           // 保存到localStorage
           localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
         }
+      });
+
+      // 删除文本
+      $(document).on('click', '.delete-button', function() {
+        $(this).parent().remove();
+        localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
       });
     });
   </script>
