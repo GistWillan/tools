@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <!-- 新增html2pdf库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Resume Generator</title>
@@ -190,6 +192,11 @@
             <p id="resumeSummary">资深前端开发工程师，拥有5年Web开发经验...</p>
         </div>
     </section>
+    <!-- 在简历预览区添加下载按钮 -->
+    <section class="resume-preview" id="resumePreview">
+        <div class="controls">
+            <button class="download-btn" onclick="downloadPDF()">下载 PDF</button>
+        </div>
 
     <script>
         function generateResume() {
@@ -209,6 +216,61 @@
                 section.classList.add('resume-section');
             });
         }
+         // 新增下载功能
+        function downloadPDF() {
+            const element = document.getElementById('resumePreview');
+            const options = {
+                margin:       12,
+                filename:     'resume.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    letterRendering: true
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf()
+                .set(options)
+                .from(element)
+                .save();
+        }
+    </script>
+
+    <style>
+        /* 新增下载按钮样式 */
+        .controls {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 2px 8px rgba(0,122,255,0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+            opacity: 0.9;
+        }
+    </style>
     </script>
 </body>
 </html>
