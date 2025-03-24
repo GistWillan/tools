@@ -38,16 +38,32 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1 class="header center-align">单位换算器</h1>
+
+    <!-- 转换类别选择 -->
+    <div class="row">
+      <div class="input-field col s12">
+        <select id="conversionCategory">
+          <option value="length" selected>长度</option>
+          <option value="temperature">温度</option>
+          <option value="currency">货币</option>
+        </select>
+        <label>转换类别</label>
+      </div>
+    </div>
+
+    <!-- 输入区域 -->
     <div class="row">
       <div class="input-field col s6">
         <input id="inputValue" type="number" class="validate">
-        <label for="inputValue">输入值(从厘米起算)</label>
+        <label id="inputLabel" for="inputValue">输入值(从厘米起算)</label>
       </div>
       <div class="input-field col s6">
         <select id="unitType">
+          <!-- 默认显示长度单位 -->
           <option value="cm">厘米 (cm)</option>
           <option value="inch">英寸 (inch)</option>
           <option value="m">米 (m)</option>
@@ -58,6 +74,8 @@
         <label>单位类型</label>
       </div>
     </div>
+
+    <!-- 结果区域 -->
     <div class="row">
       <div class="col s12">
         <h5 class="center-align">结果:</h5>
@@ -68,51 +86,137 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+      // 初始化所有select元素
       var elems = document.querySelectorAll('select');
-      var instances = M.FormSelect.init(elems);
-      
-      var input = document.getElementById('inputValue');
-      var unitType = document.getElementById('unitType');
-      var result = document.getElementById('result');
-  
-      input.addEventListener('input', function() {
+      M.FormSelect.init(elems);
+
+      // 元素绑定
+      const input = document.getElementById('inputValue');
+      const unitType = document.getElementById('unitType');
+      const result = document.getElementById('result');
+      const conversionCategory = document.getElementById('conversionCategory');
+      const inputLabel = document.getElementById('inputLabel');
+
+      // 监听输入变化
+      input.addEventListener('input', convertUnits);
+      unitType.addEventListener('change', convertUnits);
+
+      // 当转换类别变化时，更新单位下拉菜单和输入提示
+      conversionCategory.addEventListener('change', function () {
+        updateUnitOptions();
         convertUnits();
       });
-  
-      unitType.addEventListener('change', function() {
-        convertUnits();
-      });
-  
-      function convertUnits() {
-        var inputValue = parseFloat(input.value);
-        var selectedUnit = unitType.value;
-        var convertedValue;
-  
-        switch (selectedUnit) {
-          case 'cm':
-            convertedValue = inputValue;
-            break;
-          case 'inch':
-            convertedValue = inputValue * 0.393701;
-            break;
-          case 'm':
-            convertedValue = inputValue * 100;
-            break;
-          case 'ft':
-            convertedValue = inputValue * 30.48;
-            break;
-          case 'km':
-            convertedValue = inputValue * 100000;
-            break;
-          case 'mile':
-            convertedValue = inputValue * 160934.4;
-            break;
-          default:
-            convertedValue = 0;
-            break;
+
+      // 更新单位选项
+      function updateUnitOptions() {
+        let category = conversionCategory.value;
+        let optionsHTML = '';
+
+        if (category === 'length') {
+          inputLabel.textContent = '输入值(从厘米起算)';
+          optionsHTML = `
+            <option value="cm">厘米 (cm)</option>
+            <option value="inch">英寸 (inch)</option>
+            <option value="m">米 (m)</option>
+            <option value="ft">英尺 (ft)</option>
+            <option value="km">千米 (km)</option>
+            <option value="mile">英里 (mile)</option>
+          `;
+        } else if (category === 'temperature') {
+          inputLabel.textContent = '输入温度(摄氏度)';
+          optionsHTML = `
+            <option value="C">摄氏度 (°C)</option>
+            <option value="F">华氏度 (°F)</option>
+            <option value="K">开氏度 (K)</option>
+          `;
+        } else if (category === 'currency') {
+          inputLabel.textContent = '输入金额(人民币)';
+          optionsHTML = `
+            <option value="CNY">人民币 (¥)</option>
+            <option value="USD">美元 ($)</option>
+            <option value="EUR">欧元 (€)</option>
+          `;
         }
-  
+        unitType.innerHTML = optionsHTML;
+        M.FormSelect.init(unitType);
+      }
+
+      // 单位换算函数
+      function convertUnits() {
+        let inputValue = parseFloat(input.value);
+        if (isNaN(inputValue)) {
+          result.textContent = '';
+          return;
+        }
+        let category = conversionCategory.value;
+        let selectedUnit = unitType.value;
+        let convertedValue;
+
+        // 长度换算修正
+        if (category === 'length') {
+          switch (selectedUnit) {
+            case 'cm':
+              convertedValue = inputValue;
+              break;
+            case 'inch':
+              convertedValue = inputValue * 0.393701;
+              break;
+            case 'm':
+              convertedValue = inputValue / 100;
+              break;
+            case 'ft':
+              convertedValue = inputValue / 30.48;
+              break;
+            case 'km':
+              convertedValue = inputValue / 100000;
+              break;
+            case 'mile':
+              convertedValue = inputValue / 160934.4;
+              break;
+            default:
+              convertedValue = 0;
+              break;
+          }
+        }
+
+        // 温度换算
+        else if (category === 'temperature') {
+          switch (selectedUnit) {
+            case 'C':
+              convertedValue = inputValue;
+              break;
+            case 'F':
+              convertedValue = inputValue * 9 / 5 + 32;
+              break;
+            case 'K':
+              convertedValue = inputValue + 273.15;
+              break;
+            default:
+              convertedValue = 0;
+              break;
+          }
+        }
+
+        // 货币换算 (静态汇率示例)
+        else if (category === 'currency') {
+          switch (selectedUnit) {
+            case 'CNY':
+              convertedValue = inputValue;
+              break;
+            case 'USD':
+              convertedValue = inputValue * 0.14;
+              break;
+            case 'EUR':
+              convertedValue = inputValue * 0.13;
+              break;
+            default:
+              convertedValue = 0;
+              break;
+          }
+        }
+
+        // 显示结果
         result.textContent = convertedValue.toFixed(2) + ' ' + selectedUnit;
       }
     });
