@@ -13,6 +13,7 @@
 - [进制转换器](projects/test.html): 数制转换工具，支持各种进制。
 - [单位转换器](projects/unit_conversion.html): 单位换算工具，包括长度、重量等单位。
 - [密码生成器](projects/lock.html): 随机密码生成工具。
+- [简历生成器](projects/resume.html): 实时生成精美简历。
 - [屏幕录制器](projects/screenrecord.html): 录制窗口或整个屏幕。
 - [文字加密解密](projects/text.html): 文字加密和解密工具。
 - [二维码生成器](projects/qrcode.html): 快速生成二维码的工具。
