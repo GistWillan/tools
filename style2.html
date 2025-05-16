@@ -10,18 +10,18 @@
     :root {
       --glass-bg: rgba(255, 255, 255, 0.6);
       --glass-border: rgba(255, 255, 255, 0.8);
+      --content-width: 1280px;
     }
 
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 40px 20px;
       min-height: 100vh;
       background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
       background-attachment: fixed;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
 
     @keyframes container-entry {
@@ -47,52 +47,56 @@
     }
 
     .container {
-      max-width: 800px;
       width: 100%;
-      margin: 20px;
-      padding: 30px;
-      border-radius: 18px;
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 50px 40px;
+      border-radius: 24px;
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
       animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
     }
 
     .header {
       text-align: center;
-      padding: 20px 0 40px;
+      padding: 30px 0 60px;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .header h1 {
-      color: rgba(0, 0, 0, 0.8);
-      font-size: 2.8rem;
-      margin-bottom: 12px;
+      color: rgba(0, 0, 0, 0.9);
+      font-size: 3.2rem;
+      margin-bottom: 1.5rem;
       font-weight: 600;
       letter-spacing: -0.03em;
+      line-height: 1.2;
     }
 
     .header p {
-      color: rgba(0, 0, 0, 0.6);
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin: 8px 0;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 1.3rem;
+      line-height: 1.8;
+      margin: 1.2rem 0;
     }
 
     .projects {
-      margin-top: 30px;
+      margin-top: 40px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
     }
 
     .project-item {
       background: var(--glass-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-radius: 14px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 30px 25px;
       border: 1px solid var(--glass-border);
       transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       opacity: 0;
@@ -105,77 +109,100 @@
     .project-item:nth-child(n+4) { animation-delay: 0.4s; }
 
     .project-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
       background: rgba(255, 255, 255, 0.8);
     }
 
     .project-link {
       color: rgba(0, 122, 204, 0.9);
       text-decoration: none;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: 500;
       display: block;
       text-align: center;
-      transition: opacity 0.3s ease;
-    }
-
-    .project-link:hover {
-      opacity: 0.8;
+      transition: all 0.3s ease;
+      padding: 12px 0;
     }
 
     .footer {
       text-align: center;
-      margin-top: 40px;
-      padding-top: 30px;
+      margin-top: 60px;
+      padding-top: 40px;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .footer p {
       color: rgba(0, 0, 0, 0.6);
-      margin: 15px 0;
+      margin: 20px 0;
+      font-size: 1rem;
     }
 
     .footer a {
       text-decoration: none;
       color: rgba(0, 122, 204, 0.9);
       font-weight: 500;
-      margin: 0 12px;
+      margin: 0 20px;
+      font-size: 1.1rem;
       transition: opacity 0.3s ease;
     }
 
-    .footer a:hover {
-      opacity: 0.8;
+    @media (max-width: 1200px) {
+      .container {
+        padding: 40px 30px;
+      }
+      .projects {
+        gap: 25px;
+        padding: 0;
+      }
     }
 
     @media (max-width: 768px) {
       body {
-        padding: 15px;
+        padding: 30px 15px;
       }
       .container {
-        padding: 25px;
-        border-radius: 16px;
+        padding: 35px 25px;
+        border-radius: 20px;
+      }
+      .header {
+        padding: 20px 0 40px;
       }
       .header h1 {
-        font-size: 2.2rem;
+        font-size: 2.6rem;
+      }
+      .header p {
+        font-size: 1.2rem;
       }
       .projects {
         grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .project-item {
+        padding: 25px 20px;
+      }
+      .project-link {
+        font-size: 1.3rem;
       }
     }
 
     @media (max-width: 480px) {
       .container {
-        padding: 20px;
+        padding: 30px 20px;
+        border-radius: 18px;
       }
       .header h1 {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
       }
       .header p {
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
       .project-link {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+      }
+      .footer a {
+        margin: 0 15px;
+        font-size: 1rem;
       }
     }
   </style>
