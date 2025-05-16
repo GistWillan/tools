@@ -6,142 +6,176 @@
   <title>GistWillan的在线工具站点</title>
   <link rel="shortcut icon" href="images/index.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.8);
+    }
+
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+      background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
+      background-attachment: fixed;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      opacity: 0;
-      animation: fade-in 1s ease-out forwards;
+    }
+
+    @keyframes container-entry {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes card-entry {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .container {
       max-width: 800px;
+      width: 100%;
       margin: 20px;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-      transform-origin: center bottom;
+      padding: 30px;
+      border-radius: 18px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+      animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
     }
 
     .header {
       text-align: center;
-      padding: 20px 0;
+      padding: 20px 0 40px;
     }
 
     .header h1 {
-      color: #007acc;
-      font-size: 36px;
-      margin-bottom: 10px;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
     }
 
     .header p {
-      color: #777;
-      font-size: 18px;
-      margin: 5px 0;
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 8px 0;
     }
 
     .projects {
-      margin-top: 20px;
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
     }
 
     .project-item {
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      background-color: #fff;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      transform-origin: center bottom;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid var(--glass-border);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       opacity: 0;
-      animation: float-in 0.8s ease-out forwards;
+      animation: card-entry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
-    .project-item:nth-child(even) {
-      animation-delay: 0.1s;
-    }
-
-    .project-item:nth-child(odd) {
-      animation-delay: 0.2s;
-    }
+    .project-item:nth-child(1) { animation-delay: 0.1s; }
+    .project-item:nth-child(2) { animation-delay: 0.2s; }
+    .project-item:nth-child(3) { animation-delay: 0.3s; }
+    .project-item:nth-child(n+4) { animation-delay: 0.4s; }
 
     .project-item:hover {
-      background-color: #f0f0f0;
-      transform: translateY(-5px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.8);
     }
 
     .project-link {
-      color: #007acc;
+      color: rgba(0, 122, 204, 0.9);
       text-decoration: none;
-      font-size: 20px;
-      transition: color 0.3s ease;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      text-align: center;
+      transition: opacity 0.3s ease;
     }
 
     .project-link:hover {
-      color: #005ea6;
+      opacity: 0.8;
     }
 
     .footer {
       text-align: center;
-      margin-top: 20px;
-      color: #888;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .footer p {
+      color: rgba(0, 0, 0, 0.6);
+      margin: 15px 0;
     }
 
     .footer a {
       text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-      margin: 0 10px;
+      color: rgba(0, 122, 204, 0.9);
+      font-weight: 500;
+      margin: 0 12px;
+      transition: opacity 0.3s ease;
     }
 
     .footer a:hover {
-      color: #005ea6;
+      opacity: 0.8;
     }
 
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes pop-in {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes float-in {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @media screen and (max-width: 768px) {
       .container {
-        max-width: 90%;
+        padding: 25px;
+        border-radius: 16px;
+      }
+      .header h1 {
+        font-size: 2.2rem;
+      }
+      .projects {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      .header p {
+        font-size: 1rem;
+      }
+      .project-link {
+        font-size: 1.1rem;
       }
     }
   </style>
@@ -228,7 +262,5 @@
       <a href="index.html" target="_self">普通风格</a>
     </div>
   </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
