@@ -16,6 +16,7 @@
 - [简历生成器](projects/resume.html): 实时生成精美简历。
 - [屏幕录制器](projects/screenrecord.html): 录制窗口或整个屏幕。
 - [文字加密解密](projects/text.html): 文字加密和解密工具。
+- [密码强度检测](projects/lock.html): 检测密码强度是否足够安全。
 - [二维码生成器](projects/qrcode.html): 快速生成二维码的工具。
 - [随机数生成器](projects/number.html): 生成随机数的工具。
 - [时间戳转换网页](projects/tt.html)：转换时间戳至标准时间。
