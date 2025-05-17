@@ -3,37 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>单位换算器</title>
-  <link rel="shortcut icon" href="images/site.png">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>现代单位换算器</title>
   <style>
+    :root {
+      --primary: #007AFF;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --spacing: 28px;
+      --radius: 20px;
+    }
+
+    @keyframes card-entry {
+      0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes element-appear {
+      0% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
     body {
-      background-color: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: var(--spacing);
+      background: linear-gradient(150deg, #e3eeff 0%, #f9fcff 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
+
     .container {
-      max-width: 400px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      animation: fade-in 0.5s ease-out;
+      width: 100%;
+      max-width: 500px;
+      padding: var(--spacing);
+      border-radius: var(--radius);
+      background: var(--glass-bg);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+      animation: card-entry 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
-    .input-field, .select-wrapper, .col.s12 > h5, .col.s12 > p {
-      animation: fade-in 0.5s ease-out;
+
+    h1 {
+      color: rgba(0, 0, 0, 0.9);
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 0 0 2rem;
+      animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s both;
     }
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
+
+    .input-group {
+      margin: 1.5rem 0;
+      position: relative;
+      animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s both;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid rgba(0, 0, 0, 0.08);
+      border-radius: 14px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      box-sizing: border-box;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s both;
+    }
+
+    .col {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+    }
+
+    .result-card {
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s both;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.8rem;
+      color: rgba(0, 0, 0, 0.8);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    #result {
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    @media (max-width: 480px) {
+      :root {
+        --spacing: 20px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      
+      .row {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      
+      select, input {
+        padding: 0.9rem;
       }
     }
   </style>
@@ -41,184 +142,144 @@
 
 <body>
   <div class="container">
-    <h1 class="header center-align">单位换算器</h1>
+    <h1>单位换算器</h1>
 
     <!-- 转换类别选择 -->
-    <div class="row">
-      <div class="input-field col s12">
+    <div class="input-group">
+      <label>转换类别</label>
+      <div class="select-wrapper">
         <select id="conversionCategory">
           <option value="length" selected>长度</option>
           <option value="temperature">温度</option>
           <option value="currency">货币</option>
         </select>
-        <label>转换类别</label>
       </div>
     </div>
 
     <!-- 输入区域 -->
     <div class="row">
-      <div class="input-field col s6">
-        <input id="inputValue" type="number" class="validate">
-        <label id="inputLabel" for="inputValue">输入值(从厘米起算)</label>
+      <div class="col">
+        <label id="inputLabel">输入值</label>
+        <input id="inputValue" type="number">
       </div>
-      <div class="input-field col s6">
-        <select id="unitType">
-          <!-- 默认显示长度单位 -->
-          <option value="cm">厘米 (cm)</option>
-          <option value="inch">英寸 (inch)</option>
-          <option value="m">米 (m)</option>
-          <option value="ft">英尺 (ft)</option>
-          <option value="km">千米 (km)</option>
-          <option value="mile">英里 (mile)</option>
-        </select>
+      <div class="col">
         <label>单位类型</label>
-      </div>
-    </div>
-
-    <!-- 结果区域 -->
-    <div class="row">
-      <div class="col s12">
-        <h5 class="center-align">结果:</h5>
-        <p id="result" class="center-align"></p>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // 初始化所有select元素
-      var elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
-
-      // 元素绑定
-      const input = document.getElementById('inputValue');
-      const unitType = document.getElementById('unitType');
-      const result = document.getElementById('result');
-      const conversionCategory = document.getElementById('conversionCategory');
-      const inputLabel = document.getElementById('inputLabel');
-
-      // 监听输入变化
-      input.addEventListener('input', convertUnits);
-      unitType.addEventListener('change', convertUnits);
-
-      // 当转换类别变化时，更新单位下拉菜单和输入提示
-      conversionCategory.addEventListener('change', function () {
-        updateUnitOptions();
-        convertUnits();
-      });
-
-      // 更新单位选项
-      function updateUnitOptions() {
-        let category = conversionCategory.value;
-        let optionsHTML = '';
-
-        if (category === 'length') {
-          inputLabel.textContent = '输入值(从厘米起算)';
-          optionsHTML = `
+        <div class="select-wrapper">
+          <select id="unitType">
             <option value="cm">厘米 (cm)</option>
             <option value="inch">英寸 (inch)</option>
             <option value="m">米 (m)</option>
             <option value="ft">英尺 (ft)</option>
             <option value="km">千米 (km)</option>
             <option value="mile">英里 (mile)</option>
-          `;
-        } else if (category === 'temperature') {
-          inputLabel.textContent = '输入温度(摄氏度)';
-          optionsHTML = `
-            <option value="C">摄氏度 (°C)</option>
-            <option value="F">华氏度 (°F)</option>
-            <option value="K">开氏度 (K)</option>
-          `;
-        } else if (category === 'currency') {
-          inputLabel.textContent = '输入金额(人民币)';
-          optionsHTML = `
-            <option value="CNY">人民币 (¥)</option>
-            <option value="USD">美元 ($)</option>
-            <option value="EUR">欧元 (€)</option>
-          `;
-        }
-        unitType.innerHTML = optionsHTML;
-        M.FormSelect.init(unitType);
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果区域 -->
+    <div class="result-card">
+      <div id="result">0.00</div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // 元素绑定
+      const elements = {
+        input: document.getElementById('inputValue'),
+        unitType: document.getElementById('unitType'),
+        result: document.getElementById('result'),
+        conversionCategory: document.getElementById('conversionCategory'),
+        inputLabel: document.getElementById('inputLabel')
+      };
+
+      // 事件监听
+      ['input', 'change'].forEach(event => {
+        elements.input.addEventListener(event, convertUnits);
+        elements.unitType.addEventListener(event, convertUnits);
+        elements.conversionCategory.addEventListener(event, updateUnitOptions);
+      });
+
+      // 更新单位选项
+      function updateUnitOptions() {
+        const category = elements.conversionCategory.value;
+        const units = {
+          length: {
+            label: '输入值(从厘米起算)',
+            options: [
+              { value: 'cm', text: '厘米 (cm)' },
+              { value: 'inch', text: '英寸 (inch)' },
+              { value: 'm', text: '米 (m)' },
+              { value: 'ft', text: '英尺 (ft)' },
+              { value: 'km', text: '千米 (km)' },
+              { value: 'mile', text: '英里 (mile)' }
+            ]
+          },
+          temperature: {
+            label: '输入温度(摄氏度)',
+            options: [
+              { value: 'C', text: '摄氏度 (°C)' },
+              { value: 'F', text: '华氏度 (°F)' },
+              { value: 'K', text: '开氏度 (K)' }
+            ]
+          },
+          currency: {
+            label: '输入金额(人民币)',
+            options: [
+              { value: 'CNY', text: '人民币 (¥)' },
+              { value: 'USD', text: '美元 ($)' },
+              { value: 'EUR', text: '欧元 (€)' }
+            ]
+          }
+        };
+
+        elements.inputLabel.textContent = units[category].label;
+        elements.unitType.innerHTML = units[category].options
+          .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
+          .join('');
+        
+        convertUnits();
       }
 
       // 单位换算函数
       function convertUnits() {
-        let inputValue = parseFloat(input.value);
+        const inputValue = parseFloat(elements.input.value);
+        const category = elements.conversionCategory.value;
+        const unit = elements.unitType.value;
+
         if (isNaN(inputValue)) {
-          result.textContent = '';
+          elements.result.textContent = '0.00';
           return;
         }
-        let category = conversionCategory.value;
-        let selectedUnit = unitType.value;
-        let convertedValue;
 
-        // 长度换算修正
-        if (category === 'length') {
-          switch (selectedUnit) {
-            case 'cm':
-              convertedValue = inputValue;
-              break;
-            case 'inch':
-              convertedValue = inputValue * 0.393701;
-              break;
-            case 'm':
-              convertedValue = inputValue / 100;
-              break;
-            case 'ft':
-              convertedValue = inputValue / 30.48;
-              break;
-            case 'km':
-              convertedValue = inputValue / 100000;
-              break;
-            case 'mile':
-              convertedValue = inputValue / 160934.4;
-              break;
-            default:
-              convertedValue = 0;
-              break;
+        const converters = {
+          length: {
+            cm: v => v,
+            inch: v => v * 0.393701,
+            m: v => v / 100,
+            ft: v => v / 30.48,
+            km: v => v / 100000,
+            mile: v => v / 160934.4
+          },
+          temperature: {
+            C: v => v,
+            F: v => v * 9/5 + 32,
+            K: v => v + 273.15
+          },
+          currency: {
+            CNY: v => v,
+            USD: v => v * 0.14,
+            EUR: v => v * 0.13
           }
-        }
+        };
 
-        // 温度换算
-        else if (category === 'temperature') {
-          switch (selectedUnit) {
-            case 'C':
-              convertedValue = inputValue;
-              break;
-            case 'F':
-              convertedValue = inputValue * 9 / 5 + 32;
-              break;
-            case 'K':
-              convertedValue = inputValue + 273.15;
-              break;
-            default:
-              convertedValue = 0;
-              break;
-          }
-        }
-
-        // 货币换算 (静态汇率示例)
-        else if (category === 'currency') {
-          switch (selectedUnit) {
-            case 'CNY':
-              convertedValue = inputValue;
-              break;
-            case 'USD':
-              convertedValue = inputValue * 0.14;
-              break;
-            case 'EUR':
-              convertedValue = inputValue * 0.13;
-              break;
-            default:
-              convertedValue = 0;
-              break;
-          }
-        }
-
-        // 显示结果
-        result.textContent = convertedValue.toFixed(2) + ' ' + selectedUnit;
+        const result = converters[category][unit](inputValue);
+        elements.result.textContent = `${result.toFixed(2)} ${unit}`;
       }
+
+      // 初始化
+      updateUnitOptions();
     });
   </script>
 </body>

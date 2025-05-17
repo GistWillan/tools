@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,82 +7,160 @@
     <link rel="shortcut icon" href="images/about.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --accent-color: rgba(0, 122, 204, 0.9);
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: linear-gradient(150deg, #1a1a2e 0%, #16213e 100%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.9);
         }
 
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
-        }
-
-        @keyframes pop-in {
+        @keyframes container-entry {
             0% {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: translateY(30px) scale(0.97);
             }
             100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0) scale(1);
             }
         }
 
+        @keyframes row-entry {
+            0% {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+            animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
         h1 {
-            color: #007acc;
-            font-size: 30px;
-            margin-bottom: 20px;
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 1.2rem;
+            text-align: left;
+            transition: all 0.3s ease;
         }
 
         th {
-            background-color: #007acc;
+            background: rgba(0, 122, 204, 0.8);
             color: #fff;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        tr {
+            background: rgba(255, 255, 255, 0.05);
+            animation: row-entry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(10px);
         }
 
         td {
-            background-color: #f0f0f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 30px;
+            }
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 24px;
+            body {
+                padding: 20px;
             }
-        }
-
-        @media (max-width: 600px) {
+            
             .container {
-                padding: 10px;
+                padding: 25px;
+                border-radius: 20px;
             }
-
+            
             h1 {
-                font-size: 20px;
+                font-size: 2.2rem;
             }
-
-            table {
-                font-size: 14px;
-            }
-
+            
             th, td {
-                padding: 5px;
+                padding: 1rem;
+                font-size: 0.95rem;
             }
         }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            tr:hover {
+                transform: none;
+            }
+        }
+
+        /* 行入场动画延迟 */
+        tr:nth-child(1) { animation-delay: 0.1s; }
+        tr:nth-child(2) { animation-delay: 0.2s; }
+        tr:nth-child(3) { animation-delay: 0.3s; }
+        tr:nth-child(n+4) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
@@ -91,83 +169,83 @@
         <table>
             <tr>
                 <th>错误代码</th>
-                <th>描述</th>
+                <th>问题描述</th>
             </tr>
             <tr>
                 <td>0x0000000A</td>
-                <td>IRQL_NOT_LESS_OR_EQUAL - 表示发生了内核或驱动程序的错误，可能导致系统崩溃。</td>
+                <td>IRQL_NOT_LESS_OR_EQUAL - 内核/驱动程序错误导致系统崩溃</td>
             </tr>
-             <tr>
+            <tr>
                 <td>0x0000001E</td>
-                <td>KMODE_EXCEPTION_NOT_HANDLED - 表示内核模式发生异常，通常是由于驱动程序问题引起的。</td>
+                <td>KMODE_EXCEPTION_NOT_HANDLED - 内核模式异常（通常由驱动程序引起）</td>
             </tr>
             <tr>
                 <td>0x0000003B</td>
-                <td>SYSTEM_SERVICE_EXCEPTION - 表示系统服务遇到了问题，可能是由于驱动程序或硬件问题引起的。</td>
+                <td>SYSTEM_SERVICE_EXCEPTION - 系统服务问题（驱动/硬件相关）</td>
             </tr>
-                <tr>
+            <tr>
                 <td>0x0000004A</td>
-                <td>IRQL_GT_ZERO_AT_SYSTEM_SERVICE - 表示内核或系统服务发生错误，可能导致系统崩溃。</td>
+                <td>IRQL_GT_ZERO_AT_SYSTEM_SERVICE - 内核服务错误导致崩溃</td>
             </tr>
             <tr>
                 <td>0x00000050</td>
-                <td>PAGE_FAULT_IN_NONPAGED_AREA - 表示发生了内存错误，通常是由于硬件或驱动程序问题引起的。</td>
+                <td>PAGE_FAULT_IN_NONPAGED_AREA - 内存错误（硬件/驱动问题）</td>
             </tr>
             <tr>
                 <td>0x0000007F</td>
-                <td>UNEXPECTED_KERNEL_MODE_TRAP - 表示内核模式遇到了意外情况，通常由于硬件或驱动程序问题引起。</td>
+                <td>UNEXPECTED_KERNEL_MODE_TRAP - 内核意外错误（硬件/驱动相关）</td>
             </tr>
             <tr>
                 <td>0x000000C2</td>
-                <td>BAD_POOL_CALLER - 表示发生了内存池错误，通常是由于驱动程序问题引起的。</td>
+                <td>BAD_POOL_CALLER - 内存池错误（驱动程序问题）</td>
             </tr>
             <tr>
                 <td>0x000000EF</td>
-                <td>CRITICAL_PROCESS_DIED - 表示关键进程已终止，可能由于系统文件损坏或硬件问题引起。</td>
+                <td>CRITICAL_PROCESS_DIED - 关键进程终止（系统文件/硬件问题）</td>
             </tr>
             <tr>
                 <td>0x000000F4</td>
-                <td>CRITICAL_OBJECT_TERMINATION - 表示关键对象已终止，通常由于硬件或存储设备问题引起。</td>
+                <td>CRITICAL_OBJECT_TERMINATION - 关键对象终止（存储设备问题）</td>
             </tr>
             <tr>
                 <td>0x00000109</td>
-                <td>CRITICAL_STRUCTURE_CORRUPTION - 表示发生了关键结构损坏，可能由于驱动程序或硬件问题引起。</td>
+                <td>CRITICAL_STRUCTURE_CORRUPTION - 关键结构损坏（驱动/硬件问题）</td>
             </tr>
             <tr>
                 <td>0x000001E3</td>
-                <td>RESOURCE_NOT_OWNED - 表示尝试释放未拥有的资源，通常由于驱动程序问题引起。</td>
+                <td>RESOURCE_NOT_OWNED - 资源释放错误（驱动问题）</td>
             </tr>
             <tr>
                 <td>0x0000021A</td>
-                <td>STATUS_SYSTEM_PROCESS_TERMINATED - 表示系统进程已终止，通常是由于系统文件损坏引起的。</td>
+                <td>STATUS_SYSTEM_PROCESS_TERMINATED - 系统进程终止（文件损坏）</td>
             </tr>
             <tr>
                 <td>0x0000007E</td>
-                <td>SYSTEM_THREAD_EXCEPTION_NOT_HANDLED - 表示系统线程发生异常，通常由于驱动程序问题引起。</td>
+                <td>SYSTEM_THREAD_EXCEPTION_NOT_HANDLED - 系统线程异常（驱动问题）</td>
             </tr>
             <tr>
                 <td>0x000000D1</td>
-                <td>DRIVER_IRQL_NOT_LESS_OR_EQUAL - 表示驱动程序引发的问题，可能导致系统不稳定。</td>
+                <td>DRIVER_IRQL_NOT_LESS_OR_EQUAL - 驱动引发系统不稳定</td>
             </tr>
             <tr>
                 <td>0x00000133</td>
-                <td>DPC_WATCHDOG_VIOLATION - 表示延迟处理程序（DPC）监视超时，通常与驱动程序相关。</td>
+                <td>DPC_WATCHDOG_VIOLATION - 延迟处理程序超时（驱动相关）</td>
             </tr>
             <tr>
                 <td>0x00000139</td>
-                <td>KERNEL_SECURITY_CHECK_FAILURE - 表示内核安全检查失败，可能由于内核数据损坏或恶意软件引起。</td>
+                <td>KERNEL_SECURITY_CHECK_FAILURE - 内核安全检查失败（数据损坏/恶意软件）</td>
             </tr>
             <tr>
                 <td>0x00000141</td>
-                <td>VIDEO_TDR_FAILURE - 表示显示驱动程序响应超时，通常与显卡或驱动程序相关。</td>
+                <td>VIDEO_TDR_FAILURE - 显示驱动响应超时（显卡问题）</td>
             </tr>
             <tr>
                 <td>0x00000124</td>
-                <td>WHEA_UNCORRECTABLE_ERROR - 表示硬件错误，可能与CPU、内存或其他硬件相关。</td>
+                <td>WHEA_UNCORRECTABLE_ERROR - 硬件错误（CPU/内存相关）</td>
             </tr>
             <tr>
                 <td>0x00000150</td>
-                <td>MEMORY_MANAGEMENT - 表示内存管理错误，可能由于内存模块或驱动程序问题引起。</td>
+                <td>MEMORY_MANAGEMENT - 内存管理错误（内存模块/驱动问题）</td>
             </tr>
         </table>
     </div>

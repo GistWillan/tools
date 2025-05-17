@@ -1,79 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>世界时钟</title>
-    <link rel="shortcut icon" href="images/clock.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 样式整个页面的背景颜色和字体颜色 */
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
         body {
-            background-color: #f0f0f0;
-            color: #333;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
         }
-        /* 卡片的样式 */
-        .card {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            opacity: 0; /* 初始设置为透明 */
-            transform: translateY(20px); /* 初始位置在下方 */
-            animation: fade-in 0.5s ease-out forwards; /* 添加渐入动画效果 */
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
-        /* 选择时区下拉菜单的样式 */
-        .input-field select {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        /* 按钮的样式 */
-        .btn {
-            background-color: #007acc;
-            color: #fff;
-            border-radius: 5px;
-            padding: 10px 20px;
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
-        /* 按钮悬停效果 */
-        .btn:hover {
-            background-color: #005ca3;
+
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
-        /* 页面标题的样式 */
-        h1.center-align {
-            font-size: 52px;
-            margin-top: 20px;
-            color: #007acc;
+
+        .select-wrapper {
+            position: relative;
         }
-        /* 时间显示的样式，将其水平居中对齐 */
+
+        select {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            appearance: none;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .time-card {
+            padding: 2rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            animation: time-appear 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        @keyframes time-appear {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         #currentTime {
-            font-size: 72px;
-            margin: 20px auto; /* 设置垂直外边距为20px，水平外边距为auto */
-            color: #007acc;
-            text-align: center; /* 将文本水平居中对齐 */
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+            margin: 0;
+            line-height: 1.2;
         }
-        /* 渐入动画效果 */
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
             }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
+            #currentTime {
+                font-size: 2.5rem;
+            }
+            select {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="center-align">世界时钟</h1>
-        <!-- 选择时区的下拉菜单 -->
-        <div class="row">
-            <div class="input-field col s12 m6">
+        <h1>世界时钟</h1>
+        
+        <div class="control-group">
+            <div class="select-wrapper">
                 <select id="timezoneSelector">
                     <option value="Asia/Shanghai">北京时间</option>
                     <option value="Asia/Tokyo">东京时间</option>
@@ -81,65 +137,87 @@
                     <option value="Europe/London">伦敦时间</option>
                     <option value="America/Los_Angeles">洛杉矶时间</option>
                     <option value="Australia/Sydney">悉尼时间</option>
-                    <!-- 添加更多时区选项 -->
                 </select>
-                <label>选择时区</label>
+                <svg class="select-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
             </div>
-            <div class="input-field col s12 m6">
+            
+            <div class="select-wrapper">
                 <select id="timeFormatSelector">
-                    <option value="12" selected>12小时制</option>
                     <option value="24">24小时制</option>
+                    <option value="12">12小时制</option>
                 </select>
-                <label>选择时间制式</label>
+                <svg class="select-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
             </div>
         </div>
-        <!-- 显示时间的卡片 -->
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title" id="currentTime"></span>
-            </div>
+
+        <div class="time-card">
+            <div id="currentTime"></div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <script>
-        // 初始化下拉菜单
-        $(document).ready(function () {
-            $('select').formSelect();
-        });
-        // 新增一个函数，用于将"AM"和"PM"翻译成中文
-        function translateTimeFormat(timeFormat) {
-            if (timeFormat === 'AM') {
-                return '上午';
-            } else if (timeFormat === 'PM') {
-                return '下午';
-            }
-            return timeFormat; // 如果不是"AM"或"PM"，则返回原值
-        }
-        // 更新时间函数
-        function updateTime() {
-            const selectedTimezone = $('#timezoneSelector').val();
-            const selectedTimeFormat = $('#timeFormatSelector').val(); // 获取用户选择的时间制式
-            let options = {
-                timeZone: selectedTimezone,
-                hour12: selectedTimeFormat === "12", // 根据用户选择设置小时制式
+        // 时区数据
+        const timeZones = [
+            { id: 'Asia/Shanghai', name: '北京时间' },
+            { id: 'Asia/Tokyo', name: '东京时间' },
+            { id: 'America/New_York', name: '纽约时间' },
+            { id: 'Europe/London', name: '伦敦时间' },
+            { id: 'America/Los_Angeles', name: '洛杉矶时间' },
+            { id: 'Australia/Sydney', name: '悉尼时间' }
+        ];
+
+        // DOM元素
+        const timezoneSelector = document.getElementById('timezoneSelector');
+        const timeFormatSelector = document.getElementById('timeFormatSelector');
+        const currentTime = document.getElementById('currentTime');
+
+        // 时间格式化
+        function formatTime(date, hour12) {
+            const options = {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
+                hour12: hour12
             };
-            const currentTime = new Date().toLocaleString('en-US', options);
-            // 获取小时制式，并翻译成中文
-            const timeParts = currentTime.split(' ');
-            const timeFormat = timeParts.pop(); // 获取最后一个部分，即"AM"或"PM"
-            const translatedTimeFormat = translateTimeFormat(timeFormat);
-            timeParts.push(translatedTimeFormat); // 将翻译后的时间制式放回时间字符串
-            const translatedTime = timeParts.join(' '); // 重新组合时间字符串
-            $('#currentTime').text(translatedTime);
+            
+            let timeString = date.toLocaleTimeString('zh-CN', options);
+            if (hour12) {
+                timeString = timeString.replace('上午', 'AM').replace('下午', 'PM');
+            }
+            return timeString;
         }
-        // 初次加载页面时更新时间
+
+        // 更新时间
+        function updateTime() {
+            const timezone = timezoneSelector.value;
+            const hour12 = timeFormatSelector.value === '12';
+            const now = new Date().toLocaleString('en-US', { timeZone: timezone });
+            const localDate = new Date(now);
+            
+            currentTime.textContent = formatTime(localDate, hour12);
+        }
+
+        // 初始化事件监听
+        timezoneSelector.addEventListener('change', updateTime);
+        timeFormatSelector.addEventListener('change', updateTime);
+
+        // 启动时钟
         updateTime();
-        // 每秒更新时间
         setInterval(updateTime, 1000);
+
+        // 添加微交互
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('focus', () => {
+                select.parentElement.style.transform = 'scale(1.02)';
+            });
+            select.addEventListener('blur', () => {
+                select.parentElement.style.transform = 'scale(1)';
+            });
+        });
     </script>
 </body>
 </html>

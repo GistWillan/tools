@@ -1,204 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>摩斯电码转换器</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px); /* 向下移动一点，实现渐入效果 */
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0); /* 清除向下的移动 */
-            }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --primary: #007AFF;
+            --error: #FF3B30;
         }
+
         body {
-            font-family: 'Roboto', sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
+            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
             margin: 0;
-            padding: 0;
-            animation: fadeIn 0.5s ease-in-out; /* 加快渐入动画速度 */
-        }
-        h1 {
-            color: #007acc;
-        }
-        #container {
-            background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease-in-out; /* 渐入动画 */
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
         }
-        #inputText, #outputText {
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 18px;
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        #convertButton, #copyButton {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 18px;
-            display: inline-block;
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 2.4rem;
+            font-weight: 600;
             text-align: center;
-            line-height: 1;
-            transition: background-color 0.3s, color 0.3s;
+            margin: 0 0 2rem;
+        }
+
+        .converter-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .radio-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
             cursor: pointer;
-            overflow: hidden;
-            animation: fadeIn 0.5s ease-in-out; /* 渐入动画 */
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
-        #convertButton:hover, #copyButton:hover {
-            background-color: #007acc;
-            color: #fff;
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
-        .error {
-            color: red;
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            height: 1.2rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            animation: toast 3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            opacity: 0;
+        }
+
+        @keyframes toast {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            20% { opacity: 1; transform: translate(-50%, 0); }
+            80% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, 20px); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>摩斯电码转换器</h1>
+    <div class="container">
+        <h1>摩斯电码转换器</h1>
+        
+        <div class="converter-grid">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="inputText" 
+                    placeholder="输入要转换的内容"
+                    spellcheck="false"
+                >
+                <div class="error-message" id="inputError"></div>
+            </div>
 
-    <div id="container">
-        <div class="input-field">
-            <input type="text" id="inputText" placeholder="输入要转换的文本">
-            <label for="inputText">明文文本</label>
-            <p class="error" id="inputError"></p>
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="outputText" 
+                    readonly
+                    placeholder="转换结果将显示在这里"
+                >
+            </div>
+
+            <div class="radio-group">
+                <label class="radio-item">
+                    <input type="radio" name="operation" value="encrypt" checked>
+                    <span>文本转摩斯码</span>
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="operation" value="decrypt">
+                    <span>摩斯码转文本</span>
+                </label>
+            </div>
+
+            <div class="action-buttons">
+                <button id="convertButton">立即转换</button>
+                <button id="copyButton">复制结果</button>
+            </div>
         </div>
-
-        <div class="input-field">
-            <input type="text" id="outputText" readonly>
-            <label for="outputText">摩斯电码</label>
-        </div>
-
-        <p>
-            <label>
-                <input type="radio" name="operation" value="encrypt" checked>
-                <span>加密</span>
-            </label>
-        </p>
-        <p>
-            <label>
-                <input type="radio" name="operation" value="decrypt">
-                <span>解密</span>
-            </label>
-        </p>
-
-        <button class="btn waves-effect waves-light" id="convertButton">转换</button>
-        <button class="btn waves-effect waves-light" id="copyButton">复制</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
+        const morseMap = {
+            // 字母
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+            'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+            'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+            'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+            'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+            'Z': '--..',
+            
+            // 数字
+            '0': '-----', '1': '.----', '2': '..---', '3': '...--',
+            '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+            '8': '---..', '9': '----.',
+            
+            // 标点
+            ' ': '/', '.': '.-.-.-', ',': '--..--', '?': '..--..',
+            "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.',
+            ')': '-.--.-', '&': '.-...', ':': '---...', ';': '-.-.-.',
+            '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-',
+            '"': '.-..-.', '$': '...-..-', '@': '.--.-.'
+        };
+
+        const reverseMorseMap = Object.fromEntries(
+            Object.entries(morseMap).map(([k, v]) => [v, k])
+        );
+
+        // DOM元素
         const inputText = document.getElementById('inputText');
         const outputText = document.getElementById('outputText');
         const convertButton = document.getElementById('convertButton');
         const copyButton = document.getElementById('copyButton');
-        const operationRadios = document.querySelectorAll('input[name="operation"]');
         const inputError = document.getElementById('inputError');
 
-        convertButton.addEventListener('click', () => {
+        // 实时转换
+        inputText.addEventListener('input', handleConversion);
+        document.querySelectorAll('input[name="operation"]').forEach(radio => {
+            radio.addEventListener('change', handleConversion);
+        });
+
+        async function handleConversion() {
             inputError.textContent = '';
-
             const text = inputText.value.trim();
-            const operation = getSelectedOperation();
+            const operation = document.querySelector('input[name="operation"]:checked').value;
 
-            if (operation === 'encrypt') {
-                if (!isValidInput(text)) {
-                    inputError.textContent = '只支持字母和数字字符';
-                    return;
+            try {
+                if (operation === 'encrypt') {
+                    outputText.value = textToMorse(text);
+                } else {
+                    outputText.value = morseToText(text);
                 }
-                const morseCode = textToMorseCode(text);
-                outputText.value = morseCode;
-            } else {
-                if (!isValidMorseCode(text)) {
-                    inputError.textContent = '输入的摩斯电码不合法';
-                    return;
-                }
-                const plainText = morseCodeToText(text);
-                outputText.value = plainText;
+            } catch (error) {
+                inputError.textContent = error.message;
+                outputText.value = '';
+            }
+        }
+
+        function textToMorse(text) {
+            if (!text) return '';
+            
+            return text.toUpperCase().split('')
+                .map(char => {
+                    if (!morseMap[char]) throw new Error(`非法字符: ${char}`);
+                    return morseMap[char];
+                })
+                .join(' ');
+        }
+
+        function morseToText(morse) {
+            if (!morse) return '';
+            
+            return morse.split(' ')
+                .map(code => {
+                    if (!reverseMorseMap[code]) throw new Error(`无效摩斯码: ${code}`);
+                    return reverseMorseMap[code];
+                })
+                .join('');
+        }
+
+        // 复制功能
+        copyButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(outputText.value);
+                showToast('已复制到剪贴板');
+            } catch {
+                const textarea = document.createElement('textarea');
+                textarea.value = outputText.value;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('已复制到剪贴板');
             }
         });
 
-        copyButton.addEventListener('click', () => {
-            outputText.select();
-            document.execCommand('copy');
-            M.toast({html: '已复制到剪贴板'});
-        });
-
-        function getSelectedOperation() {
-            for (const radio of operationRadios) {
-                if (radio.checked) {
-                    return radio.value;
-                }
-            }
-            return 'encrypt'; // 默认为加密
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
-
-        function isValidInput(text) {
-            const pattern = /^[a-zA-Z0-9 ]+$/;
-            return pattern.test(text);
-        }
-
-        function isValidMorseCode(morseCode) {
-            const pattern = /^[.-/ ]+$/;
-            return true; // 这里需要添加适当的摩斯电码验证规则
-        }
-
-        function textToMorseCode(text) {
-            const morseCodeMap = {
-                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
-                'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
-                'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
-                'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
-                'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
-                'Z': '--..', '0': '-----', '1': '.----', '2': '..---', '3': '...--',
-                '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..',
-                '9': '----.', ' ': ' '
-            };
-
-            const words = text.split(' ');
-            const morseWords = words.map(word => {
-                const letters = word.split('');
-                const morseLetters = letters.map(letter => morseCodeMap[letter.toUpperCase()]);
-                return morseLetters.join(' ');
-            });
-
-            return morseWords.join(' / ');
-        }
-
-        function morseCodeToText(morseCode) {
-            const morseCodeMap = {
-                '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E',
-                '..-.': 'F', '--.': 'G', '....': 'H', '..': 'I', '.---': 'J',
-                '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O',
-                '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T',
-                '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y',
-                '--..': 'Z', '-----': '0', '.----': '1', '..---': '2', '...--': '3',
-                '....-': '4', '.....': '5', '-....': '6', '--...': '7', '---..': '8',
-                '----.': '9', '/': ' '
-            };
-
-            const words = morseCode.split(' / ');
-            const plainWords = words.map(word => {
-                const morseLetters = word.split(' ');
-                const letters = morseLetters.map(morseLetter => morseCodeMap[morseLetter]);
-                return letters.join('');
-            });
-
-            return plainWords.join(' ');
-        }
-
     </script>
 </body>
 </html>

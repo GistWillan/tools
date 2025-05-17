@@ -1,93 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>在线文档编辑器</title>
-  <!-- 使用Materialize样式 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f5f5f5;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .btn {
-      width: 100%;
-    }
-    .textarea-container {
-      position: relative;
-    }
-    .textarea-container .character-counter {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      font-size: 0.9rem;
-      color: gray;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能文档编辑器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.85);
+            --primary: #007AFF;
+            --text-primary: rgba(0, 0, 0, 0.9);
+            --text-secondary: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .toolbar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .toolbar-item:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        select, input[type="range"] {
+            padding: 6px 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            background: white;
+            min-width: 120px;
+        }
+
+        .style-button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .style-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: transparent;
+        }
+
+        #editor {
+            width: 100%;
+            height: 400px;
+            padding: 24px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9);
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        #editor:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .character-counter {
+            position: sticky;
+            float: right;
+            margin-top: -36px;
+            margin-right: 12px;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            z-index: 1;
+        }
+
+        .download-btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+            }
+            #editor {
+                height: 300px;
+                padding: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h3 class="center-align">在线文档编辑器</h3>
-    
-    <!-- 文档编辑区域 -->
-    <div class="row">
-      <div class="col s12 textarea-container">
-        <textarea id="document-content" class="materialize-textarea" data-length="1000"></textarea>
-        <span class="character-counter"></span>
-      </div>
+    <div class="container">
+        <h1>智能文档编辑器</h1>
+        
+        <div class="toolbar">
+            <div class="toolbar-item">
+                <select id="fontFamily">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">等宽字体</option>
+                    <option value="Noto Sans SC">思源黑体</option>
+                </select>
+            </div>
+
+            <div class="toolbar-item">
+                <input type="range" id="fontSize" min="12" max="36" value="16">
+                <span id="fontSizeValue">16px</span>
+            </div>
+
+            <div class="toolbar-item">
+                <input type="color" id="textColor" value="#000000">
+            </div>
+
+            <button class="style-button" id="boldBtn">B</button>
+            <button class="style-button" id="italicBtn">I</button>
+            <button class="style-button" id="underlineBtn">U</button>
+        </div>
+
+        <div class="editor-container">
+            <div class="character-counter" id="counter">0/2000</div>
+            <div id="editor" contenteditable="true" placeholder="点击输入内容..."></div>
+        </div>
+
+        <button class="download-btn" id="downloadButton">
+            ↓ 下载文档
+        </button>
     </div>
 
-    <!-- 下载按钮 -->
-    <div class="row">
-      <div class="col s12">
-        <a id="download-button" class="waves-effect waves-light btn">下载文档</a>
-      </div>
-    </div>
-  </div>
+    <script>
+        // 样式操作增强
+        function applyStyle(command, value = null) {
+            const selection = window.getSelection();
+            if (selection.rangeCount === 0 || selection.isCollapsed) {
+                alert('请先选择要修改的文字');
+                return;
+            }
+            document.execCommand(command, false, value);
+            editor.focus();
+        }
 
-  <!-- 使用Materialize脚本 -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        // 字体选择
+        document.getElementById('fontFamily').addEventListener('change', (e) => {
+            applyStyle('fontName', e.target.value);
+        });
 
-  <script>
-    // 初始化Materialize组件
-    document.addEventListener('DOMContentLoaded', function() {
-      M.AutoInit();
+        // 实时字号显示
+        const fontSizeInput = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        fontSizeInput.addEventListener('input', () => {
+            fontSizeValue.textContent = `${fontSizeInput.value}px`;
+            applyStyle('fontSize', fontSizeInput.value);
+        });
 
-      // 初始化字符计数器
-      $('textarea#document-content').characterCounter();
-    });
+        // 颜色选择
+        document.getElementById('textColor').addEventListener('input', (e) => {
+            applyStyle('foreColor', e.target.value);
+        });
 
-    // 下载按钮点击事件
-    document.getElementById('download-button').addEventListener('click', function() {
-      // 获取文档内容
-      var documentContent = document.getElementById('document-content').value;
+        // 样式按钮交互
+        ['bold', 'italic', 'underline'].forEach(style => {
+            const btn = document.getElementById(`${style}Btn`);
+            btn.addEventListener('click', () => {
+                document.execCommand(style);
+                btn.classList.toggle('active', document.queryCommandState(style));
+            });
+        });
 
-      // 创建Blob对象
-      var blob = new Blob([documentContent], { type: 'text/plain' });
+        // 智能字符统计
+        let lastLength = 0;
+        const updateCounter = () => {
+            const content = editor.innerText;
+            const newLength = content.length;
+            
+            if (newLength > 2000) {
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                editor.textContent = content.slice(0, 2000);
+                range.setStart(editor.childNodes[0], Math.min(range.startOffset, 2000));
+                range.collapse(true);
+            }
 
-      // 创建下载链接
-      var downloadLink = document.createElement('a');
-      downloadLink.href = window.URL.createObjectURL(blob);
-      downloadLink.download = 'document.txt';
+            counter.textContent = `${Math.min(newLength, 2000)}/2000`;
+            counter.style.color = newLength >= 2000 ? '#ff4757' : 'var(--text-secondary)';
+        };
+        editor.addEventListener('input', updateCounter);
 
-      // 模拟点击下载链接
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-
-      // 清理
-      document.body.removeChild(downloadLink);
-    });
-  </script>
+        // 文件下载增强
+        document.getElementById('downloadButton').addEventListener('click', () => {
+            const content = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        body { 
+                            font-family: ${document.getElementById('fontFamily').value};
+                            max-width: 800px;
+                            margin: 40px auto;
+                            padding: 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${editor.innerHTML}
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `文档_${new Date().toLocaleDateString().replace(/\//g, '-')}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
 </body>
 </html>

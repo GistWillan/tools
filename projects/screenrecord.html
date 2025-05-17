@@ -1,134 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>屏幕录制器</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能屏幕录制器</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --danger: #FF3B30;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
 
-    .container {
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      padding: 20px;
-      width: 400px;
-      text-align: center;
-      animation: fade-in 0.5s ease-out forwards;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    h1 {
-      font-size: 24px;
-      color: #007acc;
-    }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
 
-    video {
-      width: 100%;
-      margin-top: 20px;
-    }
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-    .controls {
-      margin-top: 20px;
-    }
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    button {
-      background-color: #007acc;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 10px 20px;
-      margin: 0 10px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        video {
+            width: 100%;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
 
-    button:hover {
-      background-color: #005b91;
-    }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-    .hidden {
-      display: none;
-    }
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
 
-    @keyframes fade-in {
-      0% {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .danger-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.95); }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>屏幕录制器</h1>
-    <video id="screen-recording" controls class="hidden"></video>
-    <div class="controls">
-      <button id="start-recording">开始录制</button>
-      <button id="stop-recording" class="hidden">停止录制</button>
-      <button id="preview-recording" class="hidden">预览</button>
-      <a id="download-link" href="#" download="screen-recording.webm" class="hidden">保存</a>
+    <div class="container">
+        <h1>智能屏幕录制器</h1>
+        <video id="screen-recording" controls class="hidden"></video>
+        <div class="controls">
+            <button class="primary-btn" id="start-recording">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <path d="M12 17c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1s-1 .45-1 1v8c0 .55.45 1 1 1z"/>
+                </svg>
+                开始录制
+            </button>
+            <button class="danger-btn hidden" id="stop-recording">
+                <div class="status-indicator"></div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M6 6h12v12H6z"/>
+                </svg>
+                停止录制
+            </button>
+            <a id="download-link" href="#" download="screen-recording.webm" class="primary-btn hidden">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+                保存文件
+            </a>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const videoElement = document.getElementById('screen-recording');
-    const startRecordingButton = document.getElementById('start-recording');
-    const stopRecordingButton = document.getElementById('stop-recording');
-    const previewRecordingButton = document.getElementById('preview-recording');
-    const downloadLink = document.getElementById('download-link');
-    let mediaRecorder;
-    let recordedChunks = [];
+    <script>
+        const videoElement = document.getElementById('screen-recording');
+        const startBtn = document.getElementById('start-recording');
+        const stopBtn = document.getElementById('stop-recording');
+        const downloadLink = document.getElementById('download-link');
+        let mediaRecorder, recordedChunks = [];
 
-    startRecordingButton.addEventListener('click', () => {
-      navigator.mediaDevices.getDisplayMedia({ video: true }).then((stream) => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            recordedChunks.push(event.data);
-          }
-        };
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { 
+                        frameRate: 30,
+                        cursor: "always" 
+                    },
+                    audio: false
+                });
 
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(recordedChunks, { type: 'video/webm' });
-          const url = URL.createObjectURL(blob);
-          videoElement.src = url;
-          videoElement.classList.remove('hidden');
-          previewRecordingButton.classList.remove('hidden');
-          downloadLink.href = url;
-          downloadLink.classList.remove('hidden');
-          startRecordingButton.disabled = false;
-        };
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'video/webm;codecs=vp9'
+                });
 
-        mediaRecorder.start();
-        startRecordingButton.disabled = true;
-        stopRecordingButton.classList.remove('hidden');
-      });
-    });
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
 
-    stopRecordingButton.addEventListener('click', () => {
-      mediaRecorder.stop();
-      stopRecordingButton.classList.add('hidden');
-      startRecordingButton.disabled = false;
-    });
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    videoElement.src = url;
+                    videoElement.classList.remove('hidden');
+                    downloadLink.href = url;
+                    downloadLink.classList.remove('hidden');
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
 
-    previewRecordingButton.addEventListener('click', () => {
-      videoElement.play();
-    });
-  </script>
+                mediaRecorder.start(1000);
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                recordedChunks = [];
+
+                // 处理用户提前终止共享
+                stream.getVideoTracks()[0].onended = () => {
+                    if (mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                    }
+                };
+            } catch (error) {
+                console.error('录制错误:', error);
+                resetUI();
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder?.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            resetUI();
+        }
+
+        function resetUI() {
+            startBtn.classList.remove('hidden');
+            stopBtn.classList.add('hidden');
+        }
+
+        // 事件监听
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
+        // 状态提示
+        let toastTimer;
+        function showToast(message, duration = 3000) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 12px 24px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                border-radius: 8px;
+                animation: toast 0.3s ease;
+                backdrop-filter: blur(10px);
+            `;
+            document.body.appendChild(toast);
+            
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.remove();
+            }, duration);
+        }
+
+        // 初始化提示
+        if (!navigator.mediaDevices?.getDisplayMedia) {
+            showToast('您的浏览器不支持屏幕录制功能', 5000);
+        }
+    </script>
 </body>
 </html>

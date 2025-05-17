@@ -1,140 +1,237 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
-    <title>Markdown编辑器</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown 编辑器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --primary: #007AFF;
+            --card-delay: 0.1s;
+        }
+
         body {
-            background-color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
             margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .container {
-            max-width: 100%;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
-        .editor {
-            flex: 1;
-            min-height: 300px;
-            padding: 10px;
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s ease;
+        .editor-pane {
+            padding: 2rem;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) var(--card-delay) forwards;
+            opacity: 0;
         }
 
-        .preview {
-            flex: 1;
-            min-height: 300px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-top: 1px solid #ddd;
-            overflow: auto;
+        h2 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 1.5rem;
+            text-align: center;
         }
 
         #markdownInput {
             width: 100%;
-            flex: 1;
-            border: none;
+            height: 500px;
+            padding: 1.5rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            line-height: 1.6;
             resize: none;
-            overflow: auto;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
         }
 
-        .button-container {
+        #markdownInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .preview-pane {
+            padding: 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--glass-border);
+            overflow-y: auto;
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) calc(var(--card-delay) * 2) forwards;
+            opacity: 0;
+        }
+
+        .preview-content {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .preview-content h1 { font-size: 2.2rem; }
+        .preview-content h2 { font-size: 1.8rem; }
+        .preview-content code { background: rgba(0, 0, 0, 0.05); padding: 0.2em 0.4em; border-radius: 4px; }
+        .preview-content pre { background: rgba(0, 0, 0, 0.05); padding: 1rem; border-radius: 8px; overflow-x: auto; }
+        .preview-content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin-left: 0; color: rgba(0, 0, 0, 0.6); }
+
+        .action-bar {
+            grid-column: 1 / -1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin-top: 10px;
+            margin-top: 2rem;
         }
 
         .save-button {
-            background-color: #007acc;
-            color: #fff;
-            border-radius: 4px;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
             cursor: pointer;
-            padding: 10px 20px;
-            text-align: center; /* 居中文字 */
-            line-height: 40px; /* 调整按钮高度和文字行高以垂直居中 */
-            transition: background-color 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
         .save-button:hover {
-            background-color: #0055a4;
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        @keyframes pop-in {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 20px;
             }
-            100% {
-                opacity: 1;
-                transform: scale(1);
+            
+            #markdownInput {
+                height: 300px;
+            }
+            
+            .editor-pane, .preview-pane {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="editor">
-        <h5 style="color: #007acc; text-align: center;">Markdown编辑器</h5>
-        <textarea id="markdownInput" placeholder="在这里输入Markdown文本"></textarea>
+    <div class="container">
+        <div class="editor-pane">
+            <h2>Markdown 编辑器</h2>
+            <textarea id="markdownInput" placeholder="开始书写..."></textarea>
+        </div>
+
+        <div class="preview-pane">
+            <h2>实时预览</h2>
+            <div class="preview-content" id="markdownPreview"></div>
+        </div>
+
+        <div class="action-bar">
+            <button class="save-button" id="saveButton">保存文档</button>
+        </div>
     </div>
-    <div class="preview">
-        <h5 style="color: #007acc; text-align: center;">预览</h5>
-        <div id="markdownPreview"></div>
-    </div>
-    <div class="button-container">
-        <a id="saveButton" class="waves-effect waves-light btn save-button">保存</a>
-    </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Initialize Materialize components
-        M.AutoInit();
-
-        // Render Markdown preview
-        function renderPreview() {
-            var markdownInput = $('#markdownInput').val();
-            var md = window.markdownit();
-            var html = md.render(markdownInput);
-            $('#markdownPreview').html(html);
-        }
-
-        $('#markdownInput').on('input', renderPreview);
-
-        // Save functionality
-        $('#saveButton').click(function() {
-            var markdownContent = $('#markdownInput').val();
-            var blob = new Blob([markdownContent], { type: 'text/markdown' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'markdown.md';
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.4/markdown-it.min.js"></script>
+    <script>
+        // Markdown解析器配置
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true
         });
-    });
-</script>
+
+        // 实时预览
+        const input = document.getElementById('markdownInput');
+        const preview = document.getElementById('markdownPreview');
+        
+        input.addEventListener('input', () => {
+            preview.innerHTML = md.render(input.value);
+        });
+
+        // 保存功能
+        document.getElementById('saveButton').addEventListener('click', async () => {
+            const content = input.value;
+            if (!content.trim()) return alert('请输入内容后再保存');
+
+            try {
+                const blob = new Blob([content], { type: 'text/markdown' });
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: 'document.md',
+                    types: [{
+                        description: 'Markdown文档',
+                        accept: { 'text/markdown': ['.md'] }
+                    }]
+                });
+                
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                alert('文件保存成功');
+            } catch (err) {
+                // 兼容传统保存方式
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'document.md';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        });
+
+        // 初始化示例内容
+        input.value = `# 欢迎使用Markdown编辑器
+
+## 功能特性
+- 实时预览
+- 毛玻璃效果
+- **粗体** 和 *斜体* 支持
+- 代码块高亮
+
+\`\`\`javascript
+// 示例代码
+function hello() {
+    console.log('Hello World!');
+}
+\`\`\`
+
+> 优雅的引用样式
+
+[访问GitHub](https://github.com)`;
+        preview.innerHTML = md.render(input.value);
+    </script>
 </body>
 </html>

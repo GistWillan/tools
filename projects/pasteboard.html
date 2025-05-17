@@ -1,113 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>剪切板文本管理器</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <style>
-    body {
-      background-color: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
-    }
-    .container {
-      max-width: 600px; /* 加宽显示区域 */
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
-    }
-    @keyframes pop-in {
-      0% {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    .clear-cache-btn, .download-btn {
-      margin-top: 20px;
-    }
-    .collection-item {
-      resize: vertical; /* 使文本可拉长 */
-      overflow: auto;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>剪切板文本管理器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #007AFF;
+            --danger: #FF3B30;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h4 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .danger-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .text-list {
+            margin: 2rem 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .list-item {
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
+        @keyframes item-entry {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .delete-btn {
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 59, 48, 0.1);
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: auto;
+            margin-right: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h4 class="center-align">剪切板文本管理器</h4>
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="text" type="text" class="validate">
-        <label for="text">输入文本</label>
-      </div>
+    <div class="container">
+        <h4>剪切板文本管理器</h4>
+        
+        <div class="input-group">
+            <input type="text" id="text" placeholder="输入文本">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn primary-btn" id="saveButton">保存</button>
+        </div>
+
+        <ul class="text-list" id="textList">
+            <!-- 列表项将通过JavaScript动态添加 -->
+        </ul>
+
+        <div class="btn-group">
+            <button class="btn primary-btn" id="downloadButton">下载</button>
+            <button class="btn danger-btn" id="clearCacheButton">清除缓存</button>
+        </div>
     </div>
-    <div class="center-align">
-      <a id="saveButton" class="waves-effect waves-light btn">保存</a>
-    </div>
-    <ul class="collection with-header" id="textList">
-      <li class="collection-header"><h6>已保存的文本</h6></li>
-    </ul>
-  </div>
-  <div class="center-align download-btn">
-    <a id="downloadButton" class="waves-effect waves-light btn blue">下载</a>
-  </div>
-  <div class="center-align clear-cache-btn">
-    <a id="clearCacheButton" class="waves-effect waves-light btn red">清除缓存</a>
-  </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      // 加载已保存的文本
-      if (localStorage.getItem('savedTexts')) {
-        $('#textList').html('<li class="collection-header"><h6>已保存的文本</h6></li>' + localStorage.getItem('savedTexts'));
-      }
-
-      $('#saveButton').click(function() {
-        var text = $('#text').val();
-        if (text.trim() !== '') {
-          var date = new Date().toLocaleString();
-          var listItem = '<li class="collection-item">' + text + ' <span class="right">' + date + '</span><a href="#" class="secondary-content delete-button"><i class="material-icons">delete</i></a></li>';
-          $('#textList').append(listItem);
-          $('#text').val('');
-
-          // 保存到localStorage
-          localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
+    <script>
+        // 初始化存储
+        const storageKey = 'savedTexts';
+        const textList = document.getElementById('textList');
+        
+        // 加载保存的文本
+        function loadSavedTexts() {
+            const saved = JSON.parse(localStorage.getItem(storageKey)) || [];
+            textList.innerHTML = saved.map(item => `
+                <li class="list-item">
+                    <span>${item.text}</span>
+                    <span class="timestamp">${item.date}</span>
+                    <span class="delete-btn">🗑️</span>
+                </li>
+            `).join('');
         }
-      });
 
-      // 删除文本
-      $(document).on('click', '.delete-button', function() {
-        $(this).parent().remove();
-        localStorage.setItem('savedTexts', $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', ''));
-      });
+        // 保存文本
+        document.getElementById('saveButton').addEventListener('click', () => {
+            const input = document.getElementById('text');
+            const text = input.value.trim();
+            
+            if (text) {
+                const saved = JSON.parse(localStorage.getItem(storageKey)) || [];
+                const newItem = {
+                    text: text,
+                    date: new Date().toLocaleString()
+                };
 
-      // 清除缓存
-      $('#clearCacheButton').click(function() {
-        localStorage.removeItem('savedTexts');
-        $('#textList').html('<li class="collection-header"><h6>已保存的文本</h6></li>');
-      });
+                saved.push(newItem);
+                localStorage.setItem(storageKey, JSON.stringify(saved));
+                loadSavedTexts();
+                input.value = '';
+            }
+        });
 
-      // 下载文本为Excel文件
-      $('#downloadButton').click(function() {
-        var savedTexts = $('#textList').html().replace('<li class="collection-header"><h6>已保存的文本</h6></li>', '');
-        var rows = savedTexts.split('</li>').filter(row => row.trim() !== '').map(row => row.replace(/<[^>]+>/g, '').trim());
-        var csvContent = "data:text/csv;charset=utf-8,\uFEFF" + rows.map(row => row.split(' ').join(',')).join('\n'); // 添加BOM头以防止中文乱码
-        var link = document.createElement('a');
-        link.href = encodeURI(csvContent);
-        link.download = 'saved_texts.csv';
-        link.click();
-      });
-    });
-  </script>
+        // 删除文本
+        textList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const index = [...textList.children].indexOf(e.target.parentElement);
+                const saved = JSON.parse(localStorage.getItem(storageKey));
+                saved.splice(index, 1);
+                localStorage.setItem(storageKey, JSON.stringify(saved));
+                loadSavedTexts();
+            }
+        });
+
+        // 清除缓存
+        document.getElementById('clearCacheButton').addEventListener('click', () => {
+            localStorage.removeItem(storageKey);
+            textList.innerHTML = '';
+        });
+
+        // 下载功能
+        document.getElementById('downloadButton').addEventListener('click', () => {
+            const saved = JSON.parse(localStorage.getItem(storageKey)) || [];
+            const csvContent = "data:text/csv;charset=utf-8,\uFEFF" +
+                "文本内容,保存时间\n" +
+                saved.map(item => `"${item.text}","${item.date}"`).join("\n");
+            
+            const link = document.createElement('a');
+            link.href = encodeURI(csvContent);
+            link.download = 'saved_texts.csv';
+            link.click();
+        });
+
+        // 初始化加载
+        loadSavedTexts();
+    </script>
 </body>
 </html>

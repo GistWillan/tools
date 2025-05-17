@@ -1,190 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加视口设置 -->
-    <title>番茄时钟</title>
-    <link rel="shortcut icon" href="images/tomato.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄工作钟</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #007AFF;
+            --danger: #FF3B30;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
         body {
-            text-align: center;
-            background-color: #f5f5f5;
-            padding-top: 20px; /* 调整顶部内边距 */
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 添加改进的渐入动画样式 */
-        @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
-        /* 应用改进的动画到指定元素 */
-        .animated {
-            animation: slideIn 0.3s ease-in-out;
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .timer-card {
+            padding: 2rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0;
         }
 
         #timer {
-            font-size: 32px; /* 减小字体大小 */
-            margin: 20px;
-        }
-        #status {
-            font-size: 16px; /* 减小字体大小 */
-        }
-        #controls {
-            margin-top: 10px; /* 调整按钮顶部内边距 */
-        }
-        #settings {
-            font-size: 14px; /* 减小字体大小 */
-            margin: 10px 20px; /* 调整设置顶部和左侧内边距 */
-        }
-        input[type="number"] {
-            width: 40px;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--primary);
             text-align: center;
-            font-size: 12px; /* 进一步减小输入框字体大小 */
-            margin: 0 5px;
+            margin: 1rem 0;
+            letter-spacing: -2px;
+        }
+
+        #status {
+            font-size: 1.2rem;
+            color: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.5s cubic-bezier(0.42, 0, 0.32, 1.5);
+            border-radius: 4px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        button.danger {
+            background: var(--danger);
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 0.8rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .alert {
+            padding: 1rem;
+            background: rgba(255, 245, 245, 0.9);
+            border-radius: 8px;
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            animation: alert-appear 0.4s ease;
+        }
+
+        @keyframes alert-appear {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            #timer {
+                font-size: 2.5rem;
+            }
+            .settings {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 添加具有改进的渐入动画效果的 div -->
-    <div class="container animated">
-        <h4>番茄时钟</h4>
-        <div class="card-panel">
-            <div id="timer" class="teal-text text-darken-3">25:00</div>
-            <div id="status" class="teal-text text-darken-2">工作中</div>
-            <div id="progress" class="progress">
-                <div class="determinate"></div>
+    <div class="container">
+        <div class="timer-card">
+            <h1>番茄工作钟</h1>
+            <div id="timer">25:00</div>
+            <div id="status">准备开始</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
             </div>
-            <div id="controls">
-                <button id="startPause" class="waves-effect waves-light btn-small teal darken-4">开始</button>
-                <button id="reset" class="waves-effect waves-light btn-small red">复位</button>
+            <div class="controls">
+                <button id="startPause">开始</button>
+                <button id="reset" class="danger">复位</button>
             </div>
-            <div id="settings">
-                <label>工作时间（分钟）: <input type="number" id="workDuration" value="25"></label>
-                <label>休息时间（分钟）: <input type="number" id="breakDuration" value="5"></label>
-                <a id="saveSettings" class="waves-effect waves-light btn-small teal darken-4">保存设置</a>
+            <div class="settings">
+                <div class="input-group">
+                    <label>工作时间：</label>
+                    <input type="number" id="workDuration" value="25" min="1">
+                </div>
+                <div class="input-group">
+                    <label>休息时间：</label>
+                    <input type="number" id="breakDuration" value="5" min="1">
+                </div>
             </div>
-            <div id="info" class="teal-text text-darken-3" style="display:none;">
-                请点击 "复位" 以使更改的时间生效。
+            <div id="alert" class="alert" style="display:none;">
+                设置已保存，点击复位应用新时间
             </div>
-            <audio id="alarm">
-                <source src="https://www.soundjay.com/button/beep-01a.mp3" type="audio/mpeg">
-            </audio>
+            <audio id="alarm" src="https://www.soundjay.com/button/beep-01a.mp3"></audio>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        // 初始化番茄钟状态
         let isPaused = true;
         let isWorking = true;
-        let workTime = 25 * 60; // 25分钟工作时间
-        let breakTime = 5 * 60; // 5分钟休息时间
+        let workTime = 25 * 60;
+        let breakTime = 5 * 60;
         let currentTime = workTime;
         let timerInterval;
-        const alarmSound = document.getElementById('alarm');
+        const alarm = document.getElementById('alarm');
 
-        // 更新计时器显示
-        function updateTimerDisplay() {
-            const minutes = Math.floor(currentTime / 60);
-            const seconds = currentTime % 60;
-            document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        // 时间格式化
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
         }
 
-        // 更新状态显示
-        function updateStatusDisplay() {
-            const status = isPaused ? '暂停中' : (isWorking ? '工作中' : '休息中');
-            document.getElementById('status').textContent = status;
+        // 更新界面
+        function updateUI() {
+            document.getElementById('timer').textContent = formatTime(currentTime);
+            document.getElementById('status').textContent = 
+                isPaused ? '暂停中' : (isWorking ? '工作中' : '休息中');
+            
+            const progress = ((workTime - currentTime) / workTime) * 100;
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
         }
 
-        // 更新进度条
-        function updateProgressBar() {
-            const percentage = ((workTime - currentTime) / workTime) * 100;
-            document.querySelector('.determinate').style.width = `${percentage}%`;
-        }
-
-        // 启动或暂停计时器
-        function startPauseTimer() {
+        // 计时器逻辑
+        function startPause() {
             if (isPaused) {
                 isPaused = false;
                 document.getElementById('startPause').textContent = '暂停';
-                timerInterval = setInterval(function() {
+                timerInterval = setInterval(() => {
                     if (currentTime > 0) {
                         currentTime--;
-                        updateTimerDisplay();
-                        updateProgressBar();
+                        updateUI();
                     } else {
-                        // 切换工作和休息状态
-                        isPaused = true;
-                        isWorking = !isWorking;
-                        if (isWorking) {
-                            currentTime = workTime;
-                        } else {
-                            currentTime = breakTime;
-                        }
-                        updateStatusDisplay();
-                        updateTimerDisplay();
-                        updateProgressBar();
-
-                        // 播放警告音
-                        alarmSound.play();
+                        handleTimeEnd();
                     }
                 }, 1000);
             } else {
                 isPaused = true;
-                document.getElementById('startPause').textContent = '开始';
+                document.getElementById('startPause').textContent = '继续';
                 clearInterval(timerInterval);
             }
-            updateStatusDisplay();
+            updateUI();
         }
 
-        // 复位计时器
-        function resetTimer() {
+        function handleTimeEnd() {
+            clearInterval(timerInterval);
+            isPaused = true;
+            isWorking = !isWorking;
+            currentTime = isWorking ? workTime : breakTime;
+            alarm.play();
+            updateUI();
+        }
+
+        // 复位功能
+        function reset() {
             clearInterval(timerInterval);
             isPaused = true;
             isWorking = true;
-            document.getElementById('startPause').textContent = '开始';
             workTime = parseInt(document.getElementById('workDuration').value) * 60;
             breakTime = parseInt(document.getElementById('breakDuration').value) * 60;
             currentTime = workTime;
-            updateStatusDisplay();
-            updateTimerDisplay();
-            updateProgressBar();
-
-            // 显示提示信息
-            document.getElementById('info').style.display = 'block';
+            document.getElementById('alert').style.display = 'none';
+            updateUI();
+            document.getElementById('startPause').textContent = '开始';
         }
 
-        // 保存设置并关闭提示
-        function saveSettings() {
-            workTime = parseInt(document.getElementById('workDuration').value) * 60;
-            breakTime = parseInt(document.getElementById('breakDuration').value) * 60;
+        // 自动保存设置
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('change', () => {
+                document.getElementById('alert').style.display = 'block';
+            });
+        });
 
-            // 关闭提示信息
-            document.getElementById('info').style.display = 'none';
-        }
+        // 事件绑定
+        document.getElementById('startPause').addEventListener('click', startPause);
+        document.getElementById('reset').addEventListener('click', reset);
 
-        // 绑定按钮事件
-        document.getElementById('startPause').addEventListener('click', startPauseTimer);
-        document.getElementById('reset').addEventListener('click', resetTimer);
-        document.getElementById('saveSettings').addEventListener('click', saveSettings);
-
-        // 初始显示
-        updateStatusDisplay();
-        updateTimerDisplay();
-        updateProgressBar();
-
-        // 初始化Materialize组件
-        M.AutoInit();
+        // 初始化
+        updateUI();
     </script>
 </body>
 </html>

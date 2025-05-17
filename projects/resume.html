@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- 新增html2pdf库 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Resume Generator</title>
+    <title>智能简历生成器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary-color: #007AFF;
-            --background-color: #F5F5F7;
-            --card-bg: #FFFFFF;
-            --text-primary: #1D1D1F;
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
         }
 
         * {
@@ -22,127 +21,147 @@
         }
 
         body {
-            background: var(--background-color);
             min-height: 100vh;
-            padding: 2rem;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
             display: flex;
-            gap: 2rem;
+            gap: var(--spacing);
+            flex-wrap: wrap;
         }
 
-        /* 输入区域样式 */
+        /* 输入区域 */
         .input-section {
-            width: 350px;
-            padding: 2rem;
-            background: var(--card-bg);
-            border-radius: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            animation: slideInLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+            max-width: 400px;
+            padding: var(--spacing);
+            background: var(--glass-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
         .input-group {
             margin-bottom: 1.5rem;
+            position: relative;
         }
 
         label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 500;
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            pointer-events: none;
+            background: var(--glass-bg);
+            padding: 0 4px;
         }
 
         input, textarea {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
         input:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        input:focus ~ label,
+        input:not(:placeholder-shown) ~ label,
+        textarea:focus ~ label,
+        textarea:not(:placeholder-shown) ~ label {
+            top: -8px;
+            left: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--primary);
         }
 
         button {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
             padding: 1rem 2rem;
-            border-radius: 25px;
+            border-radius: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
             width: 100%;
         }
 
         button:hover {
             opacity: 0.9;
-            transform: scale(0.98);
+            transform: translateY(-2px);
         }
 
-        /* 简历预览样式 */
+        /* 简历预览 */
         .resume-preview {
             flex: 1;
-            background: var(--card-bg);
-            border-radius: 18px;
-            padding: 3rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            animation: slideInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            min-width: 300px;
+            padding: var(--spacing);
+            background: var(--glass-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            position: relative;
         }
 
         .resume-section {
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 0.4s ease forwards;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
         }
 
-        h2 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-left: 1rem;
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        h2::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 80%;
-            background: var(--primary-color);
-            border-radius: 2px;
+        @keyframes item-entry {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* 动画定义 */
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
+        /* 下载按钮 */
+        .download-btn {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+            float: right;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                padding: 1rem;
             }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .input-section, .resume-preview {
+                max-width: 100%;
+                width: 100%;
             }
         }
     </style>
@@ -150,53 +169,50 @@
 <body>
     <!-- 输入表单 -->
     <section class="input-section">
-        <h1>简历生成器</h1>
+        <h1 style="color: var(--primary); margin-bottom: 2rem;">简历生成器</h1>
         <div class="input-group">
+            <input type="text" id="name" placeholder=" ">
             <label>姓名</label>
-            <input type="text" id="name">
         </div>
         <div class="input-group">
+            <input type="text" id="position" placeholder=" ">
             <label>职位</label>
-            <input type="text" id="position">
         </div>
         <div class="input-group">
+            <input type="email" id="email" placeholder=" ">
             <label>邮箱</label>
-            <input type="email" id="email">
         </div>
         <div class="input-group">
+            <input type="tel" id="phone" placeholder=" ">
             <label>电话</label>
-            <input type="tel" id="phone">
         </div>
         <div class="input-group">
+            <textarea id="summary" rows="4" placeholder=" "></textarea>
             <label>个人简介</label>
-            <textarea id="summary" rows="4"></textarea>
         </div>
         <button onclick="generateResume()">生成简历</button>
     </section>
 
     <!-- 简历预览 -->
     <section class="resume-preview" id="resumePreview">
+        <button class="download-btn" onclick="downloadPDF()">下载 PDF</button>
+        
         <div class="resume-section" id="headerSection">
             <h1 id="resumeName">张三</h1>
             <h3 id="resumePosition">前端工程师</h3>
         </div>
         
         <div class="resume-section" id="contactSection">
-            <h2>联系方式</h2>
+            <h2 style="color: var(--primary);">联系方式</h2>
             <p id="resumeEmail">example@email.com</p>
             <p id="resumePhone">138-1234-5678</p>
         </div>
 
         <div class="resume-section" id="summarySection">
-            <h2>个人简介</h2>
+            <h2 style="color: var(--primary);">个人简介</h2>
             <p id="resumeSummary">资深前端开发工程师，拥有5年Web开发经验...</p>
         </div>
     </section>
-    <!-- 在简历预览区添加下载按钮 -->
-    <section class="resume-preview" id="resumePreview">
-        <div class="controls">
-            <button class="download-btn" onclick="downloadPDF()">下载 PDF</button>
-        </div>
 
     <script>
         function generateResume() {
@@ -207,70 +223,45 @@
             document.getElementById('resumePhone').textContent = document.getElementById('phone').value;
             document.getElementById('resumeSummary').textContent = document.getElementById('summary').value;
 
-            // 添加动画
-            const sections = document.querySelectorAll('.resume-section');
-            sections.forEach((section, index) => {
+            // 触发动画
+            document.querySelectorAll('.resume-section').forEach((section, index) => {
                 section.style.animationDelay = `${index * 0.2}s`;
-                section.classList.remove('resume-section');
-                void section.offsetWidth; // 触发重绘
-                section.classList.add('resume-section');
+                section.style.animation = 'none';
+                void section.offsetWidth;
+                section.style.animation = 'item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards';
             });
         }
-         // 新增下载功能
+
         function downloadPDF() {
             const element = document.getElementById('resumePreview');
             const options = {
-                margin:       12,
-                filename:     'resume.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
+                margin: 12,
+                filename: 'resume.pdf',
+                html2canvas: { 
                     scale: 2,
                     useCORS: true,
                     logging: true,
                     letterRendering: true
                 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait',
+                    putOnlyUsedFonts: true 
+                }
             };
 
             html2pdf()
                 .set(options)
                 .from(element)
-                .save();
-        }
-    </script>
-
-    <style>
-        /* 新增下载按钮样式 */
-        .controls {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            text-align: right;
-            margin-bottom: 1rem;
+                .save()
+                .catch(err => console.error('PDF生成失败:', err));
         }
 
-        .download-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 2px 8px rgba(0,122,255,0.2);
-        }
-
-        .download-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
-        }
-
-        .download-btn:active {
-            transform: translateY(0);
-            opacity: 0.9;
-        }
-    </style>
+        // 实时预览
+        document.querySelectorAll('input, textarea').forEach(element => {
+            element.addEventListener('input', generateResume);
+        });
     </script>
 </body>
 </html>

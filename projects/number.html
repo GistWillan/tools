@@ -5,206 +5,295 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>随机数生成器</title>
     <link rel="shortcut icon" href="images/number.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #007AFF;
+            --spacing: 24px;
+        }
+
         body {
-            background-color: rgba(240, 240, 240, 0); /* 初始背景色透明 */
-            color: #333;
-            font-family: 'Roboto', sans-serif;
-            transition: background-color 0.5s ease; /* 添加背景色渐变效果 */
-        }
-
-        /* 加入渐变后，隐藏网页内容 */
-        .container {
-            opacity: 0;
-        }
-
-        /* 应用渐变动画效果的元素 */
-        .animated-element {
-            animation: fade-in 0.5s ease; /* 动画持续时间和缓动函数可以根据需要调整 */
-        }
-
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            padding: 20px;
-            opacity: 0; /* 初始设置为不可见 */
-            transform: translateY(-10px); /* 初始上移一些距离 */
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        /* 悬停时显示渐入动画 */
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .btn {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #e8f4ff 0%, #f5f9ff 100%);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .btn:hover {
-            background-color: #005ca3;
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         h4 {
-            margin-top: 20px;
-            color: #007acc;
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 2rem;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        .input-field {
+            margin: 1.5rem 0;
+            position: relative;
+            opacity: 0;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
+        .input-field:nth-child(1) { animation-delay: 0.2s; }
+        .input-field:nth-child(2) { animation-delay: 0.3s; }
+
+        @keyframes item-entry {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        input {
+            width: calc(100% - 2rem);
+            padding: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+            margin: 0 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        label {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        input:focus ~ label,
+        input:not(:placeholder-shown) ~ label {
+            top: -8px;
+            left: 1rem;
+            font-size: 0.8rem;
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .card {
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            margin: 2rem 0;
+            opacity: 0;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+            animation-delay: 0.4s;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         #randomNumber {
-            font-size: 36px;
-            margin-top: 20px;
+            font-size: 2.5rem;
+            font-weight: 600;
             text-align: center;
+            color: rgba(0, 0, 0, 0.9);
+            margin: 1rem 0;
         }
 
         #history {
-            margin-top: 30px;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+            animation-delay: 0.5s;
         }
 
         #history h5 {
-            color: #007acc;
+            color: rgba(0, 0, 0, 0.8);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         #historyList {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.5rem;
         }
 
         #historyList li {
-            margin: 5px 0;
-            padding: 10px;
-            background-color: #e0f7fa;
-            border-radius: 5px;
-            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: item-entry 0.6s ease forwards;
+        }
+
+        @keyframes toast {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            20% { opacity: 1; transform: translate(-50%, 0); }
+            80% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, 20px); }
         }
     </style>
 </head>
 <body>
-    <div class="container animated-element">
-        <h4 class="teal-text">随机数生成器</h4>
+    <div class="container">
+        <h4>随机数生成器</h4>
 
-        <!-- 最小值输入 -->
         <div class="input-field">
-            <input type="number" id="minValue">
+            <input type="number" id="minValue" placeholder=" ">
             <label for="minValue">最小值</label>
         </div>
 
-        <!-- 最大值输入 -->
         <div class="input-field">
-            <input type="number" id="maxValue">
+            <input type="number" id="maxValue" placeholder=" ">
             <label for="maxValue">最大值</label>
         </div>
 
-        <!-- 生成随机数按钮 -->
-        <div style="display: flex; justify-content: center;">
-            <button class="btn waves-effect waves-light" onclick="generateRandomNumber()">
+        <div style="text-align: center; animation: item-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards; animation-delay: 0.35s;">
+            <button class="btn">
                 生成随机数
-                <i class="material-icons right">casino</i>
             </button>
         </div>
 
-        <!-- 显示生成的随机数 -->
         <div class="card">
             <p id="randomNumber"></p>
-            <!-- 复制按钮 -->
-            <div style="display: flex; justify-content: center;">
-                <button class="btn waves-effect waves-light" id="copyButton" onclick="copyRandomNumber()">
+            <div style="text-align: center;">
+                <button class="btn" id="copyButton">
                     复制随机数
-                    <i class="material-icons right">content_copy</i>
                 </button>
             </div>
         </div>
 
-        <!-- 历史记录开关 -->
-        <div style="margin-top: 20px;">
-            <label>
-                <input type="checkbox" id="historySwitch" />
-                <span>启用历史记录</span>
-            </label>
-        </div>
-
-        <!-- 随机数历史记录 -->
         <div id="history">
             <h5>历史记录</h5>
             <ul id="historyList"></ul>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        // 生成随机数函数
-        function generateRandomNumber() {
-            const minValue = parseInt(document.getElementById('minValue').value);
-            const maxValue = parseInt(document.getElementById('maxValue').value);
-            const historySwitch = document.getElementById('historySwitch').checked;
+        // DOM元素
+        const generateBtn = document.querySelector('.btn');
+        const copyBtn = document.getElementById('copyButton');
 
-            if (isNaN(minValue) || isNaN(maxValue)) {
-                alert('请输入有效的最小值和最大值。');
+        // 动画顺序调整
+        const elements = [
+            { element: document.querySelector('h4'), delay: 0 },
+            { element: document.querySelectorAll('.input-field')[0], delay: 0.2 },
+            { element: document.querySelectorAll('.input-field')[1], delay: 0.3 },
+            { element: document.querySelector('.card'), delay: 0.4 },
+            { element: document.getElementById('history'), delay: 0.5 }
+        ];
+
+        // 生成随机数
+        generateBtn.addEventListener('click', () => {
+            const min = parseInt(document.getElementById('minValue').value);
+            const max = parseInt(document.getElementById('maxValue').value);
+
+            if (isNaN(min) || isNaN(max)) {
+                showToast('请输入有效数值');
                 return;
             }
 
-            const randomNum = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
-            const randomNumberElement = document.getElementById('randomNumber');
-            const copyButton = document.getElementById('copyButton');
-            const historyList = document.getElementById('historyList');
+            const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById('randomNumber').textContent = randomNum;
+            
+            // 自动添加历史记录
+            const li = document.createElement('li');
+            li.textContent = `${new Date().toLocaleTimeString()}: ${randomNum}`;
+            document.getElementById('historyList').appendChild(li);
+            li.style.animation = 'item-entry 0.6s ease forwards';
+        });
 
-            randomNumberElement.textContent = `随机数：${randomNum}`;
-            copyButton.style.display = 'block'; // 显示复制按钮
+        // 复制功能
+        copyBtn.addEventListener('click', () => {
+            const text = document.getElementById('randomNumber').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制到剪贴板');
+            });
+        });
 
-            if (historySwitch) {
-                // 添加历史记录
-                const historyItem = document.createElement('li');
-                historyItem.textContent = `随机数：${randomNum}`;
-                historyList.appendChild(historyItem);
-            }
-
-            // 添加渐入动画的类
-            setTimeout(function() {
-                document.querySelector('.card').classList.add('visible');
-            }, 10);
+        // Toast提示
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 12px 24px;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                border-radius: 8px;
+                animation: toast 3s ease;
+                backdrop-filter: blur(10px);
+                font-size: 0.9rem;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // 复制随机数函数
-        function copyRandomNumber() {
-            const randomNumText = document.getElementById('randomNumber').textContent;
-
-            const textarea = document.createElement('textarea');
-            textarea.value = randomNumText;
-
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            alert('随机数已复制到剪贴板！');
-        }
-
-        // 页面加载后，添加背景渐变和显示页面内容的动画
-        window.addEventListener('load', () => {
-            document.body.style.backgroundColor = '#f0f0f0'; // 设置背景色
-            setTimeout(() => {
-                document.querySelector('.container').style.opacity = 1; // 显示内容
-            }, 500);
+        // 输入框标签动画
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                const label = this.parentNode.querySelector('label');
+                label.style.color = this.value ? 'var(--primary)' : 'rgba(0, 0, 0, 0.5)';
+                label.style.background = this.value ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.9)';
+            });
         });
     </script>
 </body>

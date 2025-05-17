@@ -1,166 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>时间戳转换网页</title>
-  <!-- 引入Material Design的样式表和字体 -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-  <!-- 引入Material Design的脚本 -->
-  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-  <!-- 引入jQuery的脚本 -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- 定义自己的样式 -->
-  <style>
-    /* 设置网页的背景颜色为浅灰色 */
-    body {
-      background-color: #f5f5f5;
-    }
-    /* 设置标题的样式 */
-    h1 {
-      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-      font-weight: 300;
-      font-size: 48px; /* 放大整体文字 */
-      text-align: center;
-      margin-top: 50px;
-      margin-bottom: 20px;
-    }
-    /* 设置输入框的样式 */
-    .input {
-      width: 300px;
-      margin: 0 auto;
-      text-align: center; /* 居中输入框 */
-    }
-    /* 设置按钮的样式 */
-    .button {
-      width: 300px;
-      margin: 20px auto;
-      text-align: center; /* 居中按钮 */
-    }
-    /* 设置结果的样式 */
-    .result {
-      width: 300px;
-      margin: 20px auto;
-      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-      font-weight: 400;
-      font-size: 18px;
-      text-align: center;
-    }
-    /* 设置动画的样式 */
-    .animated {
-      animation-duration: 0.5s;
-      animation-fill-mode: both;
-    }
-    @keyframes bounceIn {
-      from, 20%, 40%, 60%, 80%, to {
-        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-      }
-      0% {
-        opacity: 0;
-        transform: scale3d(0.3, 0.3, 0.3);
-      }
-      20% {
-        transform: scale3d(1.1, 1.1, 1.1);
-      }
-      40% {
-        transform: scale3d(0.9, 0.9, 0.9);
-      }
-      60% {
-        opacity: 1;
-        transform: scale3d(1.03, 1.03, 1.03);
-      }
-      80% {
-        transform: scale3d(0.97, 0.97, 0.97);
-      }
-      to {
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
-      }
-    }
-    .bounceIn {
-      animation-name: bounceIn;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间戳转换工具</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .result-card {
+            padding: 1.5rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            animation: result-appear 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: none;
+        }
+
+        @keyframes result-appear {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .time-format {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .format-option {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(0, 122, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .format-option.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .error-message {
+            color: #ff3b30;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- 网页的标题 -->
-  <h1>时间戳转换网页</h1>
-  <!-- 网页的输入框 -->
-  <div class="input">
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" type="text" id="timestamp" pattern="-?[0-9]*(\.[0-9]+)?">
-      <label class="mdl-textfield__label" for="timestamp">请输入时间戳</label>
-      <span class="mdl-textfield__error">请输入一个有效的时间戳</span>
+    <div class="container">
+        <h1>时间戳转换工具</h1>
+        
+        <div class="input-group">
+            <input type="text" id="timestamp" placeholder="输入时间戳（秒或毫秒）">
+            <div class="error-message" id="errorMsg"></div>
+        </div>
+
+        <div class="time-format">
+            <div class="format-option active" data-format="local">本地时间</div>
+            <div class="format-option" data-format="utc">UTC时间</div>
+            <div class="format-option" data-format="iso">ISO格式</div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="convertTimestamp()">立即转换</button>
+            <button onclick="insertCurrentTime()">当前时间戳</button>
+        </div>
+
+        <div class="result-card" id="result">
+            <div id="resultContent"></div>
+        </div>
     </div>
-  </div>
-  <!-- 网页的按钮 -->
-  <div class="button">
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="convert">
-      转换
-    </button>
-  </div>
-  <!-- 网页的结果 -->
-  <div class="result" id="result" style="display: none;">
-    <!-- 这里会显示结果 -->
-  </div>
-  <!-- 网页的脚本 -->
-  <script>
-    // 定义一个函数，用于转换时间戳
-    function convertTimestamp(timestamp) {
-      // 将时间戳转换为整数
-      var date = new Date(parseInt(timestamp) * 1000);
-      // 获取年月日和时间
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var seconds = date.getSeconds();
-      // 返回结果字符串
-      return `时间戳 ${timestamp} 转换结果为：
-        <br>
-        <span style="font-weight: bold; font-size: 24px;">${year}年${month}月${day}日 ${hours}时${minutes}分${seconds}秒</span>`;
-    }
 
-    // 定义一个函数，用于显示结果
-    function showResult(result) {
-      // 获取结果元素
-      var resultElement = $("#result");
-      // 设置结果元素的 HTML
-      resultElement.html(result);
-      // 显示结果元素，并添加动画效果
-      resultElement.show().addClass("animated bounceIn");
-    }
+    <script>
+        let currentFormat = 'local';
+        
+        // 初始化格式选择
+        document.querySelectorAll('.format-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.format-option').forEach(el => el.classList.remove('active'));
+                option.classList.add('active');
+                currentFormat = option.dataset.format;
+                if(document.getElementById('timestamp').value) convertTimestamp();
+            });
+        });
 
-    // 定义一个函数，用于隐藏结果
-    function hideResult() {
-      // 获取结果元素
-      var resultElement = $("#result");
-      // 隐藏结果元素，并移除动画效果
-      resultElement.hide().removeClass("animated bounceIn");
-    }
+        // 实时转换
+        document.getElementById('timestamp').addEventListener('input', function() {
+            if(this.value) convertTimestamp();
+        });
 
-    // 当网页加载完成后，执行以下代码
-    $(document).ready(function() {
-      // 获取转换按钮
-      var convertButton = $("#convert");
-      // 为转换按钮绑定点击事件
-      convertButton.click(function() {
-        // 获取输入框的值
-        var timestamp = $("#timestamp").val();
-        // 判断输入框的值是否为空
-        if (timestamp == "") {
-          // 如果为空，隐藏结果
-          hideResult();
-        } else {
-          // 如果不为空，转换时间戳
-          var result = convertTimestamp(timestamp);
-          // 显示结果
-          showResult(result);
+        function convertTimestamp() {
+            const timestamp = document.getElementById('timestamp').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            errorMsg.style.display = 'none';
+            resultDiv.style.display = 'none';
+
+            if (!timestamp) return;
+
+            let date;
+            try {
+                const numericTimestamp = timestamp.length === 13 ? 
+                    parseInt(timestamp) : 
+                    parseInt(timestamp) * 1000;
+                
+                if (isNaN(numericTimestamp)) throw new Error('无效数字');
+                
+                date = new Date(numericTimestamp);
+                if (date.toString() === 'Invalid Date') throw new Error('无效时间戳');
+            } catch (e) {
+                errorMsg.textContent = '请输入有效的时间戳（10位秒或13位毫秒）';
+                errorMsg.style.display = 'block';
+                errorMsg.style.animation = 'result-appear 0.3s';
+                return;
+            }
+
+            let formattedTime;
+            switch(currentFormat) {
+                case 'utc':
+                    formattedTime = date.toUTCString();
+                    break;
+                case 'iso':
+                    formattedTime = date.toISOString();
+                    break;
+                default:
+                    formattedTime = date.toLocaleString();
+            }
+
+            resultContent.innerHTML = `
+                <div style="color: #666; margin-bottom: 0.5rem;">转换结果：</div>
+                <div style="font-size: 1.2rem; color: var(--primary); word-break: break-all;">
+                    ${formattedTime}
+                </div>
+            `;
+            resultDiv.style.display = 'block';
         }
-      });
-    });
-  </script>
+
+        function insertCurrentTime() {
+            const timestamp = Date.now();
+            document.getElementById('timestamp').value = timestamp;
+            convertTimestamp();
+        }
+
+        // 输入验证
+        document.getElementById('timestamp').addEventListener('keypress', (e) => {
+            if (!/[0-9]/.test(e.key) && e.key !== 'Backspace') {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>

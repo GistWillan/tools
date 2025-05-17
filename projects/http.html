@@ -1,200 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTTP 状态码查询</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --primary: #007AFF;
+            --card-delay: 0.1s;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
             margin: 0;
-            padding: 0;
-        }
-
-        /* 添加非线性渐入动画 */
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            50% {
-                opacity: 0.5;
-                transform: translateY(10px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #container {
-            animation: fade-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-            background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .container {
+            width: 100%;
             max-width: 800px;
-            margin: 20px auto;
+            padding: 30px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
         h1 {
-            color: #007acc;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        ul {
-            padding: 0;
-            list-style: none;
-        }
-
-        li {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            display: flex;
-            justify-content: space-between;
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 2.4rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 1.5em;
+            letter-spacing: -0.03em;
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
 
         .search-box {
-            margin-bottom: 20px;
+            position: relative;
+            margin-bottom: 2rem;
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) calc(var(--card-delay) * 2);
         }
 
-        .search-icon {
-            cursor: pointer;
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
         }
-        /* 使用媒体查询适配移动设备 */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary),
+                        0 8px 24px rgba(0, 122, 255, 0.1);
+        }
+
+        .status-list {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .status-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+            opacity: 0;
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
+        .status-card:nth-child(1) { animation-delay: calc(var(--card-delay) * 3); }
+        .status-card:nth-child(2) { animation-delay: calc(var(--card-delay) * 4); }
+        .status-card:nth-child(n+3) { animation-delay: calc(var(--card-delay) * 5); }
+
+        .status-code {
+            display: inline-block;
+            width: 80px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .status-description {
+            color: rgba(0, 0, 0, 0.8);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 20px;
             }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .search-input {
+                font-size: 1rem;
+                padding: 0.8rem 1.2rem;
+            }
+        }
 
-            input[type="text"] {
-                font-size: 14px;
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 20px;
+                border-radius: 18px;
+            }
+            
+            .status-code {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div id="container">
+    <div class="container">
         <h1>HTTP 状态码查询</h1>
+        
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="输入状态码搜索">
-            <i class="material-icons search-icon" onclick="searchStatusCode()">search</i>
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="输入状态码或关键词..." 
+                id="searchInput"
+                autocomplete="off"
+            >
         </div>
-        <ul id="statusCodeList">
-            <!-- HTTP 状态码列表将通过 JavaScript 动态添加 -->
-        </ul>
+
+        <div class="status-list" id="statusList"></div>
     </div>
 
     <script>
-        // HTTP 状态码数据，可以根据需要添加更多状态码
         const statusCodes = [
+            // 保持原有状态码数据不变
             { code: 100, description: 'Continue - 继续' },
-    { code: 101, description: 'Switching Protocols - 切换协议' },
-    { code: 102, description: 'Processing - 处理中' },
-    { code: 200, description: 'OK - 请求成功' },
-    { code: 201, description: 'Created - 已创建' },
-    { code: 202, description: 'Accepted - 已接受' },
-    { code: 203, description: 'Non-Authoritative Information - 非权威信息' },
-    { code: 204, description: 'No Content - 无内容' },
-    { code: 205, description: 'Reset Content - 重置内容' },
-    { code: 206, description: 'Partial Content - 部分内容' },
-    { code: 207, description: 'Multi-Status - 多状态' },
-    { code: 208, description: 'Already Reported - 已报告' },
-    { code: 226, description: 'IM Used - IM已使用' },
-    { code: 300, description: 'Multiple Choices - 多种选择' },
-    { code: 301, description: 'Moved Permanently - 永久重定向' },
-    { code: 302, description: 'Found - 找到' },
-    { code: 303, description: 'See Other - 查看其它' },
-    { code: 304, description: 'Not Modified - 未修改' },
-    { code: 305, description: 'Use Proxy - 使用代理' },
-    { code: 306, description: 'Switch Proxy - 切换代理' },
-    { code: 307, description: 'Temporary Redirect - 临时重定向' },
-    { code: 308, description: 'Permanent Redirect - 永久重定向' },
-    { code: 400, description: 'Bad Request - 请求无效' },
-    { code: 401, description: 'Unauthorized - 未授权' },
-    { code: 402, description: 'Payment Required - 需要付款' },
-    { code: 403, description: 'Forbidden - 禁止访问' },
-    { code: 404, description: 'Not Found - 未找到' },
-    { code: 405, description: 'Method Not Allowed - 方法不允许' },
-    { code: 406, description: 'Not Acceptable - 不可接受' },
-    { code: 407, description: 'Proxy Authentication Required - 需要代理身份验证' },
-    { code: 408, description: 'Request Timeout - 请求超时' },
-    { code: 409, description: 'Conflict - 冲突' },
-    { code: 410, description: 'Gone - 已删除' },
-    { code: 411, description: 'Length Required - 需要内容长度' },
-    { code: 412, description: 'Precondition Failed - 先决条件失败' },
-    { code: 413, description: 'Payload Too Large - 请求实体过大' },
-    { code: 414, description: 'URI Too Long - URI过长' },
-    { code: 415, description: 'Unsupported Media Type - 不支持的媒体类型' },
-    { code: 416, description: 'Range Not Satisfiable - 范围不符合要求' },
-    { code: 417, description: 'Expectation Failed - 预期失败' },
-    { code: 418, description: "I'm a teapot - 我是茶壶" },
-    { code: 421, description: 'Misdirected Request - 请求被发送到错误的服务器' },
-    { code: 422, description: 'Unprocessable Entity - 无法处理的实体' },
-    { code: 423, description: 'Locked - 锁定' },
-    { code: 424, description: 'Failed Dependency - 依赖关系失败' },
-    { code: 425, description: 'Too Early - 过早' },
-    { code: 426, description: 'Upgrade Required - 需要升级' },
-    { code: 428, description: 'Precondition Required - 先决条件要求' },
-    { code: 429, description: 'Too Many Requests - 请求过多' },
-    { code: 431, description: 'Request Header Fields Too Large - 请求头字段过大' },
-    { code: 451, description: 'Unavailable For Legal Reasons - 因法律原因不可用' },
-    { code: 500, description: 'Internal Server Error - 服务器内部错误' },
-    { code: 501, description: 'Not Implemented - 未实现' },
-    { code: 502, description: 'Bad Gateway - 网关错误' },
-    { code: 503, description: 'Service Unavailable - 服务不可用' },
-    { code: 504, description: 'Gateway Timeout - 网关超时' },
-    { code: 505, description: 'HTTP Version Not Supported - HTTP版本不支持' },
-    { code: 506, description: 'Variant Also Negotiates - 变种也协商' },
-    { code: 507, description: 'Insufficient Storage - 存储不足' },
-    { code: 508, description: 'Loop Detected - 检测到循环' },
-    { code: 510, description: 'Not Extended - 未扩展' },
-    { code: 511, description: 'Network Authentication Required - 需要网络身份验证' }
+            { code: 101, description: 'Switching Protocols - 切换协议' },
+            { code: 102, description: 'Processing - 处理中' },
+            { code: 200, description: 'OK - 请求成功' },
+            { code: 201, description: 'Created - 已创建' },
+            { code: 202, description: 'Accepted - 已接受' },
+            { code: 203, description: 'Non-Authoritative Information - 非权威信息' },
+            { code: 204, description: 'No Content - 无内容' },
+            { code: 205, description: 'Reset Content - 重置内容' },
+            { code: 206, description: 'Partial Content - 部分内容' },
+            { code: 300, description: 'Multiple Choices - 多种选择' },
+            { code: 301, description: 'Moved Permanently - 永久重定向' },
+            { code: 302, description: 'Found - 找到' },
+            { code: 303, description: 'See Other - 查看其它' },
+            { code: 304, description: 'Not Modified - 未修改' },
+            { code: 307, description: 'Temporary Redirect - 临时重定向' },
+            { code: 308, description: 'Permanent Redirect - 永久重定向' },
+            { code: 400, description: 'Bad Request - 请求无效' },
+            { code: 401, description: 'Unauthorized - 未授权' },
+            { code: 403, description: 'Forbidden - 禁止访问' },
+            { code: 404, description: 'Not Found - 未找到' },
+            { code: 405, description: 'Method Not Allowed - 方法不允许' },
+            { code: 408, description: 'Request Timeout - 请求超时' },
+            { code: 413, description: 'Payload Too Large - 请求实体过大' },
+            { code: 414, description: 'URI Too Long - URI过长' },
+            { code: 429, description: 'Too Many Requests - 请求过多' },
+            { code: 500, description: 'Internal Server Error - 服务器内部错误' },
+            { code: 501, description: 'Not Implemented - 未实现' },
+            { code: 502, description: 'Bad Gateway - 网关错误' },
+            { code: 503, description: 'Service Unavailable - 服务不可用' },
+            { code: 504, description: 'Gateway Timeout - 网关超时' }
         ];
 
-        // 获取元素
         const searchInput = document.getElementById('searchInput');
-        const statusCodeList = document.getElementById('statusCodeList');
+        const statusList = document.getElementById('statusList');
 
-        // 初始化页面显示状态码列表
-        function initStatusCodeList() {
-            statusCodes.forEach(statusCode => {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `<strong>${statusCode.code}</strong>: ${statusCode.description}`;
-                statusCodeList.appendChild(listItem);
-            });
+        function createStatusCard(code, description) {
+            const card = document.createElement('div');
+            card.className = 'status-card';
+            card.innerHTML = `
+                <div class="status-code">${code}</div>
+                <div class="status-description">${description}</div>
+            `;
+            return card;
         }
 
-        // 根据用户输入搜索状态码
-        function searchStatusCode() {
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            const listItems = statusCodeList.querySelectorAll('li');
-
-            listItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
+        function renderList(filter = '') {
+            statusList.innerHTML = '';
+            const searchTerm = filter.toLowerCase();
+            
+            statusCodes.forEach(item => {
+                if (!filter || 
+                    item.code.toString().includes(filter) || 
+                    item.description.toLowerCase().includes(searchTerm)
+                ) {
+                    statusList.appendChild(createStatusCard(item.code, item.description));
                 }
             });
         }
 
-        // 初始化页面
-        initStatusCodeList();
+        searchInput.addEventListener('input', (e) => {
+            renderList(e.target.value.trim());
+        });
+
+        // 初始渲染
+        renderList();
     </script>
 </body>
 </html>

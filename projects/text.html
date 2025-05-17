@@ -1,248 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文字加密解密</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817" crossorigin="anonymous"></script>
+    <title>安全加密解密器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
+        :root {
+            --primary: #007AFF;
+            --danger: #FF3B30;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
         }
+
         .container {
-            margin-top: 20px;
+            width: 100%;
+            max-width: 1200px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        /* 添加动画效果 */
-        .card-panel {
-            padding: 20px;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            animation: fade-in 0.5s ease;
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing);
+            margin: 2rem 0;
         }
-        /* 悬停时应用阴影和缩放动画 */
-        .card-panel:hover {
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-            transform: scale(1.02);
+
+        .card {
+            padding: var(--spacing);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.42, 0, 0.32, 1.5);
         }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        h4 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .radio-group {
+            display: grid;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+            gap: 12px; /* 新增间距 */
+        }
+
+        .radio-item label {
+            flex: 1;
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: center; /* 新增垂直居中 */
+        }
+
+        .radio-item:hover {
+            background: rgba(0, 122, 255, 0.05);
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: var(--primary);
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
         #result {
-            font-weight: bold;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            word-break: break-all;
+            animation: result-appear 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            line-height: 1.6;
         }
-        #copyButton {
+
+        @keyframes result-appear {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .key-input {
+            margin-top: 1rem;
             display: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            animation: toast 3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .radio-item {
+                padding: 0.6rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h4 class="center-align">文字加密解密</h4>
-        <div class="row">
-            <div class="col s12 m6">
-                <div class="card-panel">
-                    <h5>加密</h5>
-                    <div class="input-field">
-                        <input type="text" id="encryptInput">
-                        <label for="encryptInput">输入要加密的文本</label>
-                    </div>
-                    <p>选择加密方式:</p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="base64" checked>
-                            <span>Base64</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="url">
-                            <span>URL (UTF8)</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="sha1">
-                            <span>SHA-1</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="md5">
-                            <span>MD5</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="des">
-                            <span>DES</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="encryptionType" type="radio" value="aes">
-                            <span>AES</span>
-                        </label>
-                    </p>
-                    <button class="btn waves-effect waves-light" onclick="encrypt()">加密</button>
+        <h4 class="center">安全加密解密器</h4>
+        
+        <div class="grid">
+            <!-- 加密面板 -->
+            <div class="card">
+                <h4>加密</h4>
+                <div class="input-group">
+                    <input type="text" id="encryptInput" placeholder="输入要加密的文本">
                 </div>
+                
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="encryptionType" id="base64" value="base64" checked>
+                        <label for="base64">Base64 编码</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="encryptionType" id="url" value="url">
+                        <label for="url">URL 编码</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="encryptionType" id="aes" value="aes">
+                        <label for="aes">AES 加密</label>
+                    </div>
+                </div>
+
+                <div class="input-group key-input" id="encryptKey">
+                    <input type="text" placeholder="输入加密密钥">
+                </div>
+
+                <button onclick="handleEncrypt()">立即加密</button>
             </div>
-            <div class="col s12 m6">
-                <div class="card-panel">
-                    <h5>解密</h5>
-                    <div class="input-field">
-                        <input type="text" id="decryptInput">
-                        <label for="decryptInput">输入要解密的文本</label>
-                    </div>
-                    <p>选择解密方式:</p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="base64" checked>
-                            <span>Base64</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="url">
-                            <span>URL (UTF8)</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="sha1">
-                            <span>SHA-1</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="md5">
-                            <span>MD5</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="des">
-                            <span>DES</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input name="decryptionType" type="radio" value="aes">
-                            <span>AES</span>
-                        </label>
-                    </p>
-                    <button class="btn waves-effect waves-light" onclick="decrypt()">解密</button>
+
+            <!-- 解密面板 -->
+            <div class="card">
+                <h4>解密</h4>
+                <div class="input-group">
+                    <input type="text" id="decryptInput" placeholder="输入要解密的文本">
                 </div>
+                
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="decryptionType" id="d-base64" value="base64" checked>
+                        <label for="d-base64">Base64 解码</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="decryptionType" id="d-url" value="url">
+                        <label for="d-url">URL 解码</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="decryptionType" id="d-aes" value="aes">
+                        <label for="d-aes">AES 解密</label>
+                    </div>
+                </div>
+
+                <div class="input-group key-input" id="decryptKey">
+                    <input type="text" placeholder="输入解密密钥">
+                </div>
+
+                <button onclick="handleDecrypt()">立即解密</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card-panel">
-                    <h5>结果</h5>
-                    <p id="result">这里将显示加密或解密后的结果。</p>
-                    <button id="copyButton" class="btn waves-effect waves-light" onclick="copyToClipboard()">复制</button>
-                </div>
-            </div>
+
+        <div class="card">
+            <h4>处理结果</h4>
+            <div id="result">结果将显示在此处</div>
+            <button onclick="copyResult()" style="margin-top:1rem">复制结果</button>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <script>
-        function utf8ToBase64(str) {
-            const encoder = new TextEncoder('utf-8');
-            const data = encoder.encode(str);
-            return btoa(String.fromCharCode(...data));
-        }
+        // 密钥输入显示逻辑
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const showKey = radio.value === 'aes';
+                const keyInput = radio.closest('.card').querySelector('.key-input');
+                keyInput.style.display = showKey ? 'block' : 'none';
+                keyInput.style.animation = 'result-appear 0.4s';
+            });
+        });
 
-        function base64ToUtf8(str) {
-            const decoder = new TextDecoder('utf-8');
-            const data = atob(str);
-            const dataArray = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                dataArray[i] = data.charCodeAt(i);
-            }
-            return decoder.decode(dataArray);
-        }
-
-        function encrypt() {
-            const inputText = document.getElementById('encryptInput').value;
-            const encryptionType = document.querySelector('input[name="encryptionType"]:checked').value;
-            let encryptedText = '';
-
-            if (encryptionType === 'base64') {
-                encryptedText = utf8ToBase64(inputText);
-            } else if (encryptionType === 'url') {
-                encryptedText = encodeURIComponent(inputText);
-            } else if (encryptionType === 'sha1') {
-                encryptedText = CryptoJS.SHA1(inputText).toString();
-            } else if (encryptionType === 'md5') {
-                encryptedText = CryptoJS.MD5(inputText).toString();
-            } else if (encryptionType === 'des') {
-                const key = "your-secret-key"; // Replace with your key
-                const encrypted = CryptoJS.DES.encrypt(inputText, key);
-                encryptedText = encrypted.toString();
-            } else if (encryptionType === 'aes') {
-                const key = "your-secret-key"; // Replace with your key
-                const iv = "your-iv"; // Replace with your IV
-                const encrypted = CryptoJS.AES.encrypt(inputText, key, { iv: iv });
-                encryptedText = encrypted.toString();
-            }
-            document.getElementById('result').textContent = `加密结果: ${encryptedText}`;
-        }
-
-        function decrypt() {
-            const inputText = document.getElementById('decryptInput').value;
-            const decryptionType = document.querySelector('input[name="decryptionType"]:checked').value;
-            let decryptedText = '';
-
-            if (decryptionType === 'base64') {
-                try {
-                    decryptedText = base64ToUtf8(inputText);
-                } catch (error) {
-                    decryptedText = '解密失败，请检查输入文本是否有效的Base64字符串。';
+        async function handleEncrypt() {
+            try {
+                const input = document.getElementById('encryptInput').value;
+                const type = document.querySelector('input[name="encryptionType"]:checked').value;
+                const key = document.getElementById('encryptKey').querySelector('input').value;
+                
+                let result = '';
+                switch(type) {
+                    case 'base64':
+                        result = btoa(unescape(encodeURIComponent(input)));
+                        break;
+                    case 'url':
+                        result = encodeURIComponent(input);
+                        break;
+                    case 'aes':
+                        if (!key) throw new Error('需要加密密钥');
+                        result = CryptoJS.AES.encrypt(input, key).toString();
+                        break;
                 }
-            } else if (decryptionType === 'url') {
-                try {
-                    decryptedText = decodeURIComponent(inputText);
-                } catch (error) {
-                    decryptedText = '解密失败，请检查输入文本是否有效的URL编码字符串。';
-                }
-            } else if (decryptionType === 'sha1') {
-                decryptedText = 'SHA-1 不支持解密操作。';
-            } else if (decryptionType === 'md5') {
-                decryptedText = 'MD5 不支持解密操作。';
-            } else if (decryptionType === 'des') {
-                const key = "your-secret-key"; // Replace with your key
-                const decrypted = CryptoJS.DES.decrypt(inputText, key);
-                decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
-            } else if (decryptionType === 'aes') {
-                const key = "your-secret-key"; // Replace with your key
-                const iv = "your-iv"; // Replace with your IV
-                const decrypted = CryptoJS.AES.decrypt(inputText, key, { iv: iv });
-                decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+                
+                showResult(`加密结果：${result}`);
+            } catch (error) {
+                showResult(`加密失败：${error.message}`, true);
             }
-            document.getElementById('result').textContent = `解密结果: ${decryptedText}`;
-        }
-        function toggleCopyButton(show) {
-            const copyButton = document.getElementById('copyButton');
-            copyButton.style.display = show ? 'inline-block' : 'none';
         }
 
-        function copyToClipboard() {
-            const resultText = document.getElementById('result').textContent;
-            const textArea = document.createElement('textarea');
-            textArea.value = resultText;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            M.toast({html: '结果已复制到剪贴板'});
+        async function handleDecrypt() {
+            try {
+                const input = document.getElementById('decryptInput').value;
+                const type = document.querySelector('input[name="decryptionType"]:checked').value;
+                const key = document.getElementById('decryptKey').querySelector('input').value;
+                
+                let result = '';
+                switch(type) {
+                    case 'base64':
+                        result = decodeURIComponent(escape(atob(input)));
+                        break;
+                    case 'url':
+                        result = decodeURIComponent(input);
+                        break;
+                    case 'aes':
+                        if (!key) throw new Error('需要解密密钥');
+                        const bytes = CryptoJS.AES.decrypt(input, key);
+                        result = bytes.toString(CryptoJS.enc.Utf8);
+                        break;
+                }
+                
+                if (!result) throw new Error('解密失败，请检查密钥');
+                showResult(`解密结果：${result}`);
+            } catch (error) {
+                showResult(`解密失败：${error.message}`, true);
+            }
+        }
+
+        function showResult(text, isError = false) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = text;
+            resultDiv.style.color = isError ? 'var(--danger)' : 'inherit';
+            resultDiv.style.animation = 'none';
+            void resultDiv.offsetWidth;
+            resultDiv.style.animation = 'result-appear 0.4s';
+        }
+
+        async function copyResult() {
+            try {
+                await navigator.clipboard.writeText(document.getElementById('result').textContent);
+                showToast('结果已复制到剪贴板');
+            } catch (error) {
+                showToast('复制失败，请手动选择复制');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>

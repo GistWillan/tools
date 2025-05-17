@@ -1,116 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML 预览</title>
-    <link rel="shortcut icon" href="images/index.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/materialize-css@1.0.0/dist/css/materialize.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9707910477073817"
-     crossorigin="anonymous"></script>
+    <title>HTML 实时预览</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
             margin: 0;
-            padding: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            animation: slide-down 0.5s ease, fade-in 0.5s ease;
-        }
-
-        @keyframes slide-down {
-            from {
-                transform: translateY(-10px);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            -webkit-font-smoothing: antialiased;
         }
 
         #container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
         }
 
-        #preview-box {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         h1 {
-            color: #007acc;
-        }
-
-        h2 {
-            color: #333;
-            font-size: 20px;
-            margin-top: 10px;
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         textarea {
             width: 100%;
             height: 200px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            animation: slide-down 0.5s ease, fade-in 0.5s ease;
+            padding: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        #preview-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         iframe {
             width: 100%;
             height: 400px;
             border: none;
-            margin-top: 10px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .btn-container .btn {
-            margin-right: 10px;
-            animation: slide-down 0.5s ease, fade-in 0.5s ease;
+        #downloadLink {
+            display: none;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <h1>HTML 预览</h1>
-        <textarea id="htmlInput" placeholder="在这里输入 HTML 代码"></textarea>
-        <div class="btn-container">
+        <h1>HTML 实时预览</h1>
+        <textarea id="htmlInput" placeholder="输入 HTML 代码..."></textarea>
+        
+        <div class="btn-group">
             <button class="btn" onclick="previewHTML()">预览</button>
             <button class="btn" onclick="clearInput()">清除</button>
             <button class="btn" onclick="toggleFullScreen()">全屏</button>
-            <a class="btn" id="downloadLink" style="display: none;">下载</a>
+            <a class="btn" id="downloadLink">下载</a>
             <button class="btn" onclick="pasteFromClipboard()">粘贴</button>
         </div>
+
         <div id="preview-box">
-            <h2>预览区</h2>
             <iframe id="previewFrame"></iframe>
         </div>
     </div>
@@ -123,40 +145,49 @@
             previewFrame.contentDocument.open();
             previewFrame.contentDocument.write(htmlInput);
             previewFrame.contentDocument.close();
+            
+            // 自动显示下载链接
+            const downloadLink = document.getElementById('downloadLink');
+            if (htmlInput) {
+                const blob = new Blob([htmlInput], { type: 'text/html' });
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.style.display = 'inline-block';
+            } else {
+                downloadLink.style.display = 'none';
+            }
         }
 
         function clearInput() {
             document.getElementById('htmlInput').value = '';
+            document.getElementById('downloadLink').style.display = 'none';
+            previewHTML(); // 清除预览
         }
 
         function toggleFullScreen() {
             const previewFrame = document.getElementById('previewFrame');
             if (!document.fullscreenElement) {
                 previewFrame.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable full-screen mode: ${err.message}`);
+                    alert(`全屏模式开启失败: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
             }
         }
 
-        function pasteFromClipboard() {
-            navigator.clipboard.readText().then(text => {
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
                 document.getElementById('htmlInput').value = text;
-            }).catch(err => {
-                console.error('Failed to read from clipboard: ', err);
-            });
+            } catch (err) {
+                console.error('剪贴板读取失败: ', err);
+            }
         }
 
-        function downloadHTML() {
-            const htmlInput = document.getElementById('htmlInput').value;
-            const blob = new Blob([htmlInput], { type: 'text/html' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.getElementById('downloadLink');
-            a.href = url;
-            a.download = 'preview.html';
-            a.style.display = 'block';
-        }
+        // 实时预览功能
+        document.getElementById('htmlInput').addEventListener('input', previewHTML);
+        
+        // 初始化自动预览
+        previewHTML();
     </script>
 </body>
 </html>
