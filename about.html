@@ -7,10 +7,12 @@
     <style>
         :root {
             --primary: #007AFF;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.2);
             --spacing: 32px;
-            --radius: 20px;
+            --radius: 24px;
+            --image-radius: 14px;
+            --blur-intensity: 50px;
         }
 
         @keyframes card-entry {
@@ -19,15 +21,15 @@
         }
 
         @keyframes element-appear {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0; transform: translateY(15px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             margin: 0;
             padding: var(--spacing);
-            background: linear-gradient(150deg, #f0f5ff 0%, #f8f9ff 100%);
+            background: linear-gradient(150deg, #e3eeff 0%, #f8f9ff 100%);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
@@ -39,10 +41,10 @@
             padding: var(--spacing);
             border-radius: var(--radius);
             background: var(--glass-bg);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            backdrop-filter: blur(var(--blur-intensity)) saturate(200%);
+            -webkit-backdrop-filter: blur(var(--blur-intensity)) saturate(200%);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
             animation: card-entry 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
@@ -64,10 +66,10 @@
         }
 
         .content-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border-radius: calc(var(--radius) - 4px);
             padding: 2rem;
             margin: 2rem 0;
             animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s both;
@@ -96,38 +98,90 @@
             animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s both;
         }
 
-        .portfolio-item {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 14px;
+        .portfolio-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .portfolio-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            border-radius: calc(var(--radius) - 4px);
             overflow: hidden;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
             animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s both;
         }
 
-        .portfolio-item:hover {
-            transform: translateY(-4px);
+        .portfolio-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
         }
 
-        .portfolio-item img {
+        .card-image {
+            position: relative;
+            overflow: hidden;
+            padding-top: 56.25%;
+            border-radius: var(--image-radius);
+            margin: 16px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .card-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
-            transition: filter 0.3s ease;
+            border-radius: var(--image-radius);
+            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            mix-blend-mode: multiply;
         }
 
-        .portfolio-item-caption {
-            padding: 1.2rem;
-            text-align: center;
+        .portfolio-card:hover img {
+            transform: scale(1.05);
         }
 
-        .portfolio-item-caption a {
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-emoji {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem;
+        }
+
+        .card-description {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             color: var(--primary);
             text-decoration: none;
             font-weight: 500;
-            display: block;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-link:hover {
+            opacity: 0.8;
         }
 
         .return-button {
@@ -144,29 +198,37 @@
             color: white;
             border-radius: 12px;
             text-decoration: none;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .return-button a:hover {
-            opacity: 0.9;
+            transform: scale(0.96);
         }
 
         @media (max-width: 768px) {
             :root {
                 --spacing: 24px;
+                --blur-intensity: 30px;
+                --image-radius: 12px;
+                --radius: 20px;
             }
             
-            .content-card {
-                padding: 1.5rem;
+            .container {
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
             }
             
-            .portfolio-item img {
-                height: 160px;
+            .card-image {
+                padding-top: 75%;
+                margin: 12px;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
@@ -182,34 +244,73 @@
 
         <div class="portfolio">
             <h2>我的作品集</h2>
-            <div class="portfolio-item">
-                <a href="https://gistwillanblog.top">
-                    <img src="images/blog.png" alt="个人博客">
-                    <div class="portfolio-item-caption">
-                        <a href="https://gistwillanblog.top">个人博客 →</a>
+            <div class="portfolio-grid">
+                <div class="portfolio-card">
+                    <div class="card-image">
+                        <img src="images/blog.png" alt="个人博客">
                     </div>
-                </a>
-            </div>
-            <div class="portfolio-item">
-                <a href="https://study.gistwillanblog.top">
-                    <img src="images/study.png" alt="学习笔记">
-                    <div class="portfolio-item-caption">
-                        <a href="https://study.gistwillanblog.top">学习笔记 →</a>
+                    <div class="card-content">
+                        <div class="card-emoji">
+                            <span>📝</span>
+                            <h3 class="card-title">个人博客</h3>
+                        </div>
+                        <p class="card-description">记录技术思考与生活感悟的知识库，分享前沿技术解析和实践经验。</p>
+                        <a href="https://gistwillanblog.top" class="card-link">
+                            访问网站
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/>
+                            </svg>
+                        </a>
                     </div>
-                </a>
-            </div>
-            <div class="portfolio-item">
-                <a href="https://index.gistwillanblog.top">
-                    <img src="images/indexweb.png" alt="引导页">
-                    <div class="portfolio-item-caption">
-                        <a href="https://index.gistwillanblog.top">引导页 →</a>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="card-image">
+                        <img src="images/study.png" alt="学习笔记">
                     </div>
-                </a>
+                    <div class="card-content">
+                        <div class="card-emoji">
+                            <span>📚</span>
+                            <h3 class="card-title">学习笔记</h3>
+                        </div>
+                        <p class="card-description">系统整理的技术学习路径，涵盖前端开发、算法实践和物联网技术要点。</p>
+                        <a href="https://study.gistwillanblog.top" class="card-link">
+                            访问网站
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="portfolio-card">
+                    <div class="card-image">
+                        <img src="images/indexweb.png" alt="引导页">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-emoji">
+                            <span>🚀</span>
+                            <h3 class="card-title">导航门户</h3>
+                        </div>
+                        <p class="card-description">精选资源导航中心，集成常用工具和优质技术社区的快速访问入口。</p>
+                        <a href="https://index.gistwillanblog.top" class="card-link">
+                            访问网站
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="return-button">
-            <a href="index.html">返回首页</a>
+            <a href="index.html">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-right:8px;">
+                    <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/>
+                </svg>
+                返回首页
+            </a>
         </div>
     </div>
 </body>
