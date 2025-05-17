@@ -1,176 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="shortcut icon" href="images/about.png">
     <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 32px;
+            --radius: 20px;
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes element-appear {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
+            padding: var(--spacing);
+            background: linear-gradient(150deg, #f0f5ff 0%, #f8f9ff 100%);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
+            width: 100%;
             max-width: 800px;
-            min-height: 100vh;
             margin: 0 auto;
-            padding: 40px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            opacity: 0;
-            animation: fade-in 0.5s ease-out forwards, pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-        }
-
-        @keyframes fade-in {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pop-in {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            padding: var(--spacing);
+            border-radius: var(--radius);
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .header {
             text-align: center;
             padding: 20px 0;
+            animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s both;
         }
 
         .header h1 {
-            color: #007acc;
-            font-size: 24px;
-            margin-bottom: 10px;
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 12px;
         }
 
         .header p {
-            color: #777;
-            font-size: 16px;
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 1rem;
         }
 
-        .about-content {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fff;
+        .content-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s both;
         }
 
-        .about-content h2 {
-            color: #333;
-            font-size: 20px;
-            margin-bottom: 10px;
+        .content-card h2 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
         }
 
-        .about-content p {
-            color: #777;
-            font-size: 16px;
+        .content-card p {
+            color: rgba(0, 0, 0, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .portfolio {
+            margin: 2rem 0;
+        }
+
+        .portfolio h2 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s both;
+        }
+
+        .portfolio-item {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s both;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: filter 0.3s ease;
+        }
+
+        .portfolio-item-caption {
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .portfolio-item-caption a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
         }
 
         .return-button {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 2rem;
+            animation: element-appear 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) 0.6s both;
         }
 
         .return-button a {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
             text-decoration: none;
-            color: #007acc;
-            font-weight: bold;
-            font-size: 16px;
+            transition: opacity 0.3s ease;
         }
 
-        /* 新增作品集样式 */
-        .portfolio {
-            margin-top: 40px;
+        .return-button a:hover {
+            opacity: 0.9;
         }
 
-        .portfolio h2 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .portfolio-item {
-            margin-bottom: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .portfolio-item-caption {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            opacity: 0;
-            transition: opacity 0.3s ease, font-size 0.3s ease;
-            font-size: 16px;
-        }
-
-        .portfolio-item:hover .portfolio-item-caption {
-            opacity: 1;
-            font-size: 20px;
-        }
-
-        .portfolio-item img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            transition: filter 0.3s ease, border-radius 0.3s ease; /* 添加模糊效果的过渡动画 */
-            border-radius: 12px; /* 圆角效果，根据需要调整值 */
-        }
-
-        .portfolio-item:hover img {
-            filter: blur(5px); /* 模糊效果 */
-            border-radius: 12px; /* 圆角效果，根据需要调整值 */
-        }
-
-        /* 媒体查询 */
-        @media only screen and (max-width: 768px) {
-            .container {
-                padding: 20px;
+        @media (max-width: 768px) {
+            :root {
+                --spacing: 24px;
             }
-
-            .header h1 {
-                font-size: 20px;
+            
+            .content-card {
+                padding: 1.5rem;
             }
-
-            .header p {
-                font-size: 14px;
-            }
-
-            .about-content h2 {
-                font-size: 18px;
-            }
-
-            .about-content p {
-                font-size: 14px;
-            }
-
-            .return-button a {
-                font-size: 14px;
+            
+            .portfolio-item img {
+                height: 160px;
             }
         }
     </style>
@@ -180,42 +171,46 @@
     <div class="container">
         <div class="header">
             <h1>关于我</h1>
-            <p>欢迎了解更多关于我的信息。</p>
+            <p>探索更多关于我的故事</p>
         </div>
-        <div class="about-content">
+
+        <div class="content-card">
             <h2>自我介绍</h2>
             <p>我叫GistWillan，物联网技术应用专业。我对计算机的兴趣始于我小时候第一次接触计算机，那时我被计算机的神奇和潜力深深吸引。从那以后，我就一直在不断深挖这个领域的奥秘。</p>
             <p>在校期间，我不仅仅是一个普通的学生，我也是一个积极的自学者和技术爱好者。除了参加课堂上的学习，我还花了很多时间研究计算机领域的各种主题，包括算法与数据结构、人工智能、网络安全等等。我还参加了各种编程比赛和项目，不仅仅是为了提高自己的技能，还因为我发现通过实际项目学习更为深入和有趣。</p>
         </div>
 
-        <!-- 新增作品集部分 -->
         <div class="portfolio">
-            <h2>我的其它网站</h2>
+            <h2>我的作品集</h2>
             <div class="portfolio-item">
                 <a href="https://gistwillanblog.top">
                     <img src="images/blog.png" alt="个人博客">
-                    <div class="portfolio-item-caption">个人博客</div>
+                    <div class="portfolio-item-caption">
+                        <a href="https://gistwillanblog.top">个人博客 →</a>
+                    </div>
                 </a>
             </div>
             <div class="portfolio-item">
                 <a href="https://study.gistwillanblog.top">
                     <img src="images/study.png" alt="学习笔记">
-                    <div class="portfolio-item-caption">学习笔记</div>
+                    <div class="portfolio-item-caption">
+                        <a href="https://study.gistwillanblog.top">学习笔记 →</a>
+                    </div>
                 </a>
             </div>
             <div class="portfolio-item">
                 <a href="https://index.gistwillanblog.top">
                     <img src="images/indexweb.png" alt="引导页">
-                    <div class="portfolio-item-caption">引导页</div>
+                    <div class="portfolio-item-caption">
+                        <a href="https://index.gistwillanblog.top">引导页 →</a>
+                    </div>
                 </a>
             </div>
-            <!-- 可以根据需要添加更多作品集项目 -->
         </div>
 
         <div class="return-button">
-            <a href="index.html">返回</a>
+            <a href="index.html">返回首页</a>
         </div>
     </div>
 </body>
-
 </html>
