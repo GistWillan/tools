@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>终极设备解析器 - GistWillan工具站</title>
+    <script src="https://cdn.jsdelivr.net/npm/ua-parser-js@1.0.2/src/ua-parser.min.js"></script>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-primary: rgba(0, 0, 0, 0.8);
+            --text-secondary: rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #f0f5ff 0%, #f8f9ff 100%);
+            background-attachment: fixed;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes containerEntry {
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            animation: containerEntry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 2.4rem;
+            margin: 0 0 16px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 18px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            animation: cardEntry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .value {
+            color: var(--text-primary);
+            font-weight: 500;
+            max-width: 60%;
+            text-align: right;
+        }
+
+        /* 新增样式 */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(0, 122, 255, 0.1);
+            color: #007AFF;
+            font-size: 0.8em;
+            margin-left: 8px;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #007AFF;
+            transition: width 0.5s ease;
+        }
+
+        .sensor-box {
+            background: rgba(0,122,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .codec-list {
+            column-count: 2;
+            column-gap: 20px;
+        }
+
+        .font-list {
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 8px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        .webgpu-status {
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(0,200,100,0.1);
+        }
+
+        .theme-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid rgba(0,0,0,0.1);
+            vertical-align: middle;
+        }
+
+        .webgl-canvas {
+            width: 100%;
+            height: 100px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .gps-coordinates {
+            background: rgba(0,122,255,0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+                margin: 16px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .value {
+                text-align: left;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>终极设备解析器</h1>
+            <div class="ua-display" id="rawUA"></div>
+        </div>
+        
+        <div class="info-grid">
+            <!-- 浏览器信息 -->
+            <div class="info-card">
+                <div class="card-title">浏览器信息</div>
+                <div class="info-item">
+                    <span class="label">浏览器</span>
+                    <span class="value" id="browser"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">引擎</span>
+                    <span class="value" id="engine"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">语言</span>
+                    <span class="value" id="language"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Cookie启用</span>
+                    <span class="value" id="cookies"></span>
+                </div>
+            </div>
+
+            <!-- 系统信息 -->
+            <div class="info-card">
+                <div class="card-title">系统信息</div>
+                <div class="info-item">
+                    <span class="label">操作系统</span>
+                    <span class="value" id="os"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">CPU架构</span>
+                    <span class="value" id="cpu"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">内存</span>
+                    <span class="value" id="memory"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">时区</span>
+                    <span class="value" id="timezone"></span>
+                </div>
+            </div>
+
+            <!-- 显示信息 -->
+            <div class="info-card">
+                <div class="card-title">显示信息</div>
+                <div class="info-item">
+                    <span class="label">分辨率</span>
+                    <span class="value" id="resolution"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">色深</span>
+                    <span class="value" id="colorDepth"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">像素比</span>
+                    <span class="value" id="pixelRatio"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">可用颜色</span>
+                    <span class="value" id="colorGamut"></span>
+                </div>
+            </div>
+
+            <!-- 设备状态 -->
+            <div class="info-card">
+                <div class="card-title">设备状态</div>
+                <div class="info-item">
+                    <span class="label">电量状态</span>
+                    <span class="value" id="battery"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">网络状态</span>
+                    <span class="value" id="connection"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">存储状态</span>
+                    <span class="value" id="storage"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">光线感应</span>
+                    <span class="value" id="ambientLight"></span>
+                </div>
+            </div>
+
+            <!-- 硬件能力 -->
+            <div class="info-card">
+                <div class="card-title">硬件能力</div>
+                <div class="info-item">
+                    <span class="label">硬件并发数</span>
+                    <span class="value" id="hardwareConcurrency"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">触摸支持</span>
+                    <span class="value" id="touchSupport"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">外接显示器</span>
+                    <span class="value" id="externalDisplay"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">系统主题</span>
+                    <span class="value" id="colorScheme">
+                        <span class="theme-indicator"></span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 图形能力 -->
+            <div class="info-card">
+                <div class="card-title">图形能力</div>
+                <div class="info-item">
+                    <span class="label">WebGL 支持</span>
+                    <span class="value" id="webglSupport"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">渲染器</span>
+                    <span class="value" id="webglRenderer"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">WebGPU</span>
+                    <span class="value" id="webgpuStatus"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">适配器</span>
+                    <span class="value" id="webgpuAdapter"></span>
+                </div>
+                <canvas class="webgl-canvas" id="webglDemo"></canvas>
+            </div>
+
+            <!-- 地理位置 -->
+            <div class="info-card">
+                <div class="card-title">地理位置</div>
+                <div class="info-item">
+                    <span class="label">定位权限</span>
+                    <span class="value" id="geoPermission"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">当前位置</span>
+                    <span class="value" id="geolocation"></span>
+                </div>
+                <button onclick="requestGeolocation()" class="gps-btn">获取位置</button>
+                <div id="gpsResult" class="gps-coordinates"></div>
+            </div>
+
+            <!-- 运动传感器 -->
+            <div class="info-card">
+                <div class="card-title">运动传感器</div>
+                <div class="info-item">
+                    <span class="label">陀螺仪</span>
+                    <span class="value" id="gyroscope"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">加速度计</span>
+                    <span class="value" id="accelerometer"></span>
+                </div>
+                <div class="sensor-box" id="sensorData"></div>
+            </div>
+
+            <!-- 扩展检测 -->
+            <div class="info-card">
+                <div class="card-title">浏览器扩展</div>
+                <div class="info-item">
+                    <span class="label">广告拦截器</span>
+                    <span class="value" id="adBlock"></span>
+                </div>
+                <div class="info-item">
+                    <span class="label">检测到扩展</span>
+                    <span class="value" id="extensions"></span>
+                </div>
+            </div>
+
+            <!-- 字体列表 -->
+            <div class="info-card">
+                <div class="card-title">字体列表</div>
+                <div class="font-list" id="fontList"></div>
+            </div>
+
+            <!-- 编解码支持 -->
+            <div class="info-card">
+                <div class="card-title">媒体支持</div>
+                <div class="codec-list" id="videoCodecs"></div>
+                <div class="codec-list" id="audioCodecs"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function parseUA() {
+            const parser = new UAParser();
+            const result = parser.getResult();
+            
+            // 基础信息
+            document.getElementById('rawUA').textContent = navigator.userAgent;
+            document.getElementById('browser').innerHTML = `${result.browser.name} ${result.browser.version}`;
+            document.getElementById('engine').innerHTML = `${result.engine.name} ${result.engine.version}`;
+            document.getElementById('os').innerHTML = `${result.os.name} ${result.os.version}`;
+            document.getElementById('cpu').innerHTML = result.cpu.architecture || '未知架构';
+            document.getElementById('language').innerHTML = navigator.language;
+            document.getElementById('cookies').innerHTML = navigator.cookieEnabled ? '✅ 已启用' : '❌ 未启用';
+
+            // 显示信息
+            document.getElementById('resolution').innerHTML = 
+                `${screen.width}×${screen.height} <span class="badge">物理像素</span>`;
+            document.getElementById('colorDepth').innerHTML = 
+                `${screen.colorDepth}位 <span class="color-box" style="background:${getColorProfile(screen.colorDepth)}"></span>`;
+            document.getElementById('pixelRatio').innerHTML = 
+                window.devicePixelRatio.toFixed(1);
+            document.getElementById('colorGamut').innerHTML = 
+                getColorGamut();
+
+            // 系统状态
+            document.getElementById('timezone').innerHTML = 
+                Intl.DateTimeFormat().resolvedOptions().timeZone;
+            document.getElementById('memory').innerHTML = 
+                navigator.deviceMemory ? `${navigator.deviceMemory}GB` : '未知';
+
+            // 设备状态
+            if ('getBattery' in navigator) {
+                const battery = await navigator.getBattery();
+                updateBattery(battery);
+                battery.addEventListener('levelchange', () => updateBattery(battery));
+            }
+
+            if ('connection' in navigator) {
+                updateConnection();
+                navigator.connection.addEventListener('change', updateConnection);
+            }
+
+            if ('storage' in navigator) {
+                navigator.storage.estimate().then(estimate => {
+                    const used = (estimate.usage / 1e6).toFixed(1);
+                    const total = (estimate.quota / 1e6).toFixed(1);
+                    document.getElementById('storage').innerHTML = `
+                        <div>已用：${used}MB</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(estimate.usage/estimate.quota*100)}%"></div>
+                        </div>
+                    `;
+                });
+            }
+
+            // 硬件能力
+            document.getElementById('hardwareConcurrency').textContent = 
+                navigator.hardwareConcurrency || '未知';
+
+            const touchSupport = 
+                ('ontouchstart' in window) || 
+                (navigator.maxTouchPoints > 0) || 
+                (navigator.msMaxTouchPoints > 0);
+            document.getElementById('touchSupport').innerHTML = 
+                `${touchSupport ? '✅ 支持' : '❌ 不支持'} (${navigator.maxTouchPoints || 0}点)`;
+
+            const screens = window.screen ? [...window.screen.availScreens || []] : [];
+            document.getElementById('externalDisplay').innerHTML = 
+                window.screen.isExtended ? 
+                `✅ 多屏 (${screens.length}显示器)` : 
+                '❌ 单显示器';
+
+            // 系统主题
+            function updateTheme() {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.querySelector('.theme-indicator').style.backgroundColor = 
+                    isDark ? '#333' : '#fff';
+                document.getElementById('colorScheme').innerHTML += 
+                    isDark ? '深色模式' : '浅色模式';
+            }
+            window.matchMedia('(prefers-color-scheme: dark)')
+                .addEventListener('change', updateTheme);
+            updateTheme();
+
+            // WebGL检测
+            const glCanvas = document.getElementById('webglDemo');
+            try {
+                const gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    document.getElementById('webglSupport').innerHTML = '✅ 已支持';
+                    document.getElementById('webglRenderer').innerHTML = `
+                        ${gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)} / 
+                        ${gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)}
+                    `;
+                    gl.clearColor(0.2, 0.4, 0.8, 1);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                }
+            } catch (e) {
+                document.getElementById('webglSupport').innerHTML = '❌ 不支持';
+            }
+
+            // WebGPU检测
+            if ('gpu' in navigator) {
+                try {
+                    const adapter = await navigator.gpu.requestAdapter();
+                    document.getElementById('webgpuStatus').innerHTML = 
+                        `<span class="webgpu-status">✅ 支持</span>`;
+                    document.getElementById('webgpuAdapter').textContent = 
+                        `${adapter?.name || '未知'}`;
+                } catch (e) {
+                    document.getElementById('webgpuStatus').textContent = '❌ 不支持';
+                }
+            }
+
+            // 传感器检测
+            if ('Gyroscope' in window) {
+                try {
+                    const gyro = new Gyroscope({ frequency: 1 });
+                    gyro.addEventListener('reading', () => {
+                        document.getElementById('gyroscope').innerHTML = `
+                            ✅ 支持<br>
+                            X: ${gyro.x?.toFixed(2)}<br>
+                            Y: ${gyro.y?.toFixed(2)}<br>
+                            Z: ${gyro.z?.toFixed(2)}
+                        `;
+                    });
+                    gyro.start();
+                } catch (e) {
+                    document.getElementById('gyroscope').textContent = '❌ 权限被拒绝';
+                }
+            }
+
+            if ('Accelerometer' in window) {
+                try {
+                    const accel = new Accelerometer({ frequency: 1 });
+                    accel.addEventListener('reading', () => {
+                        document.getElementById('accelerometer').innerHTML = `
+                            ✅ 支持<br>
+                            X: ${accel.x?.toFixed(2)}<br>
+                            Y: ${accel.y?.toFixed(2)}<br>
+                            Z: ${accel.z?.toFixed(2)}
+                        `;
+                    });
+                    accel.start();
+                } catch (e) {
+                    document.getElementById('accelerometer').textContent = '❌ 权限被拒绝';
+                }
+            }
+
+            // 扩展检测
+            const checkAdBlock = async () => {
+                try {
+                    await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                    });
+                    document.getElementById('adBlock').textContent = '❌ 未检测到';
+                } catch {
+                    document.getElementById('adBlock').textContent = '✅ 检测到广告拦截器';
+                }
+            };
+            checkAdBlock();
+
+            // 字体列表
+            const fontList = [...new Set([...document.fonts].map(f => f.family))];
+            document.getElementById('fontList').innerHTML = 
+                fontList.sort().join('<br>') || '无法获取字体列表';
+
+            // 编解码检测
+            const videoCodecs = [
+                'video/mp4; codecs="avc1.42E01E"',
+                'video/webm; codecs="vp9"',
+                'video/mp4; codecs="hev1.1.6.L150.90"',
+                'video/mp4; codecs="av01.0.15M.10"'
+            ];
+            
+            const audioCodecs = [
+                'audio/mpeg',
+                'audio/ogg; codecs="opus"',
+                'audio/aac',
+                'audio/webm; codecs="opus"'
+            ];
+
+            document.getElementById('videoCodecs').innerHTML = videoCodecs
+                .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
+                .join('<br>');
+
+            document.getElementById('audioCodecs').innerHTML = audioCodecs
+                .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
+                .join('<br>');
+        }
+
+        function getColorProfile(depth) {
+            const profiles = { 24: '#FFD700', 30: '#FF4500', 16: '#00BFFF' };
+            return profiles[depth] || '#CCCCCC';
+        }
+
+        function getColorGamut() {
+            const gamut = window.matchMedia('(color-gamut: p3)').matches ? 'P3' :
+                       window.matchMedia('(color-gamut: rec2020)').matches ? 'Rec.2020' :
+                       'sRGB';
+            return `${gamut} <span class="color-box" style="background:${gamut === 'P3' ? '#FF3366' : '#33CC33'}"></span>`;
+        }
+
+        function updateBattery(battery) {
+            const level = battery.level * 100;
+            const charging = battery.charging ? '⚡' : '';
+            document.getElementById('battery').innerHTML = `
+                ${charging}${level.toFixed(0)}%
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${level}%"></div>
+                </div>
+            `;
+        }
+
+        function updateConnection() {
+            const conn = navigator.connection;
+            const type = conn.effectiveType;
+            const speed = conn.downlink ? `${conn.downlink}Mbps` : '';
+            document.getElementById('connection').innerHTML = `
+                ${type.toUpperCase()} ${speed}
+                <span class="badge">${conn.saveData ? '省流模式' : ''}</span>
+            `;
+        }
+
+        async function requestGeolocation() {
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                });
+                
+                document.getElementById('gpsResult').innerHTML = `
+                    纬度: ${position.coords.latitude.toFixed(6)}<br>
+                    经度: ${position.coords.longitude.toFixed(6)}<br>
+                    精度: ±${position.coords.accuracy.toFixed(1)}米
+                `;
+            } catch (error) {
+                document.getElementById('gpsResult').textContent = 
+                    `定位失败: ${error.message}`;
+            }
+        }
+
+        // 初始化权限状态
+        navigator.permissions.query({name:'geolocation'}).then(permission => {
+            document.getElementById('geoPermission').innerHTML = 
+                `${permission.state} <span class="badge">${permission.state === 'granted' ? '✅' : '❌'}</span>`;
+        });
+
+        window.addEventListener('DOMContentLoaded', parseUA);
+    </script>
+</body>
+</html>

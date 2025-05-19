@@ -9,6 +9,7 @@
 - [HTML预览](projects/preview.html): 实时HTML代码预览工具。
 - [HTTP状态码](projects/http.html): 快速查询HTTP状态码的工具。
 - [BMI计算器](projects/bmi.html): 计算体质指数的实用工具。
+- [UA解析器](projects/bmi.html): 解析当前浏览器UA信息。
 - [日期计算器](projects/date.html): 计算日期间隔的便捷工具。
 - [进制转换器](projects/test.html): 数制转换工具，支持各种进制。
 - [单位转换器](projects/unit_conversion.html): 单位换算工具，包括长度、重量等单位。
