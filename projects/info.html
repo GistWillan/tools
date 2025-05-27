@@ -139,12 +139,15 @@
             transition: width 0.5s ease;
         }
 
+        /* Removed .sensor-box as it's no longer used */
+        /*
         .sensor-box {
             background: rgba(0,122,255,0.1);
             padding: 15px;
             border-radius: 12px;
             margin-top: 10px;
         }
+        */
 
         .codec-list {
             column-count: 2;
@@ -189,6 +192,23 @@
             display: inline-block;
         }
 
+        /* Styles for the Geolocation button */
+        .gps-btn {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .gps-btn:hover {
+            background-color: #0056b3;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 24px;
@@ -219,7 +239,6 @@
         </div>
         
         <div class="info-grid">
-            <!-- 浏览器信息 -->
             <div class="info-card">
                 <div class="card-title">浏览器信息</div>
                 <div class="info-item">
@@ -240,7 +259,6 @@
                 </div>
             </div>
 
-            <!-- 系统信息 -->
             <div class="info-card">
                 <div class="card-title">系统信息</div>
                 <div class="info-item">
@@ -261,7 +279,6 @@
                 </div>
             </div>
 
-            <!-- 显示信息 -->
             <div class="info-card">
                 <div class="card-title">显示信息</div>
                 <div class="info-item">
@@ -282,7 +299,6 @@
                 </div>
             </div>
 
-            <!-- 设备状态 -->
             <div class="info-card">
                 <div class="card-title">设备状态</div>
                 <div class="info-item">
@@ -303,7 +319,6 @@
                 </div>
             </div>
 
-            <!-- 硬件能力 -->
             <div class="info-card">
                 <div class="card-title">硬件能力</div>
                 <div class="info-item">
@@ -326,7 +341,6 @@
                 </div>
             </div>
 
-            <!-- 图形能力 -->
             <div class="info-card">
                 <div class="card-title">图形能力</div>
                 <div class="info-item">
@@ -348,7 +362,6 @@
                 <canvas class="webgl-canvas" id="webglDemo"></canvas>
             </div>
 
-            <!-- 地理位置 -->
             <div class="info-card">
                 <div class="card-title">地理位置</div>
                 <div class="info-item">
@@ -363,7 +376,6 @@
                 <div id="gpsResult" class="gps-coordinates"></div>
             </div>
 
-            <!-- 运动传感器 -->
             <div class="info-card">
                 <div class="card-title">运动传感器</div>
                 <div class="info-item">
@@ -374,10 +386,8 @@
                     <span class="label">加速度计</span>
                     <span class="value" id="accelerometer"></span>
                 </div>
-                <div class="sensor-box" id="sensorData"></div>
-            </div>
+                </div>
 
-            <!-- 扩展检测 -->
             <div class="info-card">
                 <div class="card-title">浏览器扩展</div>
                 <div class="info-item">
@@ -390,13 +400,11 @@
                 </div>
             </div>
 
-            <!-- 字体列表 -->
             <div class="info-card">
                 <div class="card-title">字体列表</div>
                 <div class="font-list" id="fontList"></div>
             </div>
 
-            <!-- 编解码支持 -->
             <div class="info-card">
                 <div class="card-title">媒体支持</div>
                 <div class="codec-list" id="videoCodecs"></div>
@@ -412,11 +420,11 @@
             
             // 基础信息
             document.getElementById('rawUA').textContent = navigator.userAgent;
-            document.getElementById('browser').innerHTML = `${result.browser.name} ${result.browser.version}`;
-            document.getElementById('engine').innerHTML = `${result.engine.name} ${result.engine.version}`;
-            document.getElementById('os').innerHTML = `${result.os.name} ${result.os.version}`;
+            document.getElementById('browser').innerHTML = `${result.browser.name || '未知'} ${result.browser.version || ''}`;
+            document.getElementById('engine').innerHTML = `${result.engine.name || '未知'} ${result.engine.version || ''}`;
+            document.getElementById('os').innerHTML = `${result.os.name || '未知'} ${result.os.version || ''}`;
             document.getElementById('cpu').innerHTML = result.cpu.architecture || '未知架构';
-            document.getElementById('language').innerHTML = navigator.language;
+            document.getElementById('language').innerHTML = navigator.language || '未知';
             document.getElementById('cookies').innerHTML = navigator.cookieEnabled ? '✅ 已启用' : '❌ 未启用';
 
             // 显示信息
@@ -431,33 +439,80 @@
 
             // 系统状态
             document.getElementById('timezone').innerHTML = 
-                Intl.DateTimeFormat().resolvedOptions().timeZone;
+                Intl.DateTimeFormat().resolvedOptions().timeZone || '未知';
             document.getElementById('memory').innerHTML = 
                 navigator.deviceMemory ? `${navigator.deviceMemory}GB` : '未知';
 
             // 设备状态
             if ('getBattery' in navigator) {
-                const battery = await navigator.getBattery();
-                updateBattery(battery);
-                battery.addEventListener('levelchange', () => updateBattery(battery));
+                try {
+                    const battery = await navigator.getBattery();
+                    updateBattery(battery);
+                    battery.addEventListener('levelchange', () => updateBattery(battery));
+                    battery.addEventListener('chargingchange', () => updateBattery(battery));
+                } catch (e) {
+                    document.getElementById('battery').textContent = '❌ 无法获取电量信息';
+                    console.error("Battery API error:", e);
+                }
+            } else {
+                document.getElementById('battery').textContent = '❌ 不支持';
             }
 
             if ('connection' in navigator) {
                 updateConnection();
                 navigator.connection.addEventListener('change', updateConnection);
+            } else {
+                document.getElementById('connection').textContent = '❌ 不支持';
             }
 
             if ('storage' in navigator) {
-                navigator.storage.estimate().then(estimate => {
-                    const used = (estimate.usage / 1e6).toFixed(1);
-                    const total = (estimate.quota / 1e6).toFixed(1);
+                try {
+                    const estimate = await navigator.storage.estimate();
+                    const used = (estimate.usage / (1024 * 1024)).toFixed(1); // Convert to MB
+                    const total = (estimate.quota / (1024 * 1024)).toFixed(1); // Convert to MB
+                    const percentage = total > 0 ? (estimate.usage / estimate.quota * 100).toFixed(1) : 0;
                     document.getElementById('storage').innerHTML = `
-                        <div>已用：${used}MB</div>
+                        <div>已用：${used}MB / 总计：${total}MB</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${(estimate.usage/estimate.quota*100)}%"></div>
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
                         </div>
                     `;
-                });
+                } catch (e) {
+                    document.getElementById('storage').textContent = '❌ 无法获取存储信息';
+                    console.error("Storage API error:", e);
+                }
+            } else {
+                document.getElementById('storage').textContent = '❌ 不支持';
+            }
+
+            // Ambient Light Sensor
+            if ('AmbientLightSensor' in window) {
+                try {
+                    const sensor = new AmbientLightSensor({ frequency: 1 });
+                    sensor.addEventListener('reading', () => {
+                        document.getElementById('ambientLight').innerHTML = `✅ 支持: ${sensor.illuminance.toFixed(2)} lux`;
+                    });
+                    sensor.addEventListener('error', event => {
+                        if (event.error.name === 'NotAllowedError') {
+                            document.getElementById('ambientLight').textContent = '❌ 权限被拒绝';
+                        } else {
+                            document.getElementById('ambientLight').textContent = `❌ 错误: ${event.error.message}`;
+                        }
+                    });
+                    sensor.start();
+                } catch (e) {
+                    // Handle SecurityError specifically for AmbientLightSensor
+                    if (e.name === 'SecurityError') {
+                        document.getElementById('ambientLight').textContent = '❌ 访问被安全策略阻止';
+                    } else if (e.name === 'NotAllowedError') {
+                        document.getElementById('ambientLight').textContent = '❌ 权限被拒绝';
+                    } else {
+                        document.getElementById('ambientLight').textContent = '❌ 传感器初始化失败';
+                    }
+                    console.error("AmbientLightSensor error:", e);
+                }
+            } else {
+                document.getElementById('ambientLight').textContent = '❌ 不支持';
             }
 
             // 硬件能力
@@ -471,7 +526,7 @@
             document.getElementById('touchSupport').innerHTML = 
                 `${touchSupport ? '✅ 支持' : '❌ 不支持'} (${navigator.maxTouchPoints || 0}点)`;
 
-            const screens = window.screen ? [...window.screen.availScreens || []] : [];
+            const screens = window.screen ? [...(window.screen.availScreens || [])] : [];
             document.getElementById('externalDisplay').innerHTML = 
                 window.screen.isExtended ? 
                 `✅ 多屏 (${screens.length}显示器)` : 
@@ -480,10 +535,12 @@
             // 系统主题
             function updateTheme() {
                 const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.querySelector('.theme-indicator').style.backgroundColor = 
-                    isDark ? '#333' : '#fff';
-                document.getElementById('colorScheme').innerHTML += 
-                    isDark ? '深色模式' : '浅色模式';
+                const themeName = isDark ? '深色模式' : '浅色模式';
+                const themeColor = isDark ? '#333' : '#fff';
+                document.querySelector('.theme-indicator').style.backgroundColor = themeColor;
+                document.getElementById('colorScheme').innerHTML = `
+                    ${themeName} <span class="theme-indicator" style="background-color: ${themeColor};"></span>
+                `;
             }
             window.matchMedia('(prefers-color-scheme: dark)')
                 .addEventListener('change', updateTheme);
@@ -497,14 +554,19 @@
                     const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
                     document.getElementById('webglSupport').innerHTML = '✅ 已支持';
                     document.getElementById('webglRenderer').innerHTML = `
-                        ${gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)} / 
-                        ${gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)}
+                        ${gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '未知供应商'} / 
+                        ${gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '未知渲染器'}
                     `;
                     gl.clearColor(0.2, 0.4, 0.8, 1);
                     gl.clear(gl.COLOR_BUFFER_BIT);
+                } else {
+                    document.getElementById('webglSupport').innerHTML = '❌ 不支持';
+                    document.getElementById('webglRenderer').innerHTML = 'N/A';
                 }
             } catch (e) {
                 document.getElementById('webglSupport').innerHTML = '❌ 不支持';
+                document.getElementById('webglRenderer').innerHTML = 'N/A';
+                console.error("WebGL detection error:", e);
             }
 
             // WebGPU检测
@@ -517,7 +579,12 @@
                         `${adapter?.name || '未知'}`;
                 } catch (e) {
                     document.getElementById('webgpuStatus').textContent = '❌ 不支持';
+                    document.getElementById('webgpuAdapter').textContent = 'N/A';
+                    console.error("WebGPU detection error:", e);
                 }
+            } else {
+                document.getElementById('webgpuStatus').textContent = '❌ 不支持';
+                document.getElementById('webgpuAdapter').textContent = 'N/A';
             }
 
             // 传感器检测
@@ -527,15 +594,32 @@
                     gyro.addEventListener('reading', () => {
                         document.getElementById('gyroscope').innerHTML = `
                             ✅ 支持<br>
-                            X: ${gyro.x?.toFixed(2)}<br>
-                            Y: ${gyro.y?.toFixed(2)}<br>
-                            Z: ${gyro.z?.toFixed(2)}
+                            X: ${gyro.x?.toFixed(2) || 'N/A'}<br>
+                            Y: ${gyro.y?.toFixed(2) || 'N/A'}<br>
+                            Z: ${gyro.z?.toFixed(2) || 'N/A'}
                         `;
+                    });
+                    gyro.addEventListener('error', event => {
+                        if (event.error.name === 'NotAllowedError') {
+                            document.getElementById('gyroscope').textContent = '❌ 权限被拒绝';
+                        } else {
+                            document.getElementById('gyroscope').textContent = `❌ 错误: ${event.error.message}`;
+                        }
                     });
                     gyro.start();
                 } catch (e) {
-                    document.getElementById('gyroscope').textContent = '❌ 权限被拒绝';
+                    // Check for SecurityError specifically
+                    if (e.name === 'SecurityError') {
+                        document.getElementById('gyroscope').textContent = '❌ 访问被安全策略阻止';
+                    } else if (e.name === 'NotAllowedError') {
+                        document.getElementById('gyroscope').textContent = '❌ 权限被拒绝';
+                    } else {
+                        document.getElementById('gyroscope').textContent = '❌ 初始化失败';
+                    }
+                    console.error("Gyroscope API error:", e);
                 }
+            } else {
+                document.getElementById('gyroscope').textContent = '❌ 不支持';
             }
 
             if ('Accelerometer' in window) {
@@ -544,99 +628,169 @@
                     accel.addEventListener('reading', () => {
                         document.getElementById('accelerometer').innerHTML = `
                             ✅ 支持<br>
-                            X: ${accel.x?.toFixed(2)}<br>
-                            Y: ${accel.y?.toFixed(2)}<br>
-                            Z: ${accel.z?.toFixed(2)}
+                            X: ${accel.x?.toFixed(2) || 'N/A'}<br>
+                            Y: ${accel.y?.toFixed(2) || 'N/A'}<br>
+                            Z: ${accel.z?.toFixed(2) || 'N/A'}
                         `;
+                    });
+                    accel.addEventListener('error', event => {
+                        if (event.error.name === 'NotAllowedError') {
+                            document.getElementById('accelerometer').textContent = '❌ 权限被拒绝';
+                        } else {
+                            document.getElementById('accelerometer').textContent = `❌ 错误: ${event.error.message}`;
+                        }
                     });
                     accel.start();
                 } catch (e) {
-                    document.getElementById('accelerometer').textContent = '❌ 权限被拒绝';
+                    // Check for SecurityError specifically
+                    if (e.name === 'SecurityError') {
+                        document.getElementById('accelerometer').textContent = '❌ 访问被安全策略阻止';
+                    } else if (e.name === 'NotAllowedError') {
+                        document.getElementById('accelerometer').textContent = '❌ 权限被拒绝';
+                    } else {
+                        document.getElementById('accelerometer').textContent = '❌ 初始化失败';
+                    }
+                    console.error("Accelerometer API error:", e);
                 }
+            } else {
+                document.getElementById('accelerometer').textContent = '❌ 不支持';
             }
 
             // 扩展检测
             const checkAdBlock = async () => {
                 try {
+                    // Attempt to load a common ad script. If blocked, ad blocker is likely active.
                     await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
                         method: 'HEAD',
-                        mode: 'no-cors',
+                        mode: 'no-cors', // Use no-cors to avoid CORS issues, just check if request is made
                     });
+                    // If fetch succeeds (even with opaque response in no-cors), it means it wasn't blocked by network.
+                    // This is a heuristic, not foolproof.
                     document.getElementById('adBlock').textContent = '❌ 未检测到';
                 } catch {
+                    // If fetch fails, it might be blocked by an ad blocker.
                     document.getElementById('adBlock').textContent = '✅ 检测到广告拦截器';
                 }
             };
             checkAdBlock();
 
+            // Browser extensions are generally not detectable by web pages for security and privacy reasons.
+            // This field will always show "无法检测 (安全限制)" due to browser security models.
+            document.getElementById('extensions').textContent = '无法检测 (安全限制)';
+
+
             // 字体列表
-            const fontList = [...new Set([...document.fonts].map(f => f.family))];
-            document.getElementById('fontList').innerHTML = 
-                fontList.sort().join('<br>') || '无法获取字体列表';
+            // Using document.fonts.ready to ensure fonts are loaded before enumeration
+            if ('fonts' in document && document.fonts.ready) {
+                await document.fonts.ready;
+                const fontList = [...new Set([...document.fonts].map(f => f.family))];
+                document.getElementById('fontList').innerHTML = 
+                    fontList.sort().join('<br>') || '无法获取字体列表';
+            } else {
+                document.getElementById('fontList').textContent = '❌ 不支持或无法获取';
+            }
+
 
             // 编解码检测
             const videoCodecs = [
-                'video/mp4; codecs="avc1.42E01E"',
-                'video/webm; codecs="vp9"',
-                'video/mp4; codecs="hev1.1.6.L150.90"',
-                'video/mp4; codecs="av01.0.15M.10"'
+                'video/mp4; codecs="avc1.42E01E"', // H.264
+                'video/webm; codecs="vp9"',        // VP9
+                'video/mp4; codecs="hev1.1.6.L150.90"', // HEVC (H.265)
+                'video/mp4; codecs="av01.0.15M.10"' // AV1
             ];
             
             const audioCodecs = [
-                'audio/mpeg',
-                'audio/ogg; codecs="opus"',
-                'audio/aac',
-                'audio/webm; codecs="opus"'
+                'audio/mpeg', // MP3
+                'audio/ogg; codecs="opus"', // Opus
+                'audio/aac', // AAC
+                'audio/webm; codecs="opus"' // Opus in WebM
             ];
 
-            document.getElementById('videoCodecs').innerHTML = videoCodecs
-                .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
-                .join('<br>');
+            const videoCodecListElem = document.getElementById('videoCodecs');
+            if (videoCodecListElem) {
+                videoCodecListElem.innerHTML = videoCodecs
+                    .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
+                    .join('<br>');
+            }
 
-            document.getElementById('audioCodecs').innerHTML = audioCodecs
-                .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
-                .join('<br>');
+            const audioCodecListElem = document.getElementById('audioCodecs');
+            if (audioCodecListElem) {
+                audioCodecListElem.innerHTML = audioCodecs
+                    .map(c => `${MediaSource.isTypeSupported(c) ? '✅' : '❌'} ${c.split('"')[1] || c}`)
+                    .join('<br>');
+            }
         }
 
+        /**
+         * Determines a color profile name based on color depth.
+         * @param {number} depth - The screen color depth.
+         * @returns {string} A CSS color string.
+         */
         function getColorProfile(depth) {
             const profiles = { 24: '#FFD700', 30: '#FF4500', 16: '#00BFFF' };
-            return profiles[depth] || '#CCCCCC';
+            return profiles[depth] || '#CCCCCC'; // Default to grey if depth is unknown
         }
 
+        /**
+         * Determines the supported color gamut.
+         * @returns {string} HTML string with gamut name and a color indicator.
+         */
         function getColorGamut() {
-            const gamut = window.matchMedia('(color-gamut: p3)').matches ? 'P3' :
-                       window.matchMedia('(color-gamut: rec2020)').matches ? 'Rec.2020' :
-                       'sRGB';
-            return `${gamut} <span class="color-box" style="background:${gamut === 'P3' ? '#FF3366' : '#33CC33'}"></span>`;
+            let gamutName = 'sRGB';
+            let gamutColor = '#33CC33'; // Green for sRGB
+
+            if (window.matchMedia('(color-gamut: p3)').matches) {
+                gamutName = 'Display P3';
+                gamutColor = '#FF3366'; // Reddish for P3
+            } else if (window.matchMedia('(color-gamut: rec2020)').matches) {
+                gamutName = 'Rec.2020';
+                gamutColor = '#00FFFF'; // Cyan for Rec.2020
+            }
+            return `${gamutName} <span class="color-box" style="background:${gamutColor}"></span>`;
         }
 
+        /**
+         * Updates the battery status display.
+         * @param {BatteryManager} battery - The BatteryManager object.
+         */
         function updateBattery(battery) {
             const level = battery.level * 100;
-            const charging = battery.charging ? '⚡' : '';
+            const charging = battery.charging ? '⚡ 充电中' : '🔋 未充电';
             document.getElementById('battery').innerHTML = `
-                ${charging}${level.toFixed(0)}%
+                ${charging}<br>${level.toFixed(0)}%
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${level}%"></div>
                 </div>
             `;
         }
 
+        /**
+         * Updates the network connection status display.
+         */
         function updateConnection() {
             const conn = navigator.connection;
-            const type = conn.effectiveType;
+            if (!conn) {
+                document.getElementById('connection').textContent = '❌ 不支持';
+                return;
+            }
+            const type = conn.effectiveType ? conn.effectiveType.toUpperCase() : '未知类型';
             const speed = conn.downlink ? `${conn.downlink}Mbps` : '';
+            const saveData = conn.saveData ? '<span class="badge">省流模式</span>' : '';
             document.getElementById('connection').innerHTML = `
-                ${type.toUpperCase()} ${speed}
-                <span class="badge">${conn.saveData ? '省流模式' : ''}</span>
+                ${type} ${speed} ${saveData}
             `;
         }
 
+        /**
+         * Requests and displays geolocation coordinates.
+         */
         async function requestGeolocation() {
+            document.getElementById('gpsResult').textContent = '正在获取位置...';
             try {
                 const position = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject, {
                         enableHighAccuracy: true,
-                        timeout: 5000,
+                        timeout: 10000, // Increased timeout for better accuracy
                         maximumAge: 0
                     });
                 });
@@ -647,17 +801,44 @@
                     精度: ±${position.coords.accuracy.toFixed(1)}米
                 `;
             } catch (error) {
-                document.getElementById('gpsResult').textContent = 
-                    `定位失败: ${error.message}`;
+                let errorMessage = '定位失败';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = '❌ 权限被拒绝';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = '❌ 位置信息不可用';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = '❌ 获取位置超时';
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        errorMessage = '❌ 未知错误';
+                        break;
+                }
+                document.getElementById('gpsResult').textContent = errorMessage;
+                console.error("Geolocation error:", error);
             }
         }
 
-        // 初始化权限状态
-        navigator.permissions.query({name:'geolocation'}).then(permission => {
-            document.getElementById('geoPermission').innerHTML = 
-                `${permission.state} <span class="badge">${permission.state === 'granted' ? '✅' : '❌'}</span>`;
-        });
+        // Initialize geolocation permission status on load
+        if ('permissions' in navigator && 'geolocation' in navigator) {
+            navigator.permissions.query({name:'geolocation'}).then(permission => {
+                document.getElementById('geoPermission').innerHTML = 
+                    `${permission.state} <span class="badge">${permission.state === 'granted' ? '✅' : '❌'}</span>`;
+                permission.onchange = () => { // Update if permission changes
+                    document.getElementById('geoPermission').innerHTML = 
+                        `${permission.state} <span class="badge">${permission.state === 'granted' ? '✅' : '❌'}</span>`;
+                };
+            }).catch(e => {
+                document.getElementById('geoPermission').textContent = '❌ 权限API不可用';
+                console.error("Geolocation permission query error:", e);
+            });
+        } else {
+            document.getElementById('geoPermission').textContent = '❌ 不支持';
+        }
 
+        // Run the main parsing function when the DOM is fully loaded
         window.addEventListener('DOMContentLoaded', parseUA);
     </script>
 </body>
