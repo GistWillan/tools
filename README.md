@@ -6,6 +6,7 @@
 
 - [世界时间](projects/time.html): 展示世界各地的当前时间。
 - [番茄时钟](projects/tomato.html): 提高工作效率的番茄时钟应用。
+- [在线白板](projects/whiteboard.html): 轻松绘图、书写，并利用橡皮擦、撤销和重做功能进行编辑。
 - [HTML预览](projects/preview.html): 实时HTML代码预览工具。
 - [HTTP状态码](projects/http.html): 快速查询HTTP状态码的工具。
 - [BMI计算器](projects/bmi.html): 计算体质指数的实用工具。
@@ -20,6 +21,8 @@
 - [密码强度检测](projects/lock.html): 检测密码强度是否足够安全。
 - [二维码生成器](projects/qrcode.html): 快速生成二维码的工具。
 - [随机数生成器](projects/number.html): 生成随机数的工具。
+- [代码格式化工具](projects/formatter.html)：轻松美化和标准化代码。
+- [流程图绘制工具](projects/mindmap.html)：无需后端支持即可在浏览器中轻松创建和组织您的想法。
 - [时间戳转换网页](projects/tt.html)：转换时间戳至标准时间。
 - [摩斯电码转换器](projects/morse.html): 文字转换为摩斯电码的工具。
 - [剪切板文本管理器](projects/pasteboard.html)：管理剪切文本。
