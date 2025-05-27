@@ -1,296 +1,621 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GistWillan的在线工具站点</title>
-  <link rel="shortcut icon" href="images/index.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-  <style>
-    :root {
-      --glass-bg: rgba(255, 255, 255, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.8);
-      --content-width: 1280px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GistWillan的在线工具站点</title>
+    <link rel="shortcut icon" href="images/index.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <style>
+        /* CSS 变量定义，用于玻璃效果的背景和边框颜色 */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --content-width: 1280px;
+            /* --preview-overlay-bg: rgba(0, 0, 0, 0.6); Removed as web templates are removed */
+        }
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 40px 20px;
-      min-height: 100vh;
-      background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
-      background-attachment: fixed;
-      display: flex;
-      justify-content: center;
-    }
+        /* 全局 body 样式，设置字体、边距、最小高度和背景渐变 */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+        }
 
-    @keyframes container-entry {
-      0% {
-        opacity: 0;
-        transform: translateY(30px) scale(0.97);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
+        /* 容器进入动画的关键帧 */
+        @keyframes container-entry {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
 
-    @keyframes card-entry {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        /* 卡片进入动画的关键帧 */
+        @keyframes card-entry {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .container {
-      width: 100%;
-      max-width: var(--content-width);
-      margin: 0 auto;
-      padding: 50px 40px;
-      border-radius: 24px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
-      animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
-    }
+        /* 主内容容器样式，应用玻璃效果和进入动画 */
+        .container {
+            width: 100%;
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 50px 40px;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
+        }
 
-    .header {
-      text-align: center;
-      padding: 30px 0 60px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+        /* 页面头部样式 */
+        .header {
+            text-align: center;
+            padding: 30px 0 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .header h1 {
-      color: rgba(0, 0, 0, 0.9);
-      font-size: 3.2rem;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-    }
+        /* 头部标题样式 */
+        .header h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
 
-    .header p {
-      color: rgba(0, 0, 0, 0.7);
-      font-size: 1.3rem;
-      line-height: 1.8;
-      margin: 1.2rem 0;
-    }
+        /* 头部段落文本样式 */
+        .header p {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin: 1.2rem 0;
+        }
 
-    .projects {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      padding: 0 20px;
-    }
+        /* 应用网格布局，用于排列项目卡片 */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted to match original app-grid minmax */
+            gap: 25px; /* Adjusted to match original app-grid gap */
+            margin-top: 30px; /* Adjusted to match original app-grid margin-top */
+            padding: 0; /* Removed padding to match original app-grid */
+        }
 
-    .project-item {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 30px 25px;
-      border: 1px solid var(--glass-border);
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      opacity: 0;
-      animation: card-entry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
+        /* Single application item card style, applying glass effect and entry animation */
+        .app-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px; /* Adjusted to match original app-item border-radius */
+            padding: 25px; /* Adjusted to match original app-item padding */
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth transition effect */
+            opacity: 0; /* Initial opacity 0, for animation */
+            animation: card-entry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            display: flex; /* Added flex for icon, name, description layout */
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center content horizontally */
+            text-align: center; /* Center text */
+        }
 
-    .project-item:nth-child(1) { animation-delay: 0.1s; }
-    .project-item:nth-child(2) { animation-delay: 0.2s; }
-    .project-item:nth-child(3) { animation-delay: 0.3s; }
-    .project-item:nth-child(n+4) { animation-delay: 0.4s; }
+        /* Application item card link style */
+        .app-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            width: 100%; /* Ensure link takes full width of card content */
+        }
 
-    .project-item:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
-      background: rgba(255, 255, 255, 0.8);
-    }
+        /* Set different animation delays for the first few cards to create a staggered effect */
+        .app-item:nth-child(1) { animation-delay: 0.1s; }
+        .app-item:nth-child(2) { animation-delay: 0.2s; }
+        .app-item:nth-child(3) { animation-delay: 0.3s; }
+        .app-item:nth-child(n+4) { animation-delay: 0.4s; }
+        /* Ensure new folder items also have animation delay */
+        .app-grid .app-item:last-child { animation-delay: 0.5s; }
 
-    .project-link {
-      color: rgba(0, 122, 204, 0.9);
-      text-decoration: none;
-      font-size: 1.4rem;
-      font-weight: 500;
-      display: block;
-      text-align: center;
-      transition: all 0.3s ease;
-      padding: 12px 0;
-    }
+        /* Application item card hover effect */
+        .app-item:hover {
+            transform: translateY(-4px); /* Move slightly up */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); /* Increase shadow */
+            background: rgba(255, 255, 255, 0.8); /* Background less transparent on hover */
+        }
 
-    .footer {
-      text-align: center;
-      margin-top: 60px;
-      padding-top: 40px;
-      border-top: 1px solid rgba(0, 0, 0, 0.08);
-    }
+        /* Application icon style */
+        .app-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
 
-    .footer p {
-      color: rgba(0, 0, 0, 0.6);
-      margin: 20px 0;
-      font-size: 1rem;
-    }
+        /* Application name style */
+        .app-name {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
 
-    .footer a {
-      text-decoration: none;
-      color: rgba(0, 122, 204, 0.9);
-      font-weight: 500;
-      margin: 0 20px;
-      font-size: 1.1rem;
-      transition: opacity 0.3s ease;
-    }
+        /* Application description style */
+        .app-description {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
 
-    @media (max-width: 1200px) {
-      .container {
-        padding: 40px 30px;
-      }
-      .projects {
-        gap: 25px;
-        padding: 0;
-      }
-    }
+        /* Page footer style */
+        .footer {
+            text-align: center;
+            margin-top: 60px; /* Adjusted to match original footer margin-top */
+            padding-top: 40px; /* Adjusted to match original footer padding-top */
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
 
-    @media (max-width: 768px) {
-      body {
-        padding: 30px 15px;
-      }
-      .container {
-        padding: 35px 25px;
-        border-radius: 20px;
-      }
-      .header {
-        padding: 20px 0 40px;
-      }
-      .header h1 {
-        font-size: 2.6rem;
-      }
-      .header p {
-        font-size: 1.2rem;
-      }
-      .projects {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .project-item {
-        padding: 25px 20px;
-      }
-      .project-link {
-        font-size: 1.3rem;
-      }
-    }
+        /* Footer paragraph text style */
+        .footer p {
+            color: rgba(0, 0, 0, 0.6);
+            margin: 20px 0; /* Adjusted to match original footer margin */
+            font-size: 1rem;
+        }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 30px 20px;
-        border-radius: 18px;
-      }
-      .header h1 {
-        font-size: 2.2rem;
-      }
-      .header p {
-        font-size: 1.1rem;
-      }
-      .project-link {
-        font-size: 1.2rem;
-      }
-      .footer a {
-        margin: 0 15px;
-        font-size: 1rem;
-      }
-    }
-  </style>
+        /* Footer link style */
+        .footer a {
+            text-decoration: none;
+            color: rgba(0, 122, 204, 0.9);
+            font-weight: 500;
+            margin: 0 20px; /* Adjusted to match original footer margin */
+            font-size: 1.1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Footer link hover effect */
+        .footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* Folder card specific style, making it more transparent */
+        .folder-card {
+            background: rgba(255, 255, 255, 0.4); /* More transparent background */
+            border: 1px solid rgba(255, 255, 255, 0.6); /* Lighter border */
+            cursor: pointer; /* Indicates clickable */
+        }
+
+        /* Folder card hover effect */
+        .folder-card:hover {
+            background: rgba(255, 255, 255, 0.6); /* Slightly less transparent on hover */
+        }
+
+        /* Overlay style when folder is expanded */
+        .folder-overlay {
+            position: fixed; /* Fixed position, covers entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Darker background for blur effect */
+            backdrop-filter: blur(20px); /* Blur background */
+            -webkit-backdrop-filter: blur(20px);
+            display: flex; /* Use flexbox to center content */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's on top */
+            opacity: 0; /* Initial opacity 0 */
+            visibility: hidden; /* Initially hidden */
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* Animation transition */
+        }
+
+        /* Style when folder overlay is active (shown) */
+        .folder-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Folder content container (expanded window) style */
+        .folder-content-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 18px;
+            padding: 30px;
+            width: 90vw; /* Use viewport width unit, more responsive */
+            height: 90vh; /* Use viewport height unit, more responsive */
+            max-width: 1200px; /* Max width limit */
+            max-height: 800px; /* Max height limit */
+            overflow-y: auto; /* Show vertical scrollbar if content overflows */
+            position: relative; /* For positioning close button */
+
+            /* Hide scrollbar */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+
+            /* Optimize animation:减小初始缩放幅度，使用非线性缓出曲线 */
+            transform: scale(0.5); /* 初始缩小，用于展开动画，幅度减小 */
+            opacity: 0; /* 初始透明度为0 */
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease; /* 展开动画，新的缓出曲线 */
+        }
+
+        /* 隐藏 Webkit 浏览器（如 Chrome, Safari）的滚动条 */
+        .folder-content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        /* 文件夹内容容器激活时的样式（展开） */
+        .folder-overlay.active .folder-content-wrapper {
+            transform: scale(1); /* 展开到原始大小 */
+            opacity: 1; /* 完全显示 */
+        }
+
+        /* 文件夹头部样式（包含标题和关闭按钮） */
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* 底部边框 */
+        }
+
+        /* 文件夹标题样式 */
+        .folder-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        /* 关闭文件夹按钮样式 */
+        .close-folder-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        /* 关闭文件夹按钮悬停效果 */
+        .close-folder-btn:hover {
+            color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 文件夹内部网格样式，与外部网格类似但可能间距略小 */
+        .folder-inner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 内部项目略小 */
+            gap: 20px; /* 略小的间距 */
+        }
+
+        /* 当文件夹打开时，禁止 body 滚动 */
+        body.folder-open {
+            overflow: hidden;
+        }
+
+        /* Media Queries */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 40px 30px;
+            }
+            .app-grid { /* Changed from .projects to .app-grid */
+                gap: 25px;
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 30px 15px; /* Adjusted to match original body padding */
+            }
+            .container {
+                padding: 35px 25px; /* Adjusted to match original container padding */
+                border-radius: 20px; /* Adjusted to match original container border-radius */
+            }
+            .header {
+                padding: 20px 0 40px; /* Adjusted to match original header padding */
+            }
+            .header h1 {
+                font-size: 2.6rem; /* Adjusted to match original h1 font-size */
+            }
+            .header p {
+                font-size: 1.2rem; /* Adjusted to match original p font-size */
+            }
+            .app-grid { /* Changed from .projects to .app-grid */
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .app-item { /* Changed from .project-item to .app-item */
+                padding: 25px 20px; /* Adjusted to match original project-item padding */
+            }
+            .project-link { /* Retained for existing items, but new items use app-icon/name/desc */
+                font-size: 1.3rem;
+            }
+            .folder-content-wrapper {
+                padding: 20px;
+                width: 95vw; /* On small screens use larger viewport width */
+                height: 95vh; /* On small screens use larger viewport height */
+                max-width: none; /* Remove max width limit, let it fill more space */
+                max-height: none; /* Remove max height limit */
+            }
+            .folder-title {
+                font-size: 1.5rem;
+            }
+            .close-folder-btn {
+                font-size: 1.8rem;
+            }
+            .folder-inner-grid {
+                grid-template-columns: 1fr; /* Inner items also become single column */
+            }
+        }
+
+        /* Media query: for mobile screens */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px; /* Adjusted to match original container padding */
+                border-radius: 18px; /* Adjusted to match original container border-radius */
+            }
+            .header h1 {
+                font-size: 2.2rem; /* Adjusted to match original h1 font-size */
+            }
+            .header p {
+                font-size: 1.1rem; /* Adjusted to match original p font-size */
+            }
+            .project-link { /* Retained for existing items */
+                font-size: 1.2rem;
+            }
+            .footer a {
+                margin: 0 15px; /* Adjusted to match original footer margin */
+                font-size: 1rem;
+            }
+            .app-icon {
+                font-size: 2.2rem;
+            }
+            .folder-content-wrapper {
+                padding: 15px;
+            }
+            .folder-title {
+                font-size: 1.3rem;
+            }
+            .close-folder-btn {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>在线工具站点</h1>
-      <p>欢迎来到我的在线工具站点主页！</p>
-      <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+    <div class="container">
+        <div class="header">
+            <h1>在线工具站点</h1>
+            <p>欢迎来到我的在线工具站点主页！</p>
+            <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+        </div>
+        <div class="app-grid">
+            <div class="app-item">
+                <a href="projects/time.html" target="_blank">
+                    <div class="app-name">世界时间</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/tomato.html" target="_blank">
+                    <div class="app-name">番茄时钟</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/preview.html" target="_blank">
+                    <div class="app-name">HTML预览</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/http.html" target="_blank">
+                    <div class="app-name">HTTP状态码</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bmi.html" target="_blank">
+                    <div class="app-name">BMI计算器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/info.html" target="_blank">
+                    <div class="app-name">UA解析器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/date.html" target="_blank">
+                    <div class="app-name">日期计算器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/test.html" target="_blank">
+                    <div class="app-name">进制转换器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/unit_conversion.html" target="_blank">
+                    <div class="app-name">单位转换器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/lock.html" target="_blank">
+                    <div class="app-name">密码生成器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/screenrecord.html" target="_blank">
+                    <div class="app-name">屏幕录制器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/docs.html" target="_blank">
+                    <div class="app-name">文档编辑器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/resume.html" target="_blank">
+                    <div class="app-name">简历生成器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/text.html" target="_blank">
+                    <div class="app-name">文字加密解密</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/password.html" target="_blank">
+                    <div class="app-name">密码强度检测</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/qrcode.html" target="_blank">
+                    <div class="app-name">二维码生成器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/number.html" target="_blank">
+                    <div class="app-name">随机数生成器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/morse.html" target="_blank">
+                    <div class="app-name">摩斯电码转换器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/tt.html" target="_blank">
+                    <div class="app-name">时间戳转换网页</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/pasteboard.html" target="_blank">
+                    <div class="app-name">剪切板文本管理器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/markdown.html" target="_blank">
+                    <div class="app-name">Markdown文本编辑器</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bluescreen.html" target="_blank">
+                    <div class="app-name">Windows11蓝屏代码参考</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/username.html" target="_blank">
+                    <div class="app-name">随机用户名生成器</div>
+                </a>
+            </div>
+
+            <div class="app-item folder-card" id="moreToolsFolder">
+                <div class="app-name">更多工具</div>
+            </div>
+
+            </div>
+        <div class="footer">
+            <p>&copy; 2025 GistWillan</p>
+            <a href="about.html" target="_self">关于</a>
+            <a href="https://github.com/GistWillan" target="_blank">GitHub</a>
+            <a href="index.html" target="_self">普通风格</a>
+        </div>
     </div>
-    <div class="projects">
-      <div class="project-item">
-        <a class="project-link" href="projects/time.html" target="_blank">世界时间</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/tomato.html" target="_blank">番茄时钟</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/preview.html" target="_blank">HTML预览</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/http.html" target="_blank">HTTP状态码</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/bmi.html" target="_blank">BMI计算器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/info.html" target="_blank">UA解析器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/date.html" target="_blank">日期计算器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/test.html" target="_blank">进制转换器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/unit_conversion.html" target="_blank">单位转换器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/lock.html" target="_blank">密码生成器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/screenrecord.html" target="_blank">屏幕录制器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/docs.html" target="_blank">文档编辑器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/resume.html" target="_blank">简历生成器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/text.html" target="_blank">文字加密解密</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/password.html" target="_blank">密码强度检测</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/qrcode.html" target="_blank">二维码生成器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/number.html" target="_blank">随机数生成器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/morse.html" target="_blank">摩斯电码转换器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/tt.html" target="_blank">时间戳转换器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/pasteboard.html" target="_blank">剪切板文本管理器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/markdown.html" target="_blank">Markdown文本编辑器</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/bluescreen.html" target="_blank">Windows11蓝屏代码参考</a>
-      </div>
-      <div class="project-item">
-        <a class="project-link" href="projects/username.html" target="_blank">随机用户名生成器</a>
-      </div>
+
+    <div class="folder-overlay" id="moreToolsFolderOverlay">
+        <div class="folder-content-wrapper">
+            <div class="folder-header">
+                <span class="folder-title">更多工具</span>
+                <button class="close-folder-btn" id="closeMoreToolsFolderBtn">×</button>
+            </div>
+            <div class="app-grid folder-inner-grid">
+                <div class="app-item">
+                    <a href="projects/formatter.html" target="_blank">
+                        <div class="app-name">代码格式化工具</div>
+                    </a>
+                </div>
+                <div class="app-item">
+                    <a href="projects/whiteboard.html" target="_blank">
+                        <div class="app-name">在线白板</div>
+                    </a>
+                </div>
+                <div class="app-item">
+                    <a href="projects/mindmap.html" target="_blank">
+                        <div class="app-name">流程图绘制工具</div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer">
-      <p>&copy; 2025 GistWillan</p>
-      <a href="about.html" target="_self">关于</a>
-      <a href="https://github.com/GistWillan" target="_blank">GitHub</a>
-      <a href="index.html" target="_self">普通风格</a>
-    </div>
-  </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            // Renamed existing folder elements for consistency
+            const moreToolsFolder = document.getElementById('moreToolsFolder');
+            const moreToolsFolderOverlay = document.getElementById('moreToolsFolderOverlay');
+            const closeMoreToolsFolderBtn = document.getElementById('closeMoreToolsFolderBtn');
+
+            const body = document.body;
+
+            // --- Helper Functions (Adjusted for removal of web templates) ---
+
+            /**
+             * Opens a given overlay and disables body scrolling.
+             * @param {HTMLElement} overlayElement - The overlay to open.
+             */
+            function openOverlay(overlayElement) {
+                overlayElement.classList.add('active');
+                body.classList.add('folder-open'); // Reusing folder-open class for general overlay
+            }
+
+            /**
+             * Closes a given overlay and enables body scrolling.
+             * @param {HTMLElement} overlayElement - The overlay to close.
+             */
+            function closeOverlay(overlayElement) {
+                overlayElement.classList.remove('active');
+                body.classList.remove('folder-open');
+            }
+
+            // --- Event Listeners ---
+
+            // Existing More Tools Folder Logic (IDs updated)
+            moreToolsFolder.addEventListener('click', (event) => {
+                event.preventDefault();
+                openOverlay(moreToolsFolderOverlay);
+            });
+
+            closeMoreToolsFolderBtn.addEventListener('click', () => {
+                closeOverlay(moreToolsFolderOverlay);
+            });
+
+            moreToolsFolderOverlay.addEventListener('click', (event) => {
+                if (event.target === moreToolsFolderOverlay) {
+                    closeOverlay(moreToolsFolderOverlay);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

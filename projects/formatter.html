@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码格式化工具</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box; /* 确保 padding 不会导致溢出 */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px; /* 增加最大宽度以适应代码区域 */
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* 增加元素间距 */
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem; /* 调整标题下边距 */
+        }
+
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls-group label {
+            font-size: 0.95rem;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        select, input[type="number"] {
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+            -webkit-appearance: none; /* 移除默认样式 */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-6.4H18.6c-5%200-9.3%201.8-13.2%206.4-3.9%204.5-6%2010-6%2016.3%200%206.2%202.1%2011.8%206%2016.3l118.2%20118.2c4.5%204.5%2010%206.4%2016.3%206.4s11.8-2%2016.3-6.4L287%20102c3.9-4.5%206-10%206-16.3s-2.1-11.8-6-16.3z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.7em top 50%, 0 0;
+            background-size: 0.65em auto, 100%;
+            padding-right: 2.5em; /* 为箭头留出空间 */
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px; /* 增加文本区域高度 */
+            padding: 1rem;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace; /* 代码字体 */
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            box-sizing: border-box;
+            resize: vertical; /* 允许垂直调整大小 */
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            flex: 1;
+            min-width: 140px; /* 调整按钮最小宽度 */
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2); /* 按钮阴影 */
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        .error-message {
+            color: #ff3b30;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .controls-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            select, input[type="number"] {
+                width: 100%;
+            }
+            button {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>代码格式化工具</h1>
+
+        <div class="controls-group">
+            <label for="languageSelect">选择语言:</label>
+            <select id="languageSelect">
+                <option value="javascript">JavaScript</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+                <option value="python">Python (基础缩进)</option>
+            </select>
+
+            <label for="indentSize">缩进大小:</label>
+            <input type="number" id="indentSize" value="4" min="1" max="8">
+        </div>
+
+        <textarea id="inputCode" placeholder="在此粘贴您的代码..."></textarea>
+        <div class="error-message" id="errorMsg"></div>
+        <textarea id="outputCode" readonly placeholder="格式化后的代码将显示在此处..."></textarea>
+
+        <div class="button-group">
+            <button onclick="formatCode()">格式化代码</button>
+            <button onclick="uploadFile()">上传文件</button>
+            <button onclick="downloadFile()">下载格式化文件</button>
+            <button onclick="copyToClipboard()">复制到剪贴板</button>
+        </div>
+    </div>
+
+    <script>
+        // 获取 DOM 元素
+        const languageSelect = document.getElementById('languageSelect');
+        const indentSizeInput = document.getElementById('indentSize');
+        const inputCodeTextarea = document.getElementById('inputCode');
+        const outputCodeTextarea = document.getElementById('outputCode');
+        const errorMsgDiv = document.getElementById('errorMsg');
+
+        // 初始化 js-beautify 的选项
+        const jsBeautifyOptions = {
+            indent_size: parseInt(indentSizeInput.value),
+            indent_char: ' ',
+            max_preserve_newlines: -1, // 不保留空行
+            preserve_newlines: false, // 不保留空行
+            keep_array_indentation: false,
+            break_chained_methods: false,
+            space_in_paren: false,
+            space_in_empty_paren: false,
+            jslint_happy: false,
+            space_after_anon_function: false,
+            space_after_named_function: false,
+            e4x: false,
+            unescape_strings: false,
+            wrap_line_length: 0,
+            end_with_newline: false,
+            comma_first: false,
+            operator_position: "before-newline",
+            indent_empty_lines: false,
+            templating: ["auto"]
+        };
+
+        // 更新缩进大小
+        indentSizeInput.addEventListener('input', () => {
+            jsBeautifyOptions.indent_size = parseInt(indentSizeInput.value);
+            // 实时预览：如果输入框有内容，则立即格式化
+            if (inputCodeTextarea.value.trim() !== '') {
+                formatCode();
+            }
+        });
+
+        // 实时预览：当输入代码时自动格式化
+        inputCodeTextarea.addEventListener('input', () => {
+            errorMsgDiv.style.display = 'none'; // 隐藏错误信息
+            formatCode();
+        });
+
+        // 当语言选择改变时，也进行格式化
+        languageSelect.addEventListener('change', () => {
+            errorMsgDiv.style.display = 'none'; // 隐藏错误信息
+            if (inputCodeTextarea.value.trim() !== '') {
+                formatCode();
+            }
+        });
+
+        /**
+         * 格式化代码的主函数
+         */
+        function formatCode() {
+            const code = inputCodeTextarea.value;
+            const language = languageSelect.value;
+            const indentSize = parseInt(indentSizeInput.value);
+            let formattedCode = '';
+
+            // 清空错误信息
+            errorMsgDiv.style.display = 'none';
+            errorMsgDiv.textContent = '';
+
+            if (code.trim() === '') {
+                outputCodeTextarea.value = '';
+                return;
+            }
+
+            try {
+                switch (language) {
+                    case 'javascript':
+                        formattedCode = js_beautify(code, { ...jsBeautifyOptions, indent_size: indentSize });
+                        break;
+                    case 'html':
+                        formattedCode = html_beautify(code, { ...jsBeautifyOptions, indent_size: indentSize });
+                        break;
+                    case 'css':
+                        formattedCode = css_beautify(code, { ...jsBeautifyOptions, indent_size: indentSize });
+                        break;
+                    case 'json':
+                        formattedCode = JSON.stringify(JSON.parse(code), null, indentSize);
+                        break;
+                    case 'xml':
+                        formattedCode = formatXml(code, indentSize);
+                        break;
+                    case 'python':
+                        // 客户端没有 Black 或其他高级 Python 格式化工具
+                        // 提供一个简单的缩进，并提示用户
+                        formattedCode = simplePythonIndent(code, indentSize);
+                        errorMsgDiv.textContent = '注意：Python 格式化仅提供基础缩进，高级格式化（如 Black）需要后端支持。';
+                        errorMsgDiv.style.display = 'block';
+                        break;
+                    default:
+                        formattedCode = code; // 默认不格式化
+                }
+            } catch (e) {
+                errorMsgDiv.textContent = `格式化错误: ${e.message}`;
+                errorMsgDiv.style.display = 'block';
+                formattedCode = code; // 格式化失败时显示原始代码
+            }
+
+            outputCodeTextarea.value = formattedCode;
+        }
+
+        /**
+         * 简单的 XML 格式化函数
+         * @param {string} xml - 待格式化的 XML 字符串
+         * @param {number} indentSize - 缩进大小
+         * @returns {string} 格式化后的 XML 字符串
+         */
+        function formatXml(xml, indentSize) {
+            let formatted = '';
+            const reg = /(>)(<)(\/?)/g;
+            xml = xml.replace(reg, '$1\r\n$2$3');
+            let pad = 0;
+            const indent = new Array(indentSize + 1).join(' '); // 创建缩进字符串
+            xml.split('\r\n').forEach(node => {
+                let indent = 0;
+                if (node.match( /<\/\w/ )) indent = -1;
+                else if (node.match( /<\w.*\/>/ )) indent = 0;
+                else if (node.match( /<\w/ )) indent = 1;
+                else indent = 0;
+
+                let padding = '';
+                for (let i = 0; i < pad; i++) {
+                    padding += new Array(indentSize + 1).join(' ');
+                }
+                formatted += padding + node + '\r\n';
+                pad += indent;
+            });
+            return formatted.trim();
+        }
+
+        /**
+         * 简单的 Python 缩进函数（不执行代码，仅基于行首空格）
+         * @param {string} code - 待格式化的 Python 代码
+         * @param {number} indentSize - 缩进大小
+         * @returns {string} 简单缩进后的 Python 代码
+         */
+        function simplePythonIndent(code, indentSize) {
+            const lines = code.split('\n');
+            const indentChar = ' ';
+            let newLines = [];
+            let currentIndentLevel = 0;
+            let lastLineEndedWithColon = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (line === '') {
+                    newLines.push('');
+                    continue;
+                }
+
+                // 简单的逻辑：如果上一行以冒号结束，则增加缩进
+                if (lastLineEndedWithColon) {
+                    currentIndentLevel++;
+                }
+
+                // 检查当前行是否减少缩进 (例如 else, elif, except, finally)
+                // 这是一个非常简化的处理，不完全准确
+                if (line.startsWith('else:') || line.startsWith('elif ') ||
+                    line.startsWith('except ') || line.startsWith('finally:')) {
+                    currentIndentLevel = Math.max(0, currentIndentLevel - 1);
+                }
+
+                newLines.push(indentChar.repeat(currentIndentLevel * indentSize) + line);
+
+                lastLineEndedWithColon = line.endsWith(':');
+            }
+            return newLines.join('\n');
+        }
+
+
+        /**
+         * 上传文件并读取内容到输入框
+         */
+        function uploadFile() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '*/*'; // 允许所有文件类型
+
+            fileInput.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = event => {
+                    inputCodeTextarea.value = event.target.result;
+                    // 尝试根据文件扩展名自动选择语言
+                    const fileName = file.name.toLowerCase();
+                    if (fileName.endsWith('.js') || fileName.endsWith('.jsx')) {
+                        languageSelect.value = 'javascript';
+                    } else if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
+                        languageSelect.value = 'html';
+                    } else if (fileName.endsWith('.css')) {
+                        languageSelect.value = 'css';
+                    } else if (fileName.endsWith('.json')) {
+                        languageSelect.value = 'json';
+                    } else if (fileName.endsWith('.xml')) {
+                        languageSelect.value = 'xml';
+                    } else if (fileName.endsWith('.py')) {
+                        languageSelect.value = 'python';
+                    }
+                    formatCode(); // 上传后立即格式化
+                };
+                reader.onerror = () => {
+                    errorMsgDiv.textContent = '文件读取失败。';
+                    errorMsgDiv.style.display = 'block';
+                };
+                reader.readAsText(file);
+            };
+            fileInput.click(); // 触发文件选择对话框
+        }
+
+        /**
+         * 下载格式化后的代码为文件
+         */
+        function downloadFile() {
+            const formattedCode = outputCodeTextarea.value;
+            if (formattedCode.trim() === '') {
+                errorMsgDiv.textContent = '没有可下载的格式化代码。';
+                errorMsgDiv.style.display = 'block';
+                return;
+            }
+
+            const language = languageSelect.value;
+            let filename = `formatted_code.${language}`;
+            switch (language) {
+                case 'javascript':
+                    filename = 'formatted.js';
+                    break;
+                case 'html':
+                    filename = 'formatted.html';
+                    break;
+                case 'css':
+                    filename = 'formatted.css';
+                    break;
+                case 'json':
+                    filename = 'formatted.json';
+                    break;
+                case 'xml':
+                    filename = 'formatted.xml';
+                    break;
+                case 'python':
+                    filename = 'formatted.py';
+                    break;
+            }
+
+            const blob = new Blob([formattedCode], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href); // 释放 URL 对象
+        }
+
+        /**
+         * 复制格式化后的代码到剪贴板
+         */
+        function copyToClipboard() {
+            outputCodeTextarea.select();
+            try {
+                document.execCommand('copy');
+                // 可以添加一个临时的提示，例如改变按钮文本
+                const copyButton = document.querySelector('button[onclick="copyToClipboard()"]');
+                const originalText = copyButton.textContent;
+                copyButton.textContent = '已复制!';
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                }, 1500);
+            } catch (err) {
+                errorMsgDiv.textContent = '复制失败，请手动复制。';
+                errorMsgDiv.style.display = 'block';
+            }
+        }
+
+        // 初始加载时格式化一次（如果输入框有默认内容）
+        window.onload = () => {
+            if (inputCodeTextarea.value.trim() !== '') {
+                formatCode();
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +7,23 @@
     <link rel="shortcut icon" href="images/index.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <style>
+        /* CSS 变量定义，用于玻璃效果的背景和边框颜色 */
         :root {
             --glass-bg: rgba(255, 255, 255, 0.6);
             --glass-border: rgba(255, 255, 255, 0.8);
         }
 
+        /* 全局 body 样式，设置字体、边距、最小高度和背景渐变 */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
             background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
-            background-attachment: fixed;
+            background-attachment: fixed; /* 固定背景，不随滚动条滚动 */
         }
 
+        /* 容器进入动画的关键帧 */
         @keyframes container-entry {
             0% {
                 opacity: 0;
@@ -33,6 +35,7 @@
             }
         }
 
+        /* 卡片进入动画的关键帧 */
         @keyframes card-entry {
             0% {
                 opacity: 0;
@@ -44,24 +47,27 @@
             }
         }
 
+        /* 主内容容器样式，应用玻璃效果和进入动画 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 30px;
             border-radius: 18px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px); /* 模糊背景 */
+            -webkit-backdrop-filter: blur(20px); /* 兼容 Safari */
             border: 1px solid var(--glass-border);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
             animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
         }
 
+        /* 页面头部样式 */
         .header {
             text-align: center;
             padding: 20px 0 40px;
         }
 
+        /* 头部标题样式 */
         .header h1 {
             color: rgba(0, 0, 0, 0.8);
             font-size: 2.8rem;
@@ -70,6 +76,7 @@
             letter-spacing: -0.03em;
         }
 
+        /* 头部段落文本样式 */
         .header p {
             color: rgba(0, 0, 0, 0.6);
             font-size: 1.1rem;
@@ -78,13 +85,15 @@
             margin: 0 auto;
         }
 
+        /* 应用网格布局，用于排列项目卡片 */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 响应式列布局 */
             gap: 25px;
             margin-top: 30px;
         }
 
+        /* 单个应用项目卡片样式，应用玻璃效果和进入动画 */
         .app-item {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -92,34 +101,41 @@
             border-radius: 14px;
             padding: 25px;
             border: 1px solid var(--glass-border);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 平滑过渡效果 */
+            opacity: 0; /* 初始透明度为0，配合动画 */
             animation: card-entry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
+        /* 应用项目卡片内的链接样式 */
         .app-item a {
             text-decoration: none;
             color: inherit;
             display: block;
         }
 
+        /* 为前几个卡片设置不同的动画延迟，创建错落效果 */
         .app-item:nth-child(1) { animation-delay: 0.1s; }
         .app-item:nth-child(2) { animation-delay: 0.2s; }
         .app-item:nth-child(3) { animation-delay: 0.3s; }
         .app-item:nth-child(n+4) { animation-delay: 0.4s; }
+        /* 确保新的文件夹项目也有动画延迟 */
+        .app-grid .app-item:last-child { animation-delay: 0.5s; }
 
+        /* 应用项目卡片悬停效果 */
         .app-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-4px); /* 向上轻微移动 */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); /* 增加阴影 */
+            background: rgba(255, 255, 255, 0.8); /* 悬停时背景更不透明 */
         }
 
+        /* 应用图标样式 */
         .app-icon {
             font-size: 2.8rem;
             margin-bottom: 15px;
             transition: transform 0.3s ease;
         }
 
+        /* 应用名称样式 */
         .app-name {
             color: rgba(0, 0, 0, 0.9);
             font-size: 1.2rem;
@@ -127,12 +143,14 @@
             margin-bottom: 8px;
         }
 
+        /* 应用描述样式 */
         .app-description {
             color: rgba(0, 0, 0, 0.6);
             font-size: 0.95rem;
             line-height: 1.5;
         }
 
+        /* 页面底部样式 */
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -140,11 +158,13 @@
             border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
 
+        /* 底部段落文本样式 */
         .footer p {
             color: rgba(0, 0, 0, 0.6);
             margin: 15px 0;
         }
 
+        /* 底部链接样式 */
         .footer a {
             text-decoration: none;
             color: rgba(0, 122, 204, 0.9);
@@ -153,10 +173,134 @@
             transition: opacity 0.3s ease;
         }
 
+        /* 底部链接悬停效果 */
         .footer a:hover {
             opacity: 0.8;
         }
 
+        /* 文件夹卡片特定样式，使其更透明 */
+        .folder-card {
+            background: rgba(255, 255, 255, 0.4); /* 更透明的背景 */
+            border: 1px solid rgba(255, 255, 255, 0.6); /* 更浅的边框 */
+            cursor: pointer; /* 指示可点击 */
+        }
+
+        /* 文件夹卡片悬停效果 */
+        .folder-card:hover {
+            background: rgba(255, 255, 255, 0.6); /* 悬停时稍微不那么透明 */
+        }
+
+        /* 文件夹展开时的覆盖层样式 */
+        .folder-overlay {
+            position: fixed; /* 固定定位，覆盖整个视口 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* 较暗的背景用于模糊效果 */
+            backdrop-filter: blur(20px); /* 模糊背景 */
+            -webkit-backdrop-filter: blur(20px);
+            display: flex; /* 使用 flexbox 居中内容 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 确保在最上层 */
+            opacity: 0; /* 初始透明度为0 */
+            visibility: hidden; /* 初始隐藏 */
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* 动画过渡 */
+        }
+
+        /* 文件夹覆盖层激活时的样式（显示） */
+        .folder-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 文件夹内容容器（展开的窗口）样式 */
+        .folder-content-wrapper {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 18px;
+            padding: 30px;
+            width: 90vw; /* 使用视口宽度单位，更响应式 */
+            height: 90vh; /* 使用视口高度单位，更响应式 */
+            max-width: 1200px; /* 最大宽度限制 */
+            max-height: 800px; /* 最大高度限制 */
+            overflow-y: auto; /* 内容溢出时显示垂直滚动条 */
+            position: relative; /* 用于关闭按钮的定位 */
+
+            /* 隐藏滚动条 */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+
+            /* 优化动画：减小初始缩放幅度，使用非线性缓出曲线 */
+            transform: scale(0.5); /* 初始缩小，用于展开动画，幅度减小 */
+            opacity: 0; /* 初始透明度为0 */
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease; /* 展开动画，新的缓出曲线 */
+        }
+
+        /* 隐藏 Webkit 浏览器（如 Chrome, Safari）的滚动条 */
+        .folder-content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        /* 文件夹内容容器激活时的样式（展开） */
+        .folder-overlay.active .folder-content-wrapper {
+            transform: scale(1); /* 展开到原始大小 */
+            opacity: 1; /* 完全显示 */
+        }
+
+        /* 文件夹头部样式（包含标题和关闭按钮） */
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* 底部边框 */
+        }
+
+        /* 文件夹标题样式 */
+        .folder-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        /* 关闭文件夹按钮样式 */
+        .close-folder-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        /* 关闭文件夹按钮悬停效果 */
+        .close-folder-btn:hover {
+            color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 文件夹内部网格样式，与外部网格类似但可能间距略小 */
+        .folder-inner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* 内部项目略小 */
+            gap: 20px; /* 略小的间距 */
+        }
+
+        /* 当文件夹打开时，禁止 body 滚动 */
+        body.folder-open {
+            overflow: hidden;
+        }
+
+        /* 媒体查询：适用于平板和较小屏幕 */
         @media (max-width: 768px) {
             body {
                 padding: 15px;
@@ -169,13 +313,30 @@
                 font-size: 2.2rem;
             }
             .app-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* 单列布局 */
             }
             .app-item {
                 padding: 20px;
             }
+            .folder-content-wrapper {
+                padding: 20px;
+                width: 95vw; /* 在小屏幕上使用更大的视口宽度 */
+                height: 95vh; /* 在小屏幕上使用更大的视口高度 */
+                max-width: none; /* 移除最大宽度限制，让其填充更多空间 */
+                max-height: none; /* 移除最大高度限制 */
+            }
+            .folder-title {
+                font-size: 1.5rem;
+            }
+            .close-folder-btn {
+                font-size: 1.8rem;
+            }
+            .folder-inner-grid {
+                grid-template-columns: 1fr; /* 内部项目也变为单列 */
+            }
         }
 
+        /* 媒体查询：适用于手机屏幕 */
         @media (max-width: 480px) {
             .container {
                 padding: 20px;
@@ -189,186 +350,272 @@
             .app-icon {
                 font-size: 2.2rem;
             }
+            .folder-content-wrapper {
+                padding: 15px;
+            }
+            .folder-title {
+                font-size: 1.3rem;
+            }
+            .close-folder-btn {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-    <div class="header">
-      <h1>在线工具站点</h1>
-      <p>欢迎来到我的在线工具站点主页！</p>
-      <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+        <div class="header">
+            <h1>在线工具站点</h1>
+            <p>欢迎来到我的在线工具站点主页！</p>
+            <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+        </div>
+        <div class="app-grid">
+            <div class="app-item">
+                <a href="projects/time.html">
+                    <div class="app-icon">🌏</div>
+                    <div class="app-name">世界时间</div>
+                    <div class="app-description">展示世界各地的当前时间</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/tomato.html">
+                    <div class="app-icon">⏰</div>
+                    <div class="app-name">番茄时钟</div>
+                    <div class="app-description">提高工作效率</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/preview.html">
+                    <div class="app-icon">👀</div>
+                    <div class="app-name">HTML预览</div>
+                    <div class="app-description">实时HTML代码预览</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/http.html">
+                    <div class="app-icon">🌐</div>
+                    <div class="app-name">HTTP状态码</div>
+                    <div class="app-description">快速查询HTTP状态</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bmi.html">
+                    <div class="app-icon">🧍‍♂️</div>
+                    <div class="app-name">BMI计算器</div>
+                    <div class="app-description">计算体质指数</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/info.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">UA解析器</div>
+                    <div class="app-description">解析当前浏览器UA信息</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/date.html">
+                    <div class="app-icon">📅</div>
+                    <div class="app-name">日期计算器</div>
+                    <div class="app-description">计算日期间隔</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/test.html">
+                    <div class="app-icon">🔢</div>
+                    <div class="app-name">进制转换器</div>
+                    <div class="app-description">数制转换工具</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/unit_conversion.html">
+                    <div class="app-icon">📏</div>
+                    <div class="app-name">单位转换器</div>
+                    <div class="app-description">单位换算工具</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/lock.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">密码生成器</div>
+                    <div class="app-description">随机密码生成</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/screenrecord.html">
+                    <div class="app-icon">🎥</div>
+                    <div class="app-name">屏幕录制器</div>
+                    <div class="app-description">录制窗口或整个屏幕</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/docs.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">文档编辑器</div>
+                    <div class="app-description">在线编辑文档后可下载</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/resume.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">简历生成器</div>
+                    <div class="app-description">实时生成精美简历</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/text.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">文字加密解密</div>
+                    <div class="app-description">文字加密解密</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/password.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">密码强度检测</div>
+                    <div class="app-description">检测密码强度</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/qrcode.html">
+                    <div class="app-icon">📷</div>
+                    <div class="app-name">二维码生成器</div>
+                    <div class="app-description">快速生成二维码</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/number.html">
+                    <div class="app-icon">🎲</div>
+                    <div class="app-name">随机数生成器</div>
+                    <div class="app-description">生成随机数</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/morse.html">
+                    <div class="app-icon">📻</div>
+                    <div class="app-name">摩斯电码转换器</div>
+                    <div class="app-description">文字转换摩斯电码</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/tt.html">
+                    <div class="app-icon">⏱️</div>
+                    <div class="app-name">时间戳转换网页</div>
+                    <div class="app-description">转换时间戳</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/pasteboard.html">
+                    <div class="app-icon">📋</div>
+                    <div class="app-name">剪切板文本管理器</div>
+                    <div class="app-description">管理剪切板文字</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/markdown.html">
+                    <div class="app-icon">📋</div>
+                    <div class="app-name">Markdown文本编辑器</div>
+                    <div class="app-description">可预览格式以及保存</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bluescreen.html">
+                    <div class="app-icon">⚠️</div>
+                    <div class="app-name">Windows11蓝屏代码参考</div>
+                    <div class="app-description">常见蓝屏代码参考表</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/username.html">
+                    <div class="app-icon">🎨</div>
+                    <div class="app-name">随机用户名生成器</div>
+                    <div class="app-description">生成随机用户名。</div>
+                </a>
+            </div>
+
+            <div class="app-item folder-card" id="moreToolsFolder">
+                <div class="app-icon">📁</div>
+                <div class="app-name">更多工具</div>
+                <div class="app-description">点击查看更多工具</div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 GistWillan</p>
+            <a href="about.html">关于</a>
+            <a href="https://github.com/gistwillan">我的GitHub</a>
+            <a href="style2.html">简约风格</a>
+        </div>
     </div>
-    <div class="app-grid">
-      <div class="app-item">
-        <a href="projects/time.html">
-          <div class="app-icon">🌏</div>
-          <div class="app-name">世界时间</div>
-          <div class="app-description">展示世界各地的当前时间</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/tomato.html">
-          <div class="app-icon">⏰</div>
-          <div class="app-name">番茄时钟</div>
-          <div class="app-description">提高工作效率</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/preview.html">
-          <div class="app-icon">👀</div>
-          <div class="app-name">HTML预览</div>
-          <div class="app-description">实时HTML代码预览</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/http.html">
-          <div class="app-icon">🌐</div>
-          <div class="app-name">HTTP状态码</div>
-          <div class="app-description">快速查询HTTP状态</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/bmi.html">
-          <div class="app-icon">🧍‍♂️</div>
-          <div class="app-name">BMI计算器</div>
-          <div class="app-description">计算体质指数</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/info.html">
-          <div class="app-icon">📃</div>
-          <div class="app-name">UA解析器</div>
-          <div class="app-description">解析当前浏览器UA信息</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/date.html">
-          <div class="app-icon">📅</div>
-          <div class="app-name">日期计算器</div>
-          <div class="app-description">计算日期间隔</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/test.html">
-          <div class="app-icon">🔢</div>
-          <div class="app-name">进制转换器</div>
-          <div class="app-description">数制转换工具</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/unit_conversion.html">
-          <div class="app-icon">📏</div>
-          <div class="app-name">单位转换器</div>
-          <div class="app-description">单位换算工具</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/lock.html">
-          <div class="app-icon">🔐</div>
-          <div class="app-name">密码生成器</div>
-          <div class="app-description">随机密码生成</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/screenrecord.html">
-          <div class="app-icon">🎥</div>
-          <div class="app-name">屏幕录制器</div>
-          <div class="app-description">录制窗口或整个屏幕</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/docs.html">
-          <div class="app-icon">📃</div>
-          <div class="app-name">文档编辑器</div>
-          <div class="app-description">在线编辑文档后可下载</div>
-        </a>
-      </div>
-        <div class="app-item">
-        <a href="projects/resume.html">
-          <div class="app-icon">📃</div>
-          <div class="app-name">简历生成器</div>
-          <div class="app-description">实时生成精美简历</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/text.html">
-          <div class="app-icon">🔐</div>
-          <div class="app-name">文字加密解密</div>
-          <div class="app-description">文字加密解密</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/password.html">
-          <div class="app-icon">🔐</div>
-          <div class="app-name">密码强度检测</div>
-          <div class="app-description">检测密码强度</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/qrcode.html">
-          <div class="app-icon">📷</div>
-          <div class="app-name">二维码生成器</div>
-          <div class="app-description">快速生成二维码</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/number.html">
-          <div class="app-icon">🎲</div>
-          <div class="app-name">随机数生成器</div>
-          <div class="app-description">生成随机数</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/morse.html">
-          <div class="app-icon">📻</div>
-          <div class="app-name">摩斯电码转换器</div>
-          <div class="app-description">文字转换摩斯电码</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/tt.html">
-          <div class="app-icon">⏱️</div>
-          <div class="app-name">时间戳转换网页</div>
-          <div class="app-description">转换时间戳</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/pasteboard.html">
-          <div class="app-icon">📋</div>
-          <div class="app-name">剪切板文本管理器</div>
-          <div class="app-description">管理剪切板文字</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/markdown.html">
-          <div class="app-icon">📋</div>
-          <div class="app-name">Markdown文本编辑器</div>
-          <div class="app-description">可预览格式以及保存</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/bluescreen.html">
-          <div class="app-icon">⚠️</div>
-          <div class="app-name">Windows11蓝屏代码参考</div>
-          <div class="app-description">常见蓝屏代码参考表</div>
-        </a>
-      </div>
-      <div class="app-item">
-        <a href="projects/username.html">
-          <div class="app-icon">🎨</div>
-          <div class="app-name">随机用户名生成器</div>
-          <div class="app-description">生成随机用户名。</div>
-        </a>
-      </div>
+
+    <div class="folder-overlay" id="folderOverlay">
+        <div class="folder-content-wrapper">
+            <div class="folder-header">
+                <span class="folder-title">更多工具</span>
+                <button class="close-folder-btn" id="closeFolderBtn">×</button>
+            </div>
+            <div class="app-grid folder-inner-grid">
+                <div class="app-item">
+                    <a href="projects/formatter.html">
+                        <div class="app-icon">💻</div>
+                        <div class="app-name">代码格式化工具</div>
+                        <div class="app-description">轻松美化和标准化代码</div>
+                    </a>
+                </div>
+                <div class="app-item">
+                    <a href="projects/whiteboard.html">
+                        <div class="app-icon">🎨</div>
+                        <div class="app-name">在线白板</div>
+                        <div class="app-description">轻松绘图、书写，并利用橡皮擦、撤销和重做功能进行编辑</div>
+                    </a>
+                </div>
+                <div class="app-item">
+                    <a href="projects/mindmap.html">
+                        <div class="app-icon">💡</div>
+                        <div class="app-name">流程图绘制工具</div>
+                        <div class="app-description">无需后端支持即可在浏览器中轻松创建和组织您的想法</div>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer">
-      <p>&copy; 2025 GistWillan</p>
-      <a href="about.html">关于</a>
-      <a href="https://github.com/gistwillan">我的GitHub</a>
-      <a href="style2.html">简约风格</a>
-    </div>
-  </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 获取文件夹卡片、覆盖层、内容容器和关闭按钮的DOM元素
+            const moreToolsFolder = document.getElementById('moreToolsFolder');
+            const folderOverlay = document.getElementById('folderOverlay');
+            const folderContentWrapper = document.querySelector('.folder-content-wrapper');
+            const closeFolderBtn = document.getElementById('closeFolderBtn');
+            const body = document.body;
+
+            // 为文件夹卡片添加点击事件监听器，用于打开文件夹
+            moreToolsFolder.addEventListener('click', (event) => {
+                event.preventDefault(); // 阻止默认的链接跳转行为
+
+                // 添加 'active' 类到覆盖层，使其显示并触发动画
+                folderOverlay.classList.add('active');
+                // 添加 'folder-open' 类到 body，以禁用页面滚动
+                body.classList.add('folder-open');
+            });
+
+            // 为关闭按钮添加点击事件监听器，用于关闭文件夹
+            closeFolderBtn.addEventListener('click', () => {
+                // 移除 'active' 类，使覆盖层隐藏并触发动画
+                folderOverlay.classList.remove('active');
+                // 移除 'folder-open' 类，恢复页面滚动
+                body.classList.remove('folder-open');
+            });
+
+            // 可选：点击覆盖层外部区域时关闭文件夹
+            folderOverlay.addEventListener('click', (event) => {
+                // 如果点击的目标是覆盖层本身（而不是其内部的内容）
+                if (event.target === folderOverlay) {
+                    // 移除 'active' 类，使覆盖层隐藏
+                    folderOverlay.classList.remove('active');
+                    // 移除 'folder-open' 类，恢复页面滚动
+                    body.classList.remove('folder-open');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

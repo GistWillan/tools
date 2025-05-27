@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流程图/脑图绘制</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px; /* Increased max-width for diagramming */
+            height: 90vh; /* Set a height for the drawing area */
+            min-height: 600px; /* Minimum height */
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative; /* For positioning the text input */
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            flex-grow: 1; /* Make canvas take available space */
+            cursor: default; /* Default cursor */
+            touch-action: none; /* Prevent browser default touch actions like scrolling */
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        button.active-tool {
+            background: #0056b3; /* Darker primary color for active tool */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+        }
+
+        #nodeTextInput {
+            position: absolute;
+            display: none; /* Hidden by default */
+            padding: 0.5rem;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100; /* Ensure it's above canvas */
+            box-sizing: border-box;
+            max-width: 200px; /* Limit width */
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                height: 90vh;
+            }
+            .controls-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            button {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>流程图/脑图绘制工具</h1>
+
+        <div class="controls-group">
+            <button id="addNodeBtn">添加节点</button>
+            <button id="connectModeBtn">连接模式</button>
+            <button id="deleteSelectedBtn">删除选中</button>
+            <button onclick="clearCanvas()">清空画布</button>
+            <button id="saveDiagramBtn" onclick="saveDiagram()">保存图表</button>
+            <button onclick="loadDiagram()">加载图表</button>
+            <button onclick="exportAsPng()">导出为PNG</button>
+            <button onclick="exportAsJson()">导出为JSON</button>
+        </div>
+
+        <canvas id="diagramCanvas"></canvas>
+        <input type="text" id="nodeTextInput" placeholder="编辑节点文本">
+
+        <input type="file" id="fileInput" style="display: none;" accept=".json">
+    </div>
+
+    <script>
+        const canvas = document.getElementById('diagramCanvas');
+        const ctx = canvas.getContext('2d');
+        const addNodeBtn = document.getElementById('addNodeBtn');
+        const connectModeBtn = document.getElementById('connectModeBtn');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const nodeTextInput = document.getElementById('nodeTextInput');
+        const fileInput = document.getElementById('fileInput');
+        const saveDiagramBtn = document.getElementById('saveDiagramBtn'); // Get the save button element
+
+        let nodes = [];
+        let connections = [];
+        let selectedNodeId = null;
+        let isDragging = false;
+        let draggedNodeId = null;
+        let offsetX, offsetY; // Offset for dragging
+        let connectMode = false;
+        let startNodeForConnectionId = null;
+
+        const NODE_WIDTH = 120;
+        const NODE_HEIGHT = 60;
+        const NODE_RADIUS = 10; // For rounded rectangles
+
+        // Get the primary color from CSS variables
+        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+
+        /**
+         * Generates a unique ID.
+         * @returns {string} A unique ID string.
+         */
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0,
+                    v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        /**
+         * Resizes the canvas to fit its container.
+         */
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            // Calculate available space for canvas
+            const containerWidth = container.clientWidth - (2 * parseInt(getComputedStyle(container).paddingLeft));
+            const containerHeight = container.clientHeight - (2 * parseInt(getComputedStyle(container).paddingTop)) -
+                                    document.querySelector('h1').offsetHeight -
+                                    document.querySelector('.controls-group').offsetHeight -
+                                    (2 * parseFloat(getComputedStyle(container).gap));
+
+            canvas.width = containerWidth;
+            canvas.height = containerHeight;
+            redrawAll();
+        }
+
+        /**
+         * Initializes the canvas and loads any saved diagram.
+         */
+        window.onload = () => {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            loadDiagramFromLocalStorage(); // Attempt to load from local storage on startup
+        };
+
+        /**
+         * Gets mouse/touch coordinates relative to the canvas.
+         * @param {Event} e - The event object.
+         * @returns {{x: number, y: number}} The coordinates.
+         */
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        /**
+         * Finds a node at the given coordinates.
+         * @param {number} x - The x-coordinate.
+         * @param {number} y - The y-coordinate.
+         * @returns {object|null} The node object if found, otherwise null.
+         */
+        function getNodeAtPoint(x, y) {
+            for (let i = nodes.length - 1; i >= 0; i--) { // Iterate backwards to check top-most nodes first
+                const node = nodes[i];
+                if (x >= node.x && x <= node.x + node.width &&
+                    y >= node.y && y <= node.y + node.height) {
+                    return node;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Finds a node by its ID.
+         * @param {string} id - The ID of the node.
+         * @returns {object|undefined} The node object if found, otherwise undefined.
+         */
+        function findNodeById(id) {
+            return nodes.find(node => node.id === id);
+        }
+
+        /**
+         * Draws a rounded rectangle.
+         * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+         * @param {number} x - The x-coordinate of the top-left corner.
+         * @param {number} y - The y-coordinate of the top-left corner.
+         * @param {number} width - The width of the rectangle.
+         * @param {number} height - The height of the rectangle.
+         * @param {number} radius - The corner radius.
+         */
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        /**
+         * Draws a node on the canvas.
+         * @param {object} node - The node object to draw.
+         * @param {boolean} isSelected - True if the node is currently selected.
+         */
+        function drawNode(node, isSelected) {
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
+            // Draw rounded rectangle
+            roundRect(ctx, node.x, node.y, node.width, node.height, NODE_RADIUS);
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw selection border
+            if (isSelected) {
+                ctx.strokeStyle = primaryColor; /* Use the JavaScript variable for primary color */
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]); // Dashed line for selection
+                roundRect(ctx, node.x, node.y, node.width, node.height, NODE_RADIUS);
+                ctx.stroke();
+                ctx.setLineDash([]); // Reset line dash
+            }
+
+            // Draw text
+            ctx.fillStyle = '#333';
+            ctx.font = '14px -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(node.text, node.x + node.width / 2, node.y + node.height / 2, node.width - 10);
+        }
+
+        /**
+         * Draws a connection between two nodes.
+         * @param {object} connection - The connection object to draw.
+         */
+        function drawConnection(connection) {
+            const startNode = findNodeById(connection.startNodeId);
+            const endNode = findNodeById(connection.endNodeId);
+
+            if (!startNode || !endNode) return;
+
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(startNode.x + startNode.width / 2, startNode.y + startNode.height / 2);
+            ctx.lineTo(endNode.x + endNode.width / 2, endNode.y + endNode.height / 2);
+            ctx.stroke();
+
+            // Draw arrow head
+            const angle = Math.atan2(endNode.y + endNode.height / 2 - (startNode.y + startNode.height / 2),
+                                     endNode.x + endNode.width / 2 - (startNode.x + startNode.width / 2));
+            const arrowSize = 10;
+            ctx.save();
+            ctx.translate(endNode.x + endNode.width / 2, endNode.y + endNode.height / 2);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(-arrowSize, -arrowSize / 2);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(-arrowSize, arrowSize / 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        /**
+         * Clears the canvas and redraws all nodes and connections.
+         */
+        function redrawAll() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            connections.forEach(conn => drawConnection(conn));
+            nodes.forEach(node => drawNode(node, node.id === selectedNodeId));
+        }
+
+        /**
+         * Adds a new node to the canvas.
+         */
+        addNodeBtn.addEventListener('click', () => {
+            const newNode = {
+                id: generateUUID(),
+                x: (canvas.width / 2) - (NODE_WIDTH / 2),
+                y: (canvas.height / 2) - (NODE_HEIGHT / 2),
+                width: NODE_WIDTH,
+                height: NODE_HEIGHT,
+                text: '新节点',
+                type: 'rectangle'
+            };
+            nodes.push(newNode);
+            selectedNodeId = newNode.id; // Select the new node
+            updateNodeTextInput();
+            redrawAll();
+        });
+
+        /**
+         * Toggles connection mode.
+         */
+        connectModeBtn.addEventListener('click', () => {
+            connectMode = !connectMode;
+            if (connectMode) {
+                connectModeBtn.classList.add('active-tool');
+                canvas.style.cursor = 'pointer';
+                startNodeForConnectionId = null; // Reset start node
+            } else {
+                connectModeBtn.classList.remove('active-tool');
+                canvas.style.cursor = 'default';
+                startNodeForConnectionId = null;
+            }
+        });
+
+        /**
+         * Deletes the currently selected node and its connections.
+         */
+        deleteSelectedBtn.addEventListener('click', () => {
+            if (selectedNodeId) {
+                nodes = nodes.filter(node => node.id !== selectedNodeId);
+                connections = connections.filter(conn =>
+                    conn.startNodeId !== selectedNodeId && conn.endNodeId !== selectedNodeId
+                );
+                selectedNodeId = null;
+                hideNodeTextInput();
+                redrawAll();
+            }
+        });
+
+        /**
+         * Clears all nodes and connections from the canvas.
+         */
+        function clearCanvas() {
+            nodes = [];
+            connections = [];
+            selectedNodeId = null;
+            hideNodeTextInput();
+            redrawAll();
+        }
+
+        /**
+         * Saves the current diagram to local storage.
+         */
+        function saveDiagram() {
+            const diagramData = { nodes, connections };
+            localStorage.setItem('flowchartDiagram', JSON.stringify(diagramData));
+            // Provide a visual cue for saving
+            const originalText = saveDiagramBtn.textContent;
+            saveDiagramBtn.textContent = '已保存!';
+            setTimeout(() => {
+                saveDiagramBtn.textContent = originalText;
+            }, 1500);
+        }
+
+        /**
+         * Loads a diagram from local storage.
+         */
+        function loadDiagramFromLocalStorage() {
+            const savedData = localStorage.getItem('flowchartDiagram');
+            if (savedData) {
+                try {
+                    const diagramData = JSON.parse(savedData);
+                    nodes = diagramData.nodes || [];
+                    connections = diagramData.connections || [];
+                    selectedNodeId = null;
+                    hideNodeTextInput();
+                    redrawAll();
+                } catch (e) {
+                    console.error("Failed to load diagram from local storage:", e);
+                    // Optionally show an error message to the user
+                }
+            }
+        }
+
+        /**
+         * Loads a diagram from a JSON file.
+         */
+        function loadDiagram() {
+            fileInput.click(); // Trigger the hidden file input
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = event => {
+                try {
+                    const diagramData = JSON.parse(event.target.result);
+                    if (diagramData.nodes && diagramData.connections) {
+                        nodes = diagramData.nodes;
+                        connections = diagramData.connections;
+                        selectedNodeId = null;
+                        hideNodeTextInput();
+                        redrawAll();
+                    } else {
+                        alert('无效的图表文件格式。');
+                    }
+                } catch (error) {
+                    alert('加载文件失败，请确保它是有效的JSON文件。');
+                    console.error("File load error:", error);
+                }
+            };
+            reader.onerror = () => {
+                alert('文件读取失败。');
+            };
+            reader.readAsText(file);
+            fileInput.value = ''; // Clear the input so same file can be loaded again
+        });
+
+        /**
+         * Exports the current diagram as a PNG image.
+         */
+        function exportAsPng() {
+            const link = document.createElement('a');
+            link.download = 'flowchart.png';
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * Exports the current diagram as JSON data.
+         */
+        function exportAsJson() {
+            const diagramData = { nodes, connections };
+            const jsonString = JSON.stringify(diagramData, null, 2); // Pretty print JSON
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.download = 'flowchart.json';
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // --- Node Text Input Logic ---
+        function showNodeTextInput(node) {
+            nodeTextInput.style.display = 'block';
+            nodeTextInput.value = node.text;
+            // Position the input field near the node
+            const canvasRect = canvas.getBoundingClientRect();
+            nodeTextInput.style.left = `${canvasRect.left + node.x + canvas.clientLeft}px`;
+            nodeTextInput.style.top = `${canvasRect.top + node.y + node.height + 10 + canvas.clientTop}px`;
+            nodeTextInput.focus();
+        }
+
+        function hideNodeTextInput() {
+            nodeTextInput.style.display = 'none';
+            nodeTextInput.value = '';
+        }
+
+        function updateNodeTextInput() {
+            const selectedNode = findNodeById(selectedNodeId);
+            if (selectedNode) {
+                showNodeTextInput(selectedNode);
+            } else {
+                hideNodeTextInput();
+            }
+        }
+
+        nodeTextInput.addEventListener('input', () => {
+            const selectedNode = findNodeById(selectedNodeId);
+            if (selectedNode) {
+                selectedNode.text = nodeTextInput.value;
+                redrawAll();
+            }
+        });
+
+        nodeTextInput.addEventListener('blur', hideNodeTextInput);
+        nodeTextInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                nodeTextInput.blur(); // Hide on Enter
+            }
+        });
+
+
+        // --- Canvas Interaction (Mouse & Touch) ---
+
+        canvas.addEventListener('mousedown', handlePointerDown);
+        canvas.addEventListener('touchstart', handlePointerDown);
+
+        canvas.addEventListener('mousemove', handlePointerMove);
+        canvas.addEventListener('touchmove', handlePointerMove);
+
+        canvas.addEventListener('mouseup', handlePointerUp);
+        canvas.addEventListener('touchend', handlePointerUp);
+
+        canvas.addEventListener('mouseout', handlePointerOut); // Stop dragging if mouse leaves canvas
+
+        function handlePointerDown(e) {
+            e.preventDefault(); // Prevent default touch actions like scrolling/zooming
+            const pos = getMousePos(e);
+            const clickedNode = getNodeAtPoint(pos.x, pos.y);
+
+            if (connectMode) {
+                if (clickedNode) {
+                    if (!startNodeForConnectionId) {
+                        startNodeForConnectionId = clickedNode.id;
+                        // Visual feedback for start node (e.g., highlight it)
+                        selectedNodeId = startNodeForConnectionId;
+                        redrawAll();
+                    } else if (clickedNode.id !== startNodeForConnectionId) {
+                        // Check if connection already exists
+                        const exists = connections.some(c =>
+                            (c.startNodeId === startNodeForConnectionId && c.endNodeId === clickedNode.id) ||
+                            (c.startNodeId === clickedNode.id && c.endNodeId === startNodeForConnectionId)
+                        );
+                        if (!exists) {
+                            connections.push({
+                                id: generateUUID(),
+                                startNodeId: startNodeForConnectionId,
+                                endNodeId: clickedNode.id
+                            });
+                        }
+                        connectMode = false; // Exit connect mode
+                        connectModeBtn.classList.remove('active-tool');
+                        canvas.style.cursor = 'default';
+                        startNodeForConnectionId = null;
+                        selectedNodeId = null; // Deselect after connecting
+                        redrawAll();
+                    }
+                } else {
+                    // Clicked on empty space in connect mode, exit connect mode
+                    connectMode = false;
+                    connectModeBtn.classList.remove('active-tool');
+                    canvas.style.cursor = 'default';
+                    startNodeForConnectionId = null;
+                    selectedNodeId = null;
+                    redrawAll();
+                }
+            } else { // Not in connect mode (dragging/selection)
+                if (clickedNode) {
+                    selectedNodeId = clickedNode.id;
+                    isDragging = true;
+                    draggedNodeId = clickedNode.id;
+                    offsetX = pos.x - clickedNode.x;
+                    offsetY = pos.y - clickedNode.y;
+                    updateNodeTextInput(); // Show/update text input for selected node
+                    redrawAll();
+                } else {
+                    selectedNodeId = null; // Deselect
+                    hideNodeTextInput();
+                    redrawAll();
+                }
+            }
+        }
+
+        function handlePointerMove(e) {
+            e.preventDefault(); // Prevent default touch actions
+            if (isDragging && draggedNodeId) {
+                const pos = getMousePos(e);
+                const draggedNode = findNodeById(draggedNodeId);
+                if (draggedNode) {
+                    draggedNode.x = pos.x - offsetX;
+                    draggedNode.y = pos.y - offsetY;
+                    updateNodeTextInput(); // Update position of text input
+                    redrawAll();
+                }
+            }
+        }
+
+        function handlePointerUp() {
+            isDragging = false;
+            draggedNodeId = null;
+        }
+
+        function handlePointerOut() {
+            if (isDragging) { // If dragging and mouse leaves canvas, stop dragging
+                isDragging = false;
+                draggedNodeId = null;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线白板/草稿板</title>
+    <style>
+        :root {
+            --primary: #007AFF;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --spacing: 28px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, #f0f5ff 0%, #f8f9ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px; /* Increased max-width for the whiteboard */
+            height: 80vh; /* Set a height for the whiteboard area */
+            min-height: 500px; /* Minimum height */
+            padding: var(--spacing);
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+            animation: card-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @keyframes card-entry {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls-group label {
+            font-size: 0.95rem;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 150px;
+            height: 8px;
+            background: rgba(0, 122, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+            transition: background 0.2s ease-in-out;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 122, 255, 0.4);
+            transition: background 0.2s ease-in-out;
+        }
+
+        canvas {
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            flex-grow: 1; /* Make canvas take available space */
+            cursor: crosshair; /* Change cursor to crosshair for drawing */
+            touch-action: none; /* Prevent browser default touch actions like scrolling */
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.42, 0, 0.32, 1.5);
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        button.active-tool {
+            background: #0056b3; /* Darker primary color for active tool */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                height: 90vh; /* Adjust height for smaller screens */
+            }
+            .controls-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            input[type="range"] {
+                width: 100%;
+            }
+            button {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>在线白板</h1>
+
+        <div class="controls-group">
+            <label for="colorPicker">画笔颜色:</label>
+            <input type="color" id="colorPicker" value="#000000">
+
+            <label for="brushSizeSlider">画笔大小:</label>
+            <input type="range" id="brushSizeSlider" min="1" max="20" value="5">
+            <span id="brushSizeValue">5</span>px
+        </div>
+
+        <canvas id="whiteboardCanvas"></canvas>
+
+        <div class="button-group">
+            <button id="penToolBtn" class="active-tool">画笔</button>
+            <button id="eraserToolBtn">橡皮擦</button>
+            <button onclick="clearCanvas()">清空白板</button>
+            <button id="undoBtn" disabled>撤销</button>
+            <button id="redoBtn" disabled>重做</button>
+            <button onclick="downloadWhiteboard()">保存为图片</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('whiteboardCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorPicker = document.getElementById('colorPicker');
+        const brushSizeSlider = document.getElementById('brushSizeSlider');
+        const brushSizeValueSpan = document.getElementById('brushSizeValue');
+        const penToolBtn = document.getElementById('penToolBtn');
+        const eraserToolBtn = document.getElementById('eraserToolBtn');
+        const undoBtn = document.getElementById('undoBtn');
+        const redoBtn = document.getElementById('redoBtn');
+
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let brushColor = colorPicker.value;
+        let brushSize = parseInt(brushSizeSlider.value);
+        let currentTool = 'pen'; // 'pen' or 'eraser'
+
+        // History for undo/redo
+        let history = [];
+        let historyIndex = -1;
+        const MAX_HISTORY_STATES = 30; // Limit history to prevent excessive memory usage
+
+        /**
+         * Resizes the canvas to fit its container and re-renders the current state.
+         */
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth - (2 * parseInt(getComputedStyle(container).paddingLeft));
+            const containerHeight = container.clientHeight - (2 * parseInt(getComputedStyle(container).paddingTop)) -
+                                    document.querySelector('h1').offsetHeight -
+                                    document.querySelector('.controls-group').offsetHeight -
+                                    document.querySelector('.button-group').offsetHeight -
+                                    (3 * parseFloat(getComputedStyle(container).gap));
+
+            // Store the current image data before resizing
+            const imageData = history[historyIndex];
+
+            canvas.width = containerWidth;
+            canvas.height = containerHeight;
+
+            // Reapply drawing styles
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            updateToolSettings(); // Apply current tool settings
+
+            // Redraw the image after resizing
+            if (imageData) {
+                restoreState(imageData);
+            } else {
+                // If no history, clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        /**
+         * Initializes canvas size and drawing styles on load, and sets up event listeners.
+         */
+        window.onload = () => {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Save the initial blank state
+            saveState();
+            updateUndoRedoButtons();
+        };
+
+        /**
+         * Updates the brush size display and context line width.
+         */
+        brushSizeSlider.addEventListener('input', (e) => {
+            brushSize = parseInt(e.target.value);
+            brushSizeValueSpan.textContent = brushSize;
+            ctx.lineWidth = brushSize;
+        });
+
+        /**
+         * Updates the brush color and context stroke style.
+         */
+        colorPicker.addEventListener('input', (e) => {
+            brushColor = e.target.value;
+            if (currentTool === 'pen') { // Only change strokeStyle if pen is active
+                ctx.strokeStyle = brushColor;
+            }
+        });
+
+        /**
+         * Gets mouse/touch coordinates relative to the canvas.
+         * @param {Event} e - The event object.
+         * @returns {{x: number, y: number}} The coordinates.
+         */
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        /**
+         * Starts the drawing process.
+         * @param {Event} e - The event object.
+         */
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            const coords = getCoordinates(e);
+            [lastX, lastY] = [coords.x, coords.y];
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent scrolling
+            isDrawing = true;
+            const coords = getCoordinates(e);
+            [lastX, lastY] = [coords.x, coords.y];
+        });
+
+        /**
+         * Continues drawing on canvas.
+         * @param {Event} e - The event object.
+         */
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const coords = getCoordinates(e);
+            draw(coords.x, coords.y);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Prevent scrolling
+            if (!isDrawing) return;
+            const coords = getCoordinates(e);
+            draw(coords.x, coords.y);
+        });
+
+        /**
+         * Stops the drawing process and saves the canvas state.
+         */
+        canvas.addEventListener('mouseup', () => {
+            if (isDrawing) { // Only save state if drawing actually occurred
+                isDrawing = false;
+                saveState();
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            if (isDrawing) { // Only save state if drawing actually occurred
+                isDrawing = false;
+                saveState();
+            }
+        });
+
+        /**
+         * Stops drawing if mouse leaves canvas.
+         */
+        canvas.addEventListener('mouseout', () => {
+            if (isDrawing) { // Only save state if drawing actually occurred
+                isDrawing = false;
+                saveState();
+            }
+        });
+
+        /**
+         * Draws a line on the canvas based on the current tool.
+         * @param {number} x - The x-coordinate to draw to.
+         * @param {number} y - The y-coordinate to draw to.
+         */
+        function draw(x, y) {
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            [lastX, lastY] = [x, y]; // Update last position
+        }
+
+        /**
+         * Clears the entire canvas and resets history.
+         */
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            history = [];
+            historyIndex = -1;
+            saveState(); // Save the new blank state
+            updateUndoRedoButtons();
+        }
+
+        /**
+         * Downloads the current whiteboard content as a PNG image.
+         */
+        function downloadWhiteboard() {
+            const link = document.createElement('a');
+            link.download = 'whiteboard.png';
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * Saves the current canvas state to history.
+         */
+        function saveState() {
+            // If we are not at the end of history (i.e., we've undone some actions),
+            // clear all future states before adding a new one.
+            if (historyIndex < history.length - 1) {
+                history.splice(historyIndex + 1);
+            }
+
+            // Limit history size
+            if (history.length >= MAX_HISTORY_STATES) {
+                history.shift(); // Remove the oldest state
+            } else {
+                historyIndex++;
+            }
+            history.push(canvas.toDataURL());
+            updateUndoRedoButtons();
+        }
+
+        /**
+         * Restores a specific canvas state from history.
+         * @param {string} imageData - The Base64 image data to restore.
+         */
+        function restoreState(imageData) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear current canvas
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Draw the saved state
+            };
+            img.src = imageData;
+        }
+
+        /**
+         * Undoes the last drawing action.
+         */
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreState(history[historyIndex]);
+                updateUndoRedoButtons();
+            }
+        }
+
+        /**
+         * Redoes the last undone drawing action.
+         */
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                restoreState(history[historyIndex]);
+                updateUndoRedoButtons();
+            }
+        }
+
+        /**
+         * Updates the enabled/disabled state of Undo/Redo buttons.
+         */
+        function updateUndoRedoButtons() {
+            undoBtn.disabled = historyIndex <= 0;
+            redoBtn.disabled = historyIndex >= history.length - 1;
+        }
+
+        /**
+         * Sets the active drawing tool (pen or eraser).
+         * @param {string} tool - 'pen' or 'eraser'.
+         */
+        function setTool(tool) {
+            currentTool = tool;
+            // Reset composite operation for pen, set for eraser
+            if (currentTool === 'pen') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = brushColor; // Reapply selected color
+                penToolBtn.classList.add('active-tool');
+                eraserToolBtn.classList.remove('active-tool');
+            } else if (currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out'; // Erase effect
+                ctx.strokeStyle = '#FFFFFF'; // Eraser visually appears white, but destination-out makes it transparent
+                eraserToolBtn.classList.add('active-tool');
+                penToolBtn.classList.remove('active-tool');
+            }
+            // Update cursor based on tool
+            canvas.style.cursor = (currentTool === 'pen') ? 'crosshair' : 'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'feather feather-eraser\'><path d=\'M22 12h-4l-3 3L9 3 2 10l3 3 3-3 7 7 3-3v4z\'></path><line x1=\'18\' y1=\'12\' x2=\'12\' y2=\'18\'></line></svg>") 12 12, auto';
+        }
+
+        /**
+         * Applies current tool settings to the canvas context.
+         */
+        function updateToolSettings() {
+            setTool(currentTool); // Reapply current tool settings
+            ctx.lineWidth = brushSize;
+        }
+
+        // Event listeners for tool buttons
+        penToolBtn.addEventListener('click', () => setTool('pen'));
+        eraserToolBtn.addEventListener('click', () => setTool('eraser'));
+        undoBtn.addEventListener('click', undo);
+        redoBtn.addEventListener('click', redo);
+    </script>
+</body>
+</html>
