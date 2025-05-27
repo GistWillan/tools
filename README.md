@@ -25,6 +25,7 @@
 - [流程图绘制工具](projects/mindmap.html)：无需后端支持即可在浏览器中轻松创建和组织您的想法。
 - [时间戳转换网页](projects/tt.html)：转换时间戳至标准时间。
 - [摩斯电码转换器](projects/morse.html): 文字转换为摩斯电码的工具。
+- [国家地区信息查询](projects/geoexplorer.html): 通过国家名称或代码，快速查询全球各国家/地区信息。
 - [剪切板文本管理器](projects/pasteboard.html)：管理剪切文本。
 - [随机用户名生成器](projects/username.html)：生成随机用户名。
 - [Markdown文本编辑器](projects/markdown.html): 可保存以及预览Markdown文本
