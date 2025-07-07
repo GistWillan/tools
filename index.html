@@ -532,6 +532,13 @@
                 </a>
             </div>
 
+            <!-- 新增的“语言工具”文件夹卡片 -->
+            <div class="app-item folder-card" id="languageToolsFolder">
+                <div class="app-icon">🗣️</div> <!-- 语言工具的图标 -->
+                <div class="app-name">语言工具</div>
+                <div class="app-description">翻译、词典等语言相关工具</div>
+            </div>
+
             <div class="app-item folder-card" id="moreToolsFolder">
                 <div class="app-icon">📁</div>
                 <div class="app-name">更多工具</div>
@@ -546,11 +553,12 @@
         </div>
     </div>
 
-    <div class="folder-overlay" id="folderOverlay">
+    <!-- “更多工具”的覆盖层 -->
+    <div class="folder-overlay" id="moreToolsOverlay">
         <div class="folder-content-wrapper">
             <div class="folder-header">
                 <span class="folder-title">更多工具</span>
-                <button class="close-folder-btn" id="closeFolderBtn">×</button>
+                <button class="close-folder-btn" id="closeMoreToolsFolderBtn">×</button>
             </div>
             <div class="app-grid folder-inner-grid">
                 <div class="app-item">
@@ -578,41 +586,92 @@
         </div>
     </div>
 
+    <!-- 新增的“语言工具”的覆盖层 -->
+    <div class="folder-overlay" id="languageToolsOverlay">
+        <div class="folder-content-wrapper">
+            <div class="folder-header">
+                <span class="folder-title">语言工具</span>
+                <button class="close-folder-btn" id="closeLanguageToolsFolderBtn">×</button>
+            </div>
+            <div class="app-grid folder-inner-grid">
+                <!-- 示例语言工具，您可以根据需要添加更多 -->
+                <div class="app-item">
+                    <a href="projects/bpmf.html"> <!-- 假设有一个翻译工具页面 -->
+                        <div class="app-icon">🗣️</div>
+                        <div class="app-name">拼音注音转换器</div>
+                        <div class="app-description">一個便捷的工具，幫助您輕鬆地在中文、漢語拼音和台灣注音（Bopomofo）之間進行相互轉換。</div>
+                    </a>
+                </div>
+                <!-- 在这里添加更多语言工具 -->
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 获取文件夹卡片、覆盖层、内容容器和关闭按钮的DOM元素
+            // 获取“更多工具”文件夹相关DOM元素
             const moreToolsFolder = document.getElementById('moreToolsFolder');
-            const folderOverlay = document.getElementById('folderOverlay');
-            const folderContentWrapper = document.querySelector('.folder-content-wrapper');
-            const closeFolderBtn = document.getElementById('closeFolderBtn');
+            const moreToolsOverlay = document.getElementById('moreToolsOverlay');
+            const closeMoreToolsFolderBtn = document.getElementById('closeMoreToolsFolderBtn');
+
+            // 获取“语言工具”文件夹相关DOM元素
+            const languageToolsFolder = document.getElementById('languageToolsFolder');
+            const languageToolsOverlay = document.getElementById('languageToolsOverlay');
+            const closeLanguageToolsFolderBtn = document.getElementById('closeLanguageToolsFolderBtn');
+
             const body = document.body;
 
-            // 为文件夹卡片添加点击事件监听器，用于打开文件夹
-            moreToolsFolder.addEventListener('click', (event) => {
-                event.preventDefault(); // 阻止默认的链接跳转行为
+            // 辅助函数：打开文件夹
+            function openFolder(overlayId) {
+                const overlay = document.getElementById(overlayId);
+                if (overlay) {
+                    overlay.classList.add('active');
+                    body.classList.add('folder-open');
+                }
+            }
 
-                // 添加 'active' 类到覆盖层，使其显示并触发动画
-                folderOverlay.classList.add('active');
-                // 添加 'folder-open' 类到 body，以禁用页面滚动
-                body.classList.add('folder-open');
-            });
-
-            // 为关闭按钮添加点击事件监听器，用于关闭文件夹
-            closeFolderBtn.addEventListener('click', () => {
-                // 移除 'active' 类，使覆盖层隐藏并触发动画
-                folderOverlay.classList.remove('active');
-                // 移除 'folder-open' 类，恢复页面滚动
-                body.classList.remove('folder-open');
-            });
-
-            // 可选：点击覆盖层外部区域时关闭文件夹
-            folderOverlay.addEventListener('click', (event) => {
-                // 如果点击的目标是覆盖层本身（而不是其内部的内容）
-                if (event.target === folderOverlay) {
-                    // 移除 'active' 类，使覆盖层隐藏
-                    folderOverlay.classList.remove('active');
-                    // 移除 'folder-open' 类，恢复页面滚动
+            // 辅助函数：关闭文件夹
+            function closeFolder(overlayId) {
+                const overlay = document.getElementById(overlayId);
+                if (overlay) {
+                    overlay.classList.remove('active');
                     body.classList.remove('folder-open');
+                }
+            }
+
+            // 为“更多工具”文件夹添加点击事件监听器
+            moreToolsFolder.addEventListener('click', (event) => {
+                event.preventDefault();
+                openFolder('moreToolsOverlay');
+            });
+
+            // 为“更多工具”关闭按钮添加点击事件监听器
+            closeMoreToolsFolderBtn.addEventListener('click', () => {
+                closeFolder('moreToolsOverlay');
+            });
+
+            // 为“更多工具”覆盖层外部点击事件监听器
+            moreToolsOverlay.addEventListener('click', (event) => {
+                if (event.target === moreToolsOverlay) {
+                    closeFolder('moreToolsOverlay');
+                }
+            });
+
+            // 为“语言工具”文件夹添加点击事件监听器
+            languageToolsFolder.addEventListener('click', (event) => {
+                event.preventDefault();
+                openFolder('languageToolsOverlay');
+            });
+
+            // 为“语言工具”关闭按钮添加点击事件监听器
+            closeLanguageToolsFolderBtn.addEventListener('click', () => {
+                closeFolder('languageToolsOverlay');
+            });
+
+            // 为“语言工具”覆盖层外部点击事件监听器
+            languageToolsOverlay.addEventListener('click', (event) => {
+                if (event.target === languageToolsOverlay) {
+                    closeFolder('languageToolsOverlay');
                 }
             });
         });

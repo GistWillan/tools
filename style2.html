@@ -529,11 +529,15 @@
                 </a>
             </div>
 
+            <!-- 新增的“语言工具”文件夹卡片 -->
+            <div class="app-item folder-card" id="languageToolsFolder">
+                <div class="app-name">语言工具</div>
+            </div>
+
             <div class="app-item folder-card" id="moreToolsFolder">
                 <div class="app-name">更多工具</div>
             </div>
-
-            </div>
+        </div>
         <div class="footer">
             <p>&copy; 2025 GistWillan</p>
             <a href="about.html" target="_self">关于</a>
@@ -542,6 +546,7 @@
         </div>
     </div>
 
+    <!-- “更多工具”的覆盖层 -->
     <div class="folder-overlay" id="moreToolsFolderOverlay">
         <div class="folder-content-wrapper">
             <div class="folder-header">
@@ -568,51 +573,88 @@
         </div>
     </div>
 
+    <!-- 新增的“语言工具”的覆盖层 -->
+    <div class="folder-overlay" id="languageToolsOverlay">
+        <div class="folder-content-wrapper">
+            <div class="folder-header">
+                <span class="folder-title">语言工具</span>
+                <button class="close-folder-btn" id="closeLanguageToolsFolderBtn">×</button>
+            </div>
+            <div class="app-grid folder-inner-grid">
+                <!-- 示例语言工具，您可以根据需要添加更多 -->
+                <div class="app-item">
+                    <a href="projects/bpmf.html" target="_blank"> <!-- 假设有一个翻译工具页面 -->
+                        <div class="app-name">拼音注音转换器</div>
+                    </a>
+                </div>
+                <!-- 在这里添加更多语言工具 -->
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Elements ---
-            // Renamed existing folder elements for consistency
+            // 获取“更多工具”文件夹相关DOM元素
             const moreToolsFolder = document.getElementById('moreToolsFolder');
-            const moreToolsFolderOverlay = document.getElementById('moreToolsFolderOverlay');
+            const moreToolsOverlay = document.getElementById('moreToolsFolderOverlay'); // Updated ID
             const closeMoreToolsFolderBtn = document.getElementById('closeMoreToolsFolderBtn');
+
+            // 获取“语言工具”文件夹相关DOM元素
+            const languageToolsFolder = document.getElementById('languageToolsFolder');
+            const languageToolsOverlay = document.getElementById('languageToolsOverlay');
+            const closeLanguageToolsFolderBtn = document.getElementById('closeLanguageToolsFolderBtn');
 
             const body = document.body;
 
-            // --- Helper Functions (Adjusted for removal of web templates) ---
-
-            /**
-             * Opens a given overlay and disables body scrolling.
-             * @param {HTMLElement} overlayElement - The overlay to open.
-             */
+            // 辅助函数：打开覆盖层
             function openOverlay(overlayElement) {
-                overlayElement.classList.add('active');
-                body.classList.add('folder-open'); // Reusing folder-open class for general overlay
+                if (overlayElement) {
+                    overlayElement.classList.add('active');
+                    body.classList.add('folder-open');
+                }
             }
 
-            /**
-             * Closes a given overlay and enables body scrolling.
-             * @param {HTMLElement} overlayElement - The overlay to close.
-             */
+            // 辅助函数：关闭覆盖层
             function closeOverlay(overlayElement) {
-                overlayElement.classList.remove('active');
-                body.classList.remove('folder-open');
+                if (overlayElement) {
+                    overlayElement.classList.remove('active');
+                    body.classList.remove('folder-open');
+                }
             }
 
-            // --- Event Listeners ---
-
-            // Existing More Tools Folder Logic (IDs updated)
+            // 为“更多工具”文件夹添加点击事件监听器
             moreToolsFolder.addEventListener('click', (event) => {
                 event.preventDefault();
-                openOverlay(moreToolsFolderOverlay);
+                openOverlay(moreToolsOverlay);
             });
 
+            // 为“更多工具”关闭按钮添加点击事件监听器
             closeMoreToolsFolderBtn.addEventListener('click', () => {
-                closeOverlay(moreToolsFolderOverlay);
+                closeOverlay(moreToolsOverlay);
             });
 
-            moreToolsFolderOverlay.addEventListener('click', (event) => {
-                if (event.target === moreToolsFolderOverlay) {
-                    closeOverlay(moreToolsFolderOverlay);
+            // 为“更多工具”覆盖层外部点击事件监听器
+            moreToolsOverlay.addEventListener('click', (event) => {
+                if (event.target === moreToolsOverlay) {
+                    closeOverlay(moreToolsOverlay);
+                }
+            });
+
+            // 为“语言工具”文件夹添加点击事件监听器
+            languageToolsFolder.addEventListener('click', (event) => {
+                event.preventDefault();
+                openOverlay(languageToolsOverlay);
+            });
+
+            // 为“语言工具”关闭按钮添加点击事件监听器
+            closeLanguageToolsFolderBtn.addEventListener('click', () => {
+                closeOverlay(languageToolsOverlay);
+            });
+
+            // 为“语言工具”覆盖层外部点击事件监听器
+            languageToolsOverlay.addEventListener('click', (event) => {
+                if (event.target === languageToolsOverlay) {
+                    closeOverlay(languageToolsOverlay);
                 }
             });
         });
