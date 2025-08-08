@@ -89,4 +89,4 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 本项目采用MIT许可证 - 详情请参见[LICENSE](LICENSE)文件
 
-&copy; 2025 GistWillan
+&copy; 2023-2025 GistWillan
