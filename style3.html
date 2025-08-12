@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GistWillan的在线工具站点</title>
+    <link rel="shortcut icon" href="images/index.png">
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
+    <!-- 引入 Phosphor Icons CDN for modern, crisp icons -->
+    <script src="https://unpkg.com/phosphor-icons"></script>
+    <style>
+        /* CSS 变量用于定义颜色和动画 */
+        :root {
+            --bg-color: #f0f2ff;
+            --glass-bg-primary: rgba(255, 255, 255, 0.6);
+            --glass-bg-secondary: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-color: rgba(0, 0, 0, 0.85);
+            --sidebar-bg: rgba(255, 255, 255, 0.4);
+            --sidebar-border: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 设置全局字体、背景和动画 */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: linear-gradient(150deg, var(--bg-color) 0%, #e8f0ff 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Liquid Glass 主容器的入场动画 */
+        @keyframes liquidGlassEntry {
+            0% {
+                transform: scale(0.95) translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 工具卡片入场动画，具有弹性和错落效果 */
+        @keyframes cardPop {
+            0% {
+                transform: scale(0.8) translateY(20px);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* iPadOS 风格的主布局容器 */
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            gap: 2rem;
+            animation: liquidGlassEntry 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: 300px;
+            min-width: 280px;
+            height: fit-content;
+            padding: 1.5rem;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 2rem;
+            flex-shrink: 0;
+        }
+
+        /* 侧边栏标题 */
+        .sidebar h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 侧边栏导航链接 */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            color: rgba(0, 0, 0, 0.6);
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+        
+        .nav-link.active, .nav-link:hover {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.9);
+            transform: translateX(4px);
+        }
+        
+        .nav-link .icon {
+            font-size: 1.5rem;
+        }
+        
+        .nav-link.active .icon {
+            transform: scale(1.1);
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            background: var(--glass-bg-primary);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            min-height: calc(100vh - 4rem);
+        }
+        
+        /* 主页头部 */
+        .header {
+            text-align: center;
+            padding-bottom: 2.5rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(0, 0, 0, 0.6);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 工具卡片网格布局 */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* 工具卡片样式 */
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: var(--glass-bg-secondary);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+        }
+        
+        /* 工具卡片悬停效果 */
+        .app-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+        }
+        
+        /* 工具图标和文本样式 */
+        .app-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .app-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .app-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, 0.6);
+        }
+        
+        /* 隐藏未选中分类的卡片 */
+        .app-item.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        /* 底部页脚 */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding-top: 2rem;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: rgba(0, 122, 204, 0.9);
+            font-weight: 500;
+            margin: 0 0.75rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* 媒体查询：适应平板和小屏幕 */
+        @media (max-width: 1024px) {
+            body {
+                padding: 1rem;
+            }
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- 主容器，包含侧边栏和主内容 -->
+    <div class="main-container">
+        
+        <!-- 侧边栏：分类导航 -->
+        <aside class="sidebar">
+            <h2 class="text-xl font-semibold mb-6">工具分类</h2>
+            <nav>
+                <ul>
+                    <!-- 所有工具分类 -->
+                    <li>
+                        <div class="nav-link active" data-category="all">
+                            <i class="ph-list-dashes-fill icon"></i>
+                            <span>全部工具</span>
+                        </div>
+                    </li>
+                    <!-- 其他分类 -->
+                    <li>
+                        <div class="nav-link" data-category="common">
+                            <i class="ph-star-fill icon"></i>
+                            <span>常用工具</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="content">
+                            <i class="ph-article-fill icon"></i>
+                            <span>内容创作</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="security">
+                            <i class="ph-lock-key-fill icon"></i>
+                            <span>网络安全</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="encoding">
+                            <i class="ph-code-fill icon"></i>
+                            <span>编码转换</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="media">
+                            <i class="ph-play-circle-fill icon"></i>
+                            <span>多媒体</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="productivity">
+                            <i class="ph-lightbulb-fill icon"></i>
+                            <span>效率工具</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="language">
+                            <i class="ph-chat-circle-dots-fill icon"></i>
+                            <span>语言工具</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="nav-link" data-category="system">
+                            <i class="ph-monitor-fill icon"></i>
+                            <span>系统相关</span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域：标题和工具网格 -->
+        <main class="main-content">
+            <div class="header">
+                <h1>在线工具站点</h1>
+                <p>欢迎来到我的在线工具站点主页！在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+            </div>
+            
+            <div class="app-grid">
+                <!-- 工具卡片列表，data-category 用于筛选 -->
+                
+                <!-- 常用工具 -->
+                <div class="app-item" data-category="common">
+                    <a href="projects/time.html">
+                        <div class="app-icon">🌏</div>
+                        <div class="app-name">世界时间</div>
+                        <div class="app-description">展示世界各地的当前时间</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/tomato.html">
+                        <div class="app-icon">⏰</div>
+                        <div class="app-name">番茄时钟</div>
+                        <div class="app-description">提高工作效率</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/http.html">
+                        <div class="app-icon">🌐</div>
+                        <div class="app-name">HTTP状态码</div>
+                        <div class="app-description">快速查询HTTP状态</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/bmi.html">
+                        <div class="app-icon">🧍‍♂️</div>
+                        <div class="app-name">BMI计算器</div>
+                        <div class="app-description">计算体质指数</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/info.html">
+                        <div class="app-icon">📃</div>
+                        <div class="app-name">UA解析器</div>
+                        <div class="app-description">解析当前浏览器UA信息</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/date.html">
+                        <div class="app-icon">📅</div>
+                        <div class="app-name">日期计算器</div>
+                        <div class="app-description">计算日期间隔</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/lock.html">
+                        <div class="app-icon">🔐</div>
+                        <div class="app-name">密码生成器</div>
+                        <div class="app-description">随机密码生成</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/password.html">
+                        <div class="app-icon">🔐</div>
+                        <div class="app-name">密码强度检测</div>
+                        <div class="app-description">检测密码强度</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/number.html">
+                        <div class="app-icon">🎲</div>
+                        <div class="app-name">随机数生成器</div>
+                        <div class="app-description">生成随机数</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/tt.html">
+                        <div class="app-icon">⏱️</div>
+                        <div class="app-name">时间戳转换网页</div>
+                        <div class="app-description">转换时间戳</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/pasteboard.html">
+                        <div class="app-icon">📋</div>
+                        <div class="app-name">剪切板文本管理器</div>
+                        <div class="app-description">管理剪切板文字</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="common">
+                    <a href="projects/username.html">
+                        <div class="app-icon">🎨</div>
+                        <div class="app-name">随机用户名生成器</div>
+                        <div class="app-description">生成随机用户名。</div>
+                    </a>
+                </div>
+
+                <!-- 内容创作 -->
+                <div class="app-item" data-category="content">
+                    <a href="projects/preview.html">
+                        <div class="app-icon">👀</div>
+                        <div class="app-name">HTML预览</div>
+                        <div class="app-description">实时HTML代码预览</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="content">
+                    <a href="projects/docs.html">
+                        <div class="app-icon">📃</div>
+                        <div class="app-name">文档编辑器</div>
+                        <div class="app-description">在线编辑文档后可下载</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="content">
+                    <a href="projects/resume.html">
+                        <div class="app-icon">📃</div>
+                        <div class="app-name">简历生成器</div>
+                        <div class="app-description">实时生成精美简历</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="content">
+                    <a href="projects/markdown.html">
+                        <div class="app-icon">📋</div>
+                        <div class="app-name">Markdown文本编辑器</div>
+                        <div class="app-description">可预览格式以及保存</div>
+                    </a>
+                </div>
+                
+                <!-- 网络安全 -->
+                <div class="app-item" data-category="security">
+                    <a href="projects/text.html">
+                        <div class="app-icon">🔐</div>
+                        <div class="app-name">文字加密解密</div>
+                        <div class="app-description">文字加密解密</div>
+                    </a>
+                </div>
+
+                <!-- 编码转换 -->
+                <div class="app-item" data-category="encoding">
+                    <a href="projects/test.html">
+                        <div class="app-icon">🔢</div>
+                        <div class="app-name">进制转换器</div>
+                        <div class="app-description">数制转换工具</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="encoding">
+                    <a href="projects/unit_conversion.html">
+                        <div class="app-icon">📏</div>
+                        <div class="app-name">单位转换器</div>
+                        <div class="app-description">单位换算工具</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="encoding">
+                    <a href="projects/morse.html">
+                        <div class="app-icon">📻</div>
+                        <div class="app-name">摩斯电码转换器</div>
+                        <div class="app-description">文字转换摩斯电码</div>
+                    </a>
+                </div>
+
+                <!-- 多媒体 -->
+                <div class="app-item" data-category="media">
+                    <a href="projects/screenrecord.html">
+                        <div class="app-icon">🎥</div>
+                        <div class="app-name">屏幕录制器</div>
+                        <div class="app-description">录制窗口或整个屏幕</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="media">
+                    <a href="projects/qrcode.html">
+                        <div class="app-icon">📷</div>
+                        <div class="app-name">二维码生成器</div>
+                        <div class="app-description">快速生成二维码</div>
+                    </a>
+                </div>
+
+                <!-- 效率工具 -->
+                <div class="app-item" data-category="productivity">
+                    <a href="projects/formatter.html">
+                        <div class="app-icon">💻</div>
+                        <div class="app-name">代码格式化工具</div>
+                        <div class="app-description">轻松美化和标准化代码</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="productivity">
+                    <a href="projects/whiteboard.html">
+                        <div class="app-icon">🎨</div>
+                        <div class="app-name">在线白板</div>
+                        <div class="app-description">轻松绘图、书写，并利用橡皮擦、撤销和重做功能进行编辑</div>
+                    </a>
+                </div>
+                <div class="app-item" data-category="productivity">
+                    <a href="projects/mindmap.html">
+                        <div class="app-icon">💡</div>
+                        <div class="app-name">流程图绘制工具</div>
+                        <div class="app-description">无需后端支持即可在浏览器中轻松创建和组织您的想法</div>
+                    </a>
+                </div>
+
+                <!-- 语言工具 -->
+                <div class="app-item" data-category="language">
+                    <a href="projects/bpmf.html">
+                        <div class="app-icon">🗣️</div>
+                        <div class="app-name">拼音注音转换器</div>
+                        <div class="app-description">一個便捷的工具，幫助您輕鬆地在中文、漢語拼音和台灣注音（Bopomofo）之間進行相互轉換。</div>
+                    </a>
+                </div>
+                
+                <!-- 系统相关 -->
+                <div class="app-item" data-category="system">
+                    <a href="projects/bluescreen.html">
+                        <div class="app-icon">⚠️</div>
+                        <div class="app-name">Windows11蓝屏代码参考</div>
+                        <div class="app-description">常见蓝屏代码参考表</div>
+                    </a>
+                </div>
+
+            </div>
+            <div class="footer">
+                <p>&copy; 2023 - 2025 GistWillan</p>
+                <a href="about.html">关于</a>
+                <a href="https://github.com/gistwillan">我的GitHub</a>
+                <a href="style2.html">简约风格</a>
+                <a href="index.html">普通风格</a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 获取所有分类链接和所有工具卡片
+            const navLinks = document.querySelectorAll('.nav-link');
+            const appItems = document.querySelectorAll('.app-item');
+
+            // 为每个分类链接添加点击事件监听器
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // 移除所有链接的 active 类
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    // 为当前点击的链接添加 active 类
+                    link.classList.add('active');
+
+                    // 获取当前选择的分类
+                    const category = link.dataset.category;
+
+                    // 遍历所有工具卡片，根据分类显示或隐藏
+                    appItems.forEach(item => {
+                        // 如果是 'all' 分类，或者卡片的 data-category 与选中的分类匹配，则显示
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.classList.remove('hidden');
+                            // 重启卡片入场动画
+                            item.style.animation = 'none';
+                            item.offsetHeight; // 强制 DOM 重新渲染
+                            item.style.animation = null;
+                        } else {
+                            // 否则隐藏
+                            item.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
