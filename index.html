@@ -403,7 +403,7 @@
     <div class="ad-side ad-side-left">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
             crossorigin="anonymous"></script>
-        <!-- ToolSite-Side -->
+        <!-- ToolSite-Side-Left -->
         <ins class="adsbygoogle"
             style="display:block; width:160px; height:600px;"
             data-ad-client="ca-pub-7072630492904461"
@@ -413,32 +413,73 @@
         <script>
             // 智能延迟加载广告 - 左侧
             function setupLeftAd() {
-                // 设置观察器以检测广告容器是否在视口中
-                const adContainer = document.querySelector('.ad-side-left');
-                if (!adContainer) return;
+                // 添加广告加载状态标志，防止重复加载
+                let adLoaded = false;
                 
-                // 检查是否满足显示广告的条件
                 function checkAdConditions() {
+                    const adContainer = document.querySelector('.ad-side-left');
+                    if (!adContainer) return false;
+                    
                     // 仅在宽屏且广告容器可见时显示
                     if (window.innerWidth > 1400 && 
                         adContainer.getBoundingClientRect().width > 0) {
-                        
-                        // 延迟1秒加载，避免与页面其他元素竞争资源
-                        setTimeout(() => {
-                            try {
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            } catch (e) {
-                                console.log('广告加载异常:', e);
-                                // 异常情况下5秒后重试
-                                setTimeout(() => {
-                                    (adsbygoogle = window.adsbygoogle || []).push({});
-                                }, 5000);
-                            }
-                        }, 1000);
-                        
                         return true;
                     }
                     return false;
+                }
+                
+                function loadAd() {
+                    // 如果广告已经加载或正在加载，则不再尝试
+                    if (adLoaded) return;
+                    
+                    // 标记为已加载，防止重复尝试
+                    adLoaded = true;
+                    
+                    try {
+                        // 检查是否已经有adsbygoogle对象
+                        if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+                            // 检查ins元素是否已经有广告
+                            const insElements = document.querySelectorAll('.ad-side-left ins.adsbygoogle');
+                            let hasAd = false;
+                            
+                            insElements.forEach(ins => {
+                                if (ins.innerHTML.trim() !== '') {
+                                    hasAd = true;
+                                }
+                            });
+                            
+                            // 只有当ins元素为空时才推送广告
+                            if (!hasAd) {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            }
+                        }
+                    } catch (e) {
+                        console.log('左侧广告加载异常:', e);
+                        // 重置加载状态以便重试
+                        adLoaded = false;
+                        // 异常情况下5秒后重试
+                        setTimeout(loadAd, 5000);
+                    }
+                }
+                
+                // 创建IntersectionObserver观察广告容器是否在视口中
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && checkAdConditions()) {
+                            // 广告容器进入视口且条件满足时，延迟1秒加载
+                            setTimeout(loadAd, 1000);
+                              
+                            // 停止观察
+                            observer.disconnect();
+                            return true;
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                // 开始观察
+                const adContainer = document.querySelector('.ad-side-left');
+                if (adContainer) {
+                    observer.observe(adContainer);
                 }
                 
                 // 初始检查
@@ -450,7 +491,10 @@
                     let checkCount = 0;
                     checkInterval = setInterval(() => {
                         checkCount++;
-                        if (checkAdConditions() || checkCount >= 30) {
+                        if (checkAdConditions()) {
+                            loadAd();
+                            clearInterval(checkInterval);
+                        } else if (checkCount >= 30) {
                             clearInterval(checkInterval);
                         }
                     }, 500);
@@ -458,102 +502,18 @@
                     // 监听窗口大小变化事件
                     const handleResize = window.debounce(() => {
                         if (checkAdConditions()) {
+                            loadAd();
                             window.removeEventListener('resize', handleResize);
                         }
                     }, 300);
                     window.addEventListener('resize', handleResize);
+                } else {
+                    // 如果广告容器不存在，直接尝试加载
+                    loadAd();
                 }
             }
             
             // 防抖函数
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-            
-            // 等待DOM加载完成后执行
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', setupLeftAd);
-            } else {
-                // 如果DOM已经加载完成，延迟一小段时间执行
-                setTimeout(setupLeftAd, 500);
-            }
-        </script>
-    </div>
-    <!-- 右侧广告预留位（大屏） -->
-    <div class="ad-side ad-side-right">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-            crossorigin="anonymous"></script>
-        <!-- ToolSite-Side -->
-        <ins class="adsbygoogle"
-            style="display:block; width:160px; height:600px;"
-            data-ad-client="ca-pub-7072630492904461"
-            data-ad-slot="5111495259"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
-        <script>
-            // 智能延迟加载广告 - 右侧
-            function setupRightAd() {
-                // 设置观察器以检测广告容器是否在视口中
-                const adContainer = document.querySelector('.ad-side-right');
-                if (!adContainer) return;
-                
-                // 检查是否满足显示广告的条件
-                function checkAdConditions() {
-                    // 仅在宽屏且广告容器可见时显示
-                    if (window.innerWidth > 1400 && 
-                        adContainer.getBoundingClientRect().width > 0) {
-                        
-                        // 延迟1.5秒加载，避免与页面其他元素竞争资源
-                        setTimeout(() => {
-                            try {
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            } catch (e) {
-                                console.log('广告加载异常:', e);
-                                // 异常情况下5秒后重试
-                                setTimeout(() => {
-                                    (adsbygoogle = window.adsbygoogle || []).push({});
-                                }, 5000);
-                            }
-                        }, 1500);
-                        
-                        return true;
-                    }
-                    return false;
-                }
-                
-                // 初始检查
-                if (!checkAdConditions()) {
-                    // 如果初始检查失败，添加监听事件
-                    let checkInterval;
-                    
-                    // 设置定时器检查，最多检查30次（15秒）
-                    let checkCount = 0;
-                    checkInterval = setInterval(() => {
-                        checkCount++;
-                        if (checkAdConditions() || checkCount >= 30) {
-                            clearInterval(checkInterval);
-                        }
-                    }, 500);
-                    
-                    // 监听窗口大小变化事件
-                    const handleResize = window.debounce(() => {
-                        if (checkAdConditions()) {
-                            window.removeEventListener('resize', handleResize);
-                        }
-                    }, 300);
-                    window.addEventListener('resize', handleResize);
-                }
-            }
-            
-            // 防抖函数（复用）
             window.debounce = window.debounce || function(func, wait) {
                 let timeout;
                 return function executedFunction(...args) {
@@ -568,11 +528,25 @@
             
             // 等待DOM加载完成后执行
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', setupRightAd);
+                document.addEventListener('DOMContentLoaded', setupLeftAd);
             } else {
                 // 如果DOM已经加载完成，延迟一小段时间执行
-                setTimeout(setupRightAd, 500);
+                setTimeout(setupLeftAd, 500);
             }
+        </script>
+    <!-- 右侧广告预留位（大屏） -->
+    <div class="ad-side ad-side-right">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+            crossorigin="anonymous"></script>
+        <!-- ToolSite-Side-Right -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-7072630492904461"
+            data-ad-slot="2122369838"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
     <div class="container">
