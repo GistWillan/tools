@@ -300,6 +300,50 @@
             overflow: hidden;
         }
 
+        /* 谷歌广告预留位样式 */
+        .ad-placeholder {
+            width: 100%;
+            max-width: 728px;
+            min-height: 90px;
+            margin: 30px auto;
+            background: rgba(240,240,240,0.7);
+            border: 2px dashed #bbb;
+            border-radius: 12px;
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 侧边广告预留位样式，仅在大屏显示 */
+        .ad-side {
+            position: fixed;
+            top: 80px;
+            width: 160px;
+            height: 600px;
+            background: rgba(240,240,240,0.7);
+            border: 2px dashed #bbb;
+            border-radius: 12px;
+            text-align: center;
+            color: #888;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .ad-side-left {
+            left: 80px;
+        }
+        .ad-side-right {
+            right: 80px;
+        }
+        @media (max-width: 1400px) {
+            .ad-side { display: none; }
+        }
+
         /* 媒体查询：适用于平板和较小屏幕 */
         @media (max-width: 768px) {
             body {
@@ -363,6 +407,36 @@
     </style>
 </head>
 <body>
+    <!-- 左侧广告预留位（大屏） -->
+    <div class="ad-side ad-side-left">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+            crossorigin="anonymous"></script>
+        <!-- ToolSite-Side -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-7072630492904461"
+            data-ad-slot="5111495259"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <!-- 右侧广告预留位（大屏） -->
+    <div class="ad-side ad-side-right">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+            crossorigin="anonymous"></script>
+        <!-- ToolSite-Side -->
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-7072630492904461"
+            data-ad-slot="5111495259"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
     <div class="container">
         <div class="header">
             <h1>在线工具站点</h1>
@@ -545,6 +619,21 @@
                 <div class="app-description">点击查看更多工具</div>
             </div>
         </div>
+        <!-- 底部谷歌广告预留位 -->
+        <div class="ad-placeholder">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+                crossorigin="anonymous"></script>
+            <!-- ToolSite-Bottom -->
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-7072630492904461"
+                data-ad-slot="7737658599"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
         <div class="footer">
             <p>&copy; 2023 - 2025 GistWillan</p>
             <a href="about.html">关于</a>
@@ -677,5 +766,7 @@
             });
         });
     </script>
+</body>
+</html>
 </body>
 </html>
