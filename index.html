@@ -408,13 +408,15 @@
             style="display:block; width:160px; height:600px;"
             data-ad-client="ca-pub-7072630492904461"
             data-ad-slot="5111495259"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
+            data-ad-format="rectangle" // 更明确的广告格式
+            data-full-width-responsive="false"></ins> <!-- 禁用全宽响应式 -->
         <script>
             // 智能延迟加载广告 - 左侧
             function setupLeftAd() {
                 // 添加广告加载状态标志，防止重复加载
                 let adLoaded = false;
+                let retryCount = 0;
+                const maxRetries = 3; // 限制重试次数
                 
                 function checkAdConditions() {
                     const adContainer = document.querySelector('.ad-side-left');
@@ -432,8 +434,15 @@
                     // 如果广告已经加载或正在加载，则不再尝试
                     if (adLoaded) return;
                     
+                    // 如果重试次数过多，停止尝试
+                    if (retryCount >= maxRetries) {
+                        console.log('左侧广告加载已达到最大重试次数，停止尝试');
+                        return;
+                    }
+                    
                     // 标记为已加载，防止重复尝试
                     adLoaded = true;
+                    retryCount++;
                     
                     try {
                         // 检查是否已经有adsbygoogle对象
@@ -457,8 +466,8 @@
                         console.log('左侧广告加载异常:', e);
                         // 重置加载状态以便重试
                         adLoaded = false;
-                        // 异常情况下5秒后重试
-                        setTimeout(loadAd, 5000);
+                        // 异常情况下8秒后重试（指数退避）
+                        setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
                     }
                 }
                 
@@ -468,7 +477,7 @@
                         if (entry.isIntersecting && checkAdConditions()) {
                             // 广告容器进入视口且条件满足时，延迟1秒加载
                             setTimeout(loadAd, 1000);
-                              
+                               
                             // 停止观察
                             observer.disconnect();
                             return true;
@@ -544,13 +553,15 @@
             style="display:block; width:160px; height:600px;"
             data-ad-client="ca-pub-7072630492904461"
             data-ad-slot="2122369838"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
+            data-ad-format="rectangle" // 更明确的广告格式
+            data-full-width-responsive="false"></ins> <!-- 禁用全宽响应式 -->
         <script>
             // 智能延迟加载广告 - 右侧
             function setupRightAd() {
                 // 添加广告加载状态标志，防止重复加载
                 let adLoaded = false;
+                let retryCount = 0;
+                const maxRetries = 3; // 限制重试次数
                 
                 function checkAdConditions() {
                     const adContainer = document.querySelector('.ad-side-right');
@@ -568,8 +579,15 @@
                     // 如果广告已经加载或正在加载，则不再尝试
                     if (adLoaded) return;
                     
+                    // 如果重试次数过多，停止尝试
+                    if (retryCount >= maxRetries) {
+                        console.log('右侧广告加载已达到最大重试次数，停止尝试');
+                        return;
+                    }
+                    
                     // 标记为已加载，防止重复尝试
                     adLoaded = true;
+                    retryCount++;
                     
                     try {
                         // 检查是否已经有adsbygoogle对象
@@ -593,8 +611,8 @@
                         console.log('右侧广告加载异常:', e);
                         // 重置加载状态以便重试
                         adLoaded = false;
-                        // 异常情况下5秒后重试
-                        setTimeout(loadAd, 5000);
+                        // 异常情况下8秒后重试（指数退避）
+                        setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
                     }
                 }
                 
@@ -602,9 +620,9 @@
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting && checkAdConditions()) {
-                            // 广告容器进入视口且条件满足时，延迟1.2秒加载（与左侧广告错开）
+                            // 广告容器进入视口且条件满足时，延迟1.2秒加载
                             setTimeout(loadAd, 1200);
-                              
+                               
                             // 停止观察
                             observer.disconnect();
                             return true;
@@ -654,7 +672,7 @@
                 document.addEventListener('DOMContentLoaded', setupRightAd);
             } else {
                 // 如果DOM已经加载完成，延迟一小段时间执行
-                setTimeout(setupRightAd, 500);
+                setTimeout(setupRightAd, 700);
             }
         </script>
     </div>
@@ -855,17 +873,18 @@
                 crossorigin="anonymous"></script>
             <!-- ToolSite-Bottom -->
             <ins class="adsbygoogle"
-                style="display:block; min-width:300px; max-width:970px; width:100%;"
+                style="display:block; min-width:300px; max-width:970px; width:100%; height:90px;" // 添加明确高度
                 data-ad-client="ca-pub-7072630492904461"
                 data-ad-slot="7737658599"
-                data-ad-format="auto"
+                data-ad-format="banner" // 更明确的广告格式
                 data-full-width-responsive="true"></ins>
             <script>
                 // 智能延迟加载广告 - 底部
-                // 底部广告智能延迟加载
                 function setupBottomAd() {
                     // 添加广告加载状态标志，防止重复加载
                     let adLoaded = false;
+                    let retryCount = 0;
+                    const maxRetries = 3; // 限制重试次数
                     
                     function checkAdConditions() {
                         const adContainer = document.querySelector('.ad-placeholder');
@@ -886,8 +905,15 @@
                         // 如果广告已经加载或正在加载，则不再尝试
                         if (adLoaded) return;
                         
+                        // 如果重试次数过多，停止尝试
+                        if (retryCount >= maxRetries) {
+                            console.log('底部广告加载已达到最大重试次数，停止尝试');
+                            return;
+                        }
+                        
                         // 标记为已加载，防止重复尝试
                         adLoaded = true;
+                        retryCount++;
                         
                         try {
                             // 检查是否已经有adsbygoogle对象
@@ -911,8 +937,8 @@
                             console.log('底部广告加载异常:', e);
                             // 重置加载状态以便重试
                             adLoaded = false;
-                            // 异常情况下5秒后重试
-                            setTimeout(loadAd, 5000);
+                            // 异常情况下8秒后重试（指数退避）
+                            setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
                         }
                     }
                     
@@ -922,7 +948,7 @@
                             if (entry.isIntersecting && checkAdConditions()) {
                                 // 广告容器进入视口且条件满足时，延迟2秒加载
                                 setTimeout(loadAd, 2000);
-                                 
+                                   
                                 // 停止观察
                                 observer.disconnect();
                                 return true;
@@ -952,17 +978,8 @@
                                 clearInterval(checkInterval);
                             }
                         }, 500);
-                        
-                        // 监听窗口大小变化事件
-                        const handleResize = window.debounce(() => {
-                            if (checkAdConditions()) {
-                                loadAd();
-                                window.removeEventListener('resize', handleResize);
-                            }
-                        }, 300);
-                        window.addEventListener('resize', handleResize);
                     } else {
-                        // 如果广告容器不存在，直接尝试加载
+                        // 如果条件满足，直接加载
                         loadAd();
                     }
                 }
@@ -972,7 +989,7 @@
                     document.addEventListener('DOMContentLoaded', setupBottomAd);
                 } else {
                     // 如果DOM已经加载完成，延迟一小段时间执行
-                    setTimeout(setupBottomAd, 1000);
+                    setTimeout(setupBottomAd, 1500);
                 }
             </script>
         </div>
