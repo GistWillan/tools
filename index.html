@@ -405,13 +405,31 @@
             crossorigin="anonymous"></script>
         <!-- ToolSite-Side -->
         <ins class="adsbygoogle"
-            style="display:block"
+            style="display:block; width:160px; height:600px;"
             data-ad-client="ca-pub-7072630492904461"
             data-ad-slot="5111495259"
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
         <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            // 更健壮的广告加载方法
+            function loadAdWhenReady() {
+                // 检查窗口宽度和广告容器尺寸
+                const adContainer = document.querySelector('.ad-side-left');
+                if (window.innerWidth > 1400 && adContainer && adContainer.getBoundingClientRect().width > 0) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } else {
+                    // 如果不满足条件，延迟重试
+                    setTimeout(loadAdWhenReady, 500);
+                }
+            }
+            
+            // 监听窗口加载完成和调整大小事件
+            window.addEventListener('load', loadAdWhenReady);
+            window.addEventListener('resize', function() {
+                // 使用防抖处理，避免频繁检查
+                clearTimeout(window.adResizeTimeout);
+                window.adResizeTimeout = setTimeout(loadAdWhenReady, 300);
+            });
         </script>
     </div>
     <!-- 右侧广告预留位（大屏） -->
@@ -420,13 +438,31 @@
             crossorigin="anonymous"></script>
         <!-- ToolSite-Side -->
         <ins class="adsbygoogle"
-            style="display:block"
+            style="display:block; width:160px; height:600px;"
             data-ad-client="ca-pub-7072630492904461"
             data-ad-slot="5111495259"
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
         <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
+            // 更健壮的广告加载方法
+            function loadAdWhenReadyRight() {
+                // 检查窗口宽度和广告容器尺寸
+                const adContainer = document.querySelector('.ad-side-right');
+                if (window.innerWidth > 1400 && adContainer && adContainer.getBoundingClientRect().width > 0) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } else {
+                    // 如果不满足条件，延迟重试
+                    setTimeout(loadAdWhenReadyRight, 500);
+                }
+            }
+            
+            // 监听窗口加载完成和调整大小事件
+            window.addEventListener('load', loadAdWhenReadyRight);
+            window.addEventListener('resize', function() {
+                // 使用防抖处理，避免频繁检查
+                clearTimeout(window.adResizeTimeoutRight);
+                window.adResizeTimeoutRight = setTimeout(loadAdWhenReadyRight, 300);
+            });
         </script>
     </div>
     <div class="container">
@@ -613,17 +649,44 @@
         </div>
         <!-- 底部谷歌广告预留位 -->
         <div class="ad-placeholder">
+            <style>
+                .ad-placeholder {
+                    width: 100%;
+                    min-width: 300px;
+                    max-width: 970px;
+                    margin: 20px auto;
+                    display: block;
+                }
+            </style>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
                 crossorigin="anonymous"></script>
             <!-- ToolSite-Bottom -->
             <ins class="adsbygoogle"
-                style="display:block"
+                style="display:block; min-width:300px; max-width:970px; width:100%;"
                 data-ad-client="ca-pub-7072630492904461"
                 data-ad-slot="7737658599"
                 data-ad-format="auto"
                 data-full-width-responsive="true"></ins>
             <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
+                // 更健壮的广告加载方法
+                function loadBottomAdWhenReady() {
+                    // 检查广告容器尺寸
+                    const adContainer = document.querySelector('.ad-placeholder');
+                    if (adContainer && adContainer.getBoundingClientRect().width > 0) {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } else {
+                        // 如果不满足条件，延迟重试
+                        setTimeout(loadBottomAdWhenReady, 500);
+                    }
+                }
+                
+                // 监听窗口加载完成和调整大小事件
+                window.addEventListener('load', loadBottomAdWhenReady);
+                window.addEventListener('resize', function() {
+                    // 使用防抖处理，避免频繁检查
+                    clearTimeout(window.bottomAdResizeTimeout);
+                    window.bottomAdResizeTimeout = setTimeout(loadBottomAdWhenReady, 300);
+                });
             </script>
         </div>
         <div class="footer">
