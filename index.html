@@ -411,25 +411,80 @@
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
         <script>
-            // 更健壮的广告加载方法
-            function loadAdWhenReady() {
-                // 检查窗口宽度和广告容器尺寸
+            // 智能延迟加载广告 - 左侧
+            function setupLeftAd() {
+                // 设置观察器以检测广告容器是否在视口中
                 const adContainer = document.querySelector('.ad-side-left');
-                if (window.innerWidth > 1400 && adContainer && adContainer.getBoundingClientRect().width > 0) {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } else {
-                    // 如果不满足条件，延迟重试
-                    setTimeout(loadAdWhenReady, 500);
+                if (!adContainer) return;
+                
+                // 检查是否满足显示广告的条件
+                function checkAdConditions() {
+                    // 仅在宽屏且广告容器可见时显示
+                    if (window.innerWidth > 1400 && 
+                        adContainer.getBoundingClientRect().width > 0) {
+                        
+                        // 延迟1秒加载，避免与页面其他元素竞争资源
+                        setTimeout(() => {
+                            try {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            } catch (e) {
+                                console.log('广告加载异常:', e);
+                                // 异常情况下5秒后重试
+                                setTimeout(() => {
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                }, 5000);
+                            }
+                        }, 1000);
+                        
+                        return true;
+                    }
+                    return false;
+                }
+                
+                // 初始检查
+                if (!checkAdConditions()) {
+                    // 如果初始检查失败，添加监听事件
+                    let checkInterval;
+                    
+                    // 设置定时器检查，最多检查30次（15秒）
+                    let checkCount = 0;
+                    checkInterval = setInterval(() => {
+                        checkCount++;
+                        if (checkAdConditions() || checkCount >= 30) {
+                            clearInterval(checkInterval);
+                        }
+                    }, 500);
+                    
+                    // 监听窗口大小变化事件
+                    const handleResize = window.debounce(() => {
+                        if (checkAdConditions()) {
+                            window.removeEventListener('resize', handleResize);
+                        }
+                    }, 300);
+                    window.addEventListener('resize', handleResize);
                 }
             }
             
-            // 监听窗口加载完成和调整大小事件
-            window.addEventListener('load', loadAdWhenReady);
-            window.addEventListener('resize', function() {
-                // 使用防抖处理，避免频繁检查
-                clearTimeout(window.adResizeTimeout);
-                window.adResizeTimeout = setTimeout(loadAdWhenReady, 300);
-            });
+            // 防抖函数
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+            
+            // 等待DOM加载完成后执行
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupLeftAd);
+            } else {
+                // 如果DOM已经加载完成，延迟一小段时间执行
+                setTimeout(setupLeftAd, 500);
+            }
         </script>
     </div>
     <!-- 右侧广告预留位（大屏） -->
@@ -444,25 +499,80 @@
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
         <script>
-            // 更健壮的广告加载方法
-            function loadAdWhenReadyRight() {
-                // 检查窗口宽度和广告容器尺寸
+            // 智能延迟加载广告 - 右侧
+            function setupRightAd() {
+                // 设置观察器以检测广告容器是否在视口中
                 const adContainer = document.querySelector('.ad-side-right');
-                if (window.innerWidth > 1400 && adContainer && adContainer.getBoundingClientRect().width > 0) {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } else {
-                    // 如果不满足条件，延迟重试
-                    setTimeout(loadAdWhenReadyRight, 500);
+                if (!adContainer) return;
+                
+                // 检查是否满足显示广告的条件
+                function checkAdConditions() {
+                    // 仅在宽屏且广告容器可见时显示
+                    if (window.innerWidth > 1400 && 
+                        adContainer.getBoundingClientRect().width > 0) {
+                        
+                        // 延迟1.5秒加载，避免与页面其他元素竞争资源
+                        setTimeout(() => {
+                            try {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            } catch (e) {
+                                console.log('广告加载异常:', e);
+                                // 异常情况下5秒后重试
+                                setTimeout(() => {
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                }, 5000);
+                            }
+                        }, 1500);
+                        
+                        return true;
+                    }
+                    return false;
+                }
+                
+                // 初始检查
+                if (!checkAdConditions()) {
+                    // 如果初始检查失败，添加监听事件
+                    let checkInterval;
+                    
+                    // 设置定时器检查，最多检查30次（15秒）
+                    let checkCount = 0;
+                    checkInterval = setInterval(() => {
+                        checkCount++;
+                        if (checkAdConditions() || checkCount >= 30) {
+                            clearInterval(checkInterval);
+                        }
+                    }, 500);
+                    
+                    // 监听窗口大小变化事件
+                    const handleResize = window.debounce(() => {
+                        if (checkAdConditions()) {
+                            window.removeEventListener('resize', handleResize);
+                        }
+                    }, 300);
+                    window.addEventListener('resize', handleResize);
                 }
             }
             
-            // 监听窗口加载完成和调整大小事件
-            window.addEventListener('load', loadAdWhenReadyRight);
-            window.addEventListener('resize', function() {
-                // 使用防抖处理，避免频繁检查
-                clearTimeout(window.adResizeTimeoutRight);
-                window.adResizeTimeoutRight = setTimeout(loadAdWhenReadyRight, 300);
-            });
+            // 防抖函数（复用）
+            window.debounce = window.debounce || function(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            };
+            
+            // 等待DOM加载完成后执行
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupRightAd);
+            } else {
+                // 如果DOM已经加载完成，延迟一小段时间执行
+                setTimeout(setupRightAd, 500);
+            }
         </script>
     </div>
     <div class="container">
@@ -668,25 +778,78 @@
                 data-ad-format="auto"
                 data-full-width-responsive="true"></ins>
             <script>
-                // 更健壮的广告加载方法
-                function loadBottomAdWhenReady() {
-                    // 检查广告容器尺寸
+                // 智能延迟加载广告 - 底部
+                function setupBottomAd() {
+                    // 设置观察器以检测广告容器是否在视口中
                     const adContainer = document.querySelector('.ad-placeholder');
-                    if (adContainer && adContainer.getBoundingClientRect().width > 0) {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    } else {
-                        // 如果不满足条件，延迟重试
-                        setTimeout(loadBottomAdWhenReady, 500);
+                    if (!adContainer) return;
+                    
+                    // 检查是否满足显示广告的条件
+                    function checkAdConditions() {
+                        // 检查广告容器尺寸是否合适
+                        if (adContainer.getBoundingClientRect().width > 0) {
+                            
+                            // 创建IntersectionObserver观察广告容器是否在视口中
+                            const observer = new IntersectionObserver((entries) => {
+                                entries.forEach(entry => {
+                                    if (entry.isIntersecting) {
+                                        // 广告容器进入视口时，延迟2秒加载
+                                        setTimeout(() => {
+                                            try {
+                                                (adsbygoogle = window.adsbygoogle || []).push({});
+                                            } catch (e) {
+                                                console.log('底部广告加载异常:', e);
+                                                // 异常情况下5秒后重试
+                                                setTimeout(() => {
+                                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                                }, 5000);
+                                            }
+                                        }, 2000);
+                                        
+                                        // 停止观察
+                                        observer.disconnect();
+                                        return true;
+                                    }
+                                });
+                            }, { threshold: 0.1 });
+                            
+                            // 开始观察
+                            observer.observe(adContainer);
+                        }
+                        return false;
+                    }
+                    
+                    // 初始检查
+                    if (!checkAdConditions()) {
+                        // 如果初始检查失败，添加监听事件
+                        let checkInterval;
+                        
+                        // 设置定时器检查，最多检查30次（15秒）
+                        let checkCount = 0;
+                        checkInterval = setInterval(() => {
+                            checkCount++;
+                            if (checkAdConditions() || checkCount >= 30) {
+                                clearInterval(checkInterval);
+                            }
+                        }, 500);
+                        
+                        // 监听窗口大小变化事件
+                        const handleResize = window.debounce(() => {
+                            if (checkAdConditions()) {
+                                window.removeEventListener('resize', handleResize);
+                            }
+                        }, 300);
+                        window.addEventListener('resize', handleResize);
                     }
                 }
                 
-                // 监听窗口加载完成和调整大小事件
-                window.addEventListener('load', loadBottomAdWhenReady);
-                window.addEventListener('resize', function() {
-                    // 使用防抖处理，避免频繁检查
-                    clearTimeout(window.bottomAdResizeTimeout);
-                    window.bottomAdResizeTimeout = setTimeout(loadBottomAdWhenReady, 300);
-                });
+                // 等待DOM加载完成后执行
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', setupBottomAd);
+                } else {
+                    // 如果DOM已经加载完成，延迟一小段时间执行
+                    setTimeout(setupBottomAd, 1000);
+                }
             </script>
         </div>
         <div class="footer">
@@ -821,8 +984,5 @@
             });
         });
     </script>
-</body>
-</html>
-</html>
 </body>
 </html>
