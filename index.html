@@ -306,15 +306,11 @@
             max-width: 728px;
             min-height: 90px;
             margin: 30px auto;
-            background: rgba(240,240,240,0.7);
-            border: 2px dashed #bbb;
-            border-radius: 12px;
             text-align: center;
-            color: #888;
-            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            /* 移除背景、边框、圆角、颜色等 */
         }
 
         /* 侧边广告预留位样式，仅在大屏显示 */
@@ -323,16 +319,12 @@
             top: 80px;
             width: 160px;
             height: 600px;
-            background: rgba(240,240,240,0.7);
-            border: 2px dashed #bbb;
-            border-radius: 12px;
             text-align: center;
-            color: #888;
-            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 999;
+            /* 移除背景、边框、圆角、颜色等 */
         }
         .ad-side-left {
             left: 80px;
@@ -762,6 +754,14 @@
             languageToolsOverlay.addEventListener('click', (event) => {
                 if (event.target === languageToolsOverlay) {
                     closeFolder('languageToolsOverlay');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
                 }
             });
         });
