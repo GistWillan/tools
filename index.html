@@ -1057,7 +1057,33 @@
     </div>
 
     <script>
+        // 修复body上的aria-hidden属性问题
+        function monitorAndFixAriaHidden() {
+            // 定期检查body元素上的aria-hidden属性
+            const checkInterval = setInterval(() => {
+                const body = document.body;
+                if (body.hasAttribute('aria-hidden')) {
+                    console.log('检测到body元素上有aria-hidden属性，已移除');
+                    body.removeAttribute('aria-hidden');
+                }
+            }, 500);
+            
+            // 5秒后停止检查，避免过度消耗资源
+            setTimeout(() => {
+                clearInterval(checkInterval);
+            }, 5000);
+        }
+        
+        // 当页面加载完成后执行修复
         document.addEventListener('DOMContentLoaded', () => {
+            // 先检查并修复可能已存在的aria-hidden属性
+            if (document.body.hasAttribute('aria-hidden')) {
+                document.body.removeAttribute('aria-hidden');
+            }
+            
+            // 启动监控，防止后续被动态添加
+            monitorAndFixAriaHidden();
+            
             // 获取“更多工具”文件夹相关DOM元素
             const moreToolsFolder = document.getElementById('moreToolsFolder');
             const moreToolsOverlay = document.getElementById('moreToolsOverlay');
