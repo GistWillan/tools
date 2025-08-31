@@ -1057,21 +1057,69 @@
     </div>
 
     <script>
+        // 增强版修复解决方案：处理aria-hidden和Google Ads iframe问题
+        
         // 修复body上的aria-hidden属性问题
         function monitorAndFixAriaHidden() {
-            // 定期检查body元素上的aria-hidden属性
+            // 增加检查频率和持续时间
             const checkInterval = setInterval(() => {
                 const body = document.body;
                 if (body.hasAttribute('aria-hidden')) {
                     console.log('检测到body元素上有aria-hidden属性，已移除');
                     body.removeAttribute('aria-hidden');
                 }
-            }, 500);
+            }, 200); // 提高检查频率到200ms
             
-            // 5秒后停止检查，避免过度消耗资源
+            // 延长检查时间到10秒
             setTimeout(() => {
                 clearInterval(checkInterval);
-            }, 5000);
+            }, 10000);
+        }
+        
+        // 添加样式来处理可能的Quirks Mode渲染问题
+        function addQuirksModeStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                /* 全局重置样式，帮助处理可能的Quirks Mode渲染问题 */
+                * {
+                    box-sizing: border-box;
+                }
+                
+                /* 为Google Ads iframe添加额外的样式重置 */
+                iframe[src*="googleads"],
+                iframe[src*="doubleclick"],
+                iframe[src*="googlesyndication"] {
+                    border: none !important;
+                    max-width: 100% !important;
+                    overflow: hidden !important;
+                }
+                
+                /* 处理Google Ads的ins元素样式问题 */
+                ins.adsbygoogle {
+                    display: block !important;
+                    max-width: 100% !important;
+                    overflow: hidden !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 尝试优化Google Ads加载以减少Quirks Mode问题
+        function optimizeGoogleAdsLoading() {
+            // 拦截可能导致Quirks Mode的Google Ads脚本加载
+            const originalAppendChild = Element.prototype.appendChild;
+            Element.prototype.appendChild = function(child) {
+                // 检查是否是Google Ads相关的iframe
+                if (child.tagName === 'IFRAME' && 
+                    (child.src && (child.src.includes('googleads') || 
+                                  child.src.includes('doubleclick') || 
+                                  child.src.includes('googlesyndication')))) {
+                    // 添加额外属性来帮助处理渲染
+                    child.setAttribute('loading', 'lazy');
+                    child.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms');
+                }
+                return originalAppendChild.call(this, child);
+            };
         }
         
         // 当页面加载完成后执行修复
@@ -1083,6 +1131,12 @@
             
             // 启动监控，防止后续被动态添加
             monitorAndFixAriaHidden();
+            
+            // 添加全局样式来处理Quirks Mode渲染问题
+            addQuirksModeStyles();
+            
+            // 优化Google Ads加载
+            optimizeGoogleAdsLoading();
             
             // 获取“更多工具”文件夹相关DOM元素
             const moreToolsFolder = document.getElementById('moreToolsFolder');
