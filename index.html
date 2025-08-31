@@ -300,40 +300,65 @@
             overflow: hidden;
         }
 
-        /* 谷歌广告预留位样式 */
-        .ad-placeholder {
-            width: 100%;
-            max-width: 728px;
-            min-height: 90px;
-            margin: 30px auto;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* 移除背景、边框、圆角、颜色等 */
-        }
-
-        /* 侧边广告预留位样式，仅在大屏显示 */
-        .ad-side {
+        /* 左侧谷歌广告位样式（隐藏背景和边框，仅定位和尺寸） */
+        .google-ad-left {
             position: fixed;
-            top: 80px;
+            top: 135px;
+            left: 40%;
+            transform: translateX(-700px);
             width: 160px;
             height: 600px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 999;
-            /* 移除背景、边框、圆角、颜色等 */
+            background: none;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            padding: 0;
         }
-        .ad-side-left {
-            left: 80px;
+        /* 右侧谷歌广告位样式（隐藏背景和边框，仅定位和尺寸） */
+        .google-ad-right {
+            position: fixed;
+            top: 135px;
+            left: 60%;
+            transform: translateX(540px);
+            width: 160px;
+            height: 600px;
+            z-index: 999;
+            background: none;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            padding: 0;
         }
-        .ad-side-right {
-            right: 80px;
+        /* 底部谷歌广告位样式（隐藏背景和边框，仅尺寸和居中） */
+        .google-ad-bottom {
+            width: 100%;
+            max-width: 1200px;
+            margin: 30px auto 0 auto;
+            height: 120px;
+            background: none;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            text-align: center;
+            padding: 0;
         }
+        /* 响应式隐藏侧边广告位（移动端不显示） */
         @media (max-width: 1400px) {
-            .ad-side { display: none; }
+            .google-ad-left, .google-ad-right {
+                display: none;
+            }
+        }
+        @media (max-width: 1200px) {
+            .google-ad-bottom {
+                height: 80px;
+            }
         }
 
         /* 媒体查询：适用于平板和较小屏幕 */
@@ -399,281 +424,34 @@
     </style>
 </head>
 <body>
-    <!-- 左侧广告预留位（大屏） -->
-    <div class="ad-side ad-side-left">
+    <!-- 左侧谷歌广告位（实际代码） -->
+    <div class="google-ad-left">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-            crossorigin="anonymous"></script>
-        <!-- ToolSite-Side-Left -->
+             crossorigin="anonymous"></script>
+        <!-- ToolSite-Side-left -->
         <ins class="adsbygoogle"
-            style="display:block; width:160px; height:600px;"
-            data-ad-client="ca-pub-7072630492904461"
-            data-ad-slot="5111495259"
-            data-ad-format="rectangle" // 更明确的广告格式
-            data-full-width-responsive="false"></ins> <!-- 禁用全宽响应式 -->
+             style="display:block"
+             data-ad-client="ca-pub-7072630492904461"
+             data-ad-slot="5111495259"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
         <script>
-            // 智能延迟加载广告 - 左侧
-            function setupLeftAd() {
-                // 添加广告加载状态标志，防止重复加载
-                let adLoaded = false;
-                let retryCount = 0;
-                const maxRetries = 3; // 限制重试次数
-                
-                function checkAdConditions() {
-                    const adContainer = document.querySelector('.ad-side-left');
-                    if (!adContainer) return false;
-                    
-                    // 仅在宽屏且广告容器可见时显示
-                    if (window.innerWidth > 1400 && 
-                        adContainer.getBoundingClientRect().width > 0) {
-                        return true;
-                    }
-                    return false;
-                }
-                
-                function loadAd() {
-                    // 如果广告已经加载或正在加载，则不再尝试
-                    if (adLoaded) return;
-                    
-                    // 如果重试次数过多，停止尝试
-                    if (retryCount >= maxRetries) {
-                        console.log('左侧广告加载已达到最大重试次数，停止尝试');
-                        return;
-                    }
-                    
-                    // 标记为已加载，防止重复尝试
-                    adLoaded = true;
-                    retryCount++;
-                    
-                    try {
-                        // 检查是否已经有adsbygoogle对象
-                        if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-                            // 检查ins元素是否已经有广告
-                            const insElements = document.querySelectorAll('.ad-side-left ins.adsbygoogle');
-                            let hasAd = false;
-                            
-                            insElements.forEach(ins => {
-                                if (ins.innerHTML.trim() !== '') {
-                                    hasAd = true;
-                                }
-                            });
-                            
-                            // 只有当ins元素为空时才推送广告
-                            if (!hasAd) {
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            }
-                        }
-                    } catch (e) {
-                        console.log('左侧广告加载异常:', e);
-                        // 重置加载状态以便重试
-                        adLoaded = false;
-                        // 异常情况下8秒后重试（指数退避）
-                        setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
-                    }
-                }
-                
-                // 创建IntersectionObserver观察广告容器是否在视口中
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && checkAdConditions()) {
-                            // 广告容器进入视口且条件满足时，延迟1秒加载
-                            setTimeout(loadAd, 1000);
-                               
-                            // 停止观察
-                            observer.disconnect();
-                            return true;
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                // 开始观察
-                const adContainer = document.querySelector('.ad-side-left');
-                if (adContainer) {
-                    observer.observe(adContainer);
-                }
-                
-                // 初始检查
-                if (!checkAdConditions()) {
-                    // 如果初始检查失败，添加监听事件
-                    let checkInterval;
-                    
-                    // 设置定时器检查，最多检查30次（15秒）
-                    let checkCount = 0;
-                    checkInterval = setInterval(() => {
-                        checkCount++;
-                        if (checkAdConditions()) {
-                            loadAd();
-                            clearInterval(checkInterval);
-                        } else if (checkCount >= 30) {
-                            clearInterval(checkInterval);
-                        }
-                    }, 500);
-                    
-                    // 监听窗口大小变化事件
-                    const handleResize = window.debounce(() => {
-                        if (checkAdConditions()) {
-                            loadAd();
-                            window.removeEventListener('resize', handleResize);
-                        }
-                    }, 300);
-                    window.addEventListener('resize', handleResize);
-                } else {
-                    // 如果广告容器不存在，直接尝试加载
-                    loadAd();
-                }
-            }
-            
-            // 防抖函数
-            window.debounce = window.debounce || function(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            };
-            
-            // 等待DOM加载完成后执行
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', setupLeftAd);
-            } else {
-                // 如果DOM已经加载完成，延迟一小段时间执行
-                setTimeout(setupLeftAd, 500);
-            }
+             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
-    <!-- 右侧广告预留位（大屏） -->
-    <div class="ad-side ad-side-right">
+    <!-- 右侧谷歌广告位（实际代码） -->
+    <div class="google-ad-right">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-            crossorigin="anonymous"></script>
+             crossorigin="anonymous"></script>
         <!-- ToolSite-Side-Right -->
         <ins class="adsbygoogle"
-            style="display:block; width:160px; height:600px;"
-            data-ad-client="ca-pub-7072630492904461"
-            data-ad-slot="2122369838"
-            data-ad-format="rectangle" // 更明确的广告格式
-            data-full-width-responsive="false"></ins> <!-- 禁用全宽响应式 -->
+             style="display:block"
+             data-ad-client="ca-pub-7072630492904461"
+             data-ad-slot="2122369838"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
         <script>
-            // 智能延迟加载广告 - 右侧
-            function setupRightAd() {
-                // 添加广告加载状态标志，防止重复加载
-                let adLoaded = false;
-                let retryCount = 0;
-                const maxRetries = 3; // 限制重试次数
-                
-                function checkAdConditions() {
-                    const adContainer = document.querySelector('.ad-side-right');
-                    if (!adContainer) return false;
-                    
-                    // 仅在宽屏且广告容器可见时显示
-                    if (window.innerWidth > 1400 && 
-                        adContainer.getBoundingClientRect().width > 0) {
-                        return true;
-                    }
-                    return false;
-                }
-                
-                function loadAd() {
-                    // 如果广告已经加载或正在加载，则不再尝试
-                    if (adLoaded) return;
-                    
-                    // 如果重试次数过多，停止尝试
-                    if (retryCount >= maxRetries) {
-                        console.log('右侧广告加载已达到最大重试次数，停止尝试');
-                        return;
-                    }
-                    
-                    // 标记为已加载，防止重复尝试
-                    adLoaded = true;
-                    retryCount++;
-                    
-                    try {
-                        // 检查是否已经有adsbygoogle对象
-                        if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-                            // 检查ins元素是否已经有广告
-                            const insElements = document.querySelectorAll('.ad-side-right ins.adsbygoogle');
-                            let hasAd = false;
-                            
-                            insElements.forEach(ins => {
-                                if (ins.innerHTML.trim() !== '') {
-                                    hasAd = true;
-                                }
-                            });
-                            
-                            // 只有当ins元素为空时才推送广告
-                            if (!hasAd) {
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            }
-                        }
-                    } catch (e) {
-                        console.log('右侧广告加载异常:', e);
-                        // 重置加载状态以便重试
-                        adLoaded = false;
-                        // 异常情况下8秒后重试（指数退避）
-                        setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
-                    }
-                }
-                
-                // 创建IntersectionObserver观察广告容器是否在视口中
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && checkAdConditions()) {
-                            // 广告容器进入视口且条件满足时，延迟1.2秒加载
-                            setTimeout(loadAd, 1200);
-                               
-                            // 停止观察
-                            observer.disconnect();
-                            return true;
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                // 开始观察
-                const adContainer = document.querySelector('.ad-side-right');
-                if (adContainer) {
-                    observer.observe(adContainer);
-                }
-                
-                // 初始检查
-                if (!checkAdConditions()) {
-                    // 如果初始检查失败，添加监听事件
-                    let checkInterval;
-                    
-                    // 设置定时器检查，最多检查30次（15秒）
-                    let checkCount = 0;
-                    checkInterval = setInterval(() => {
-                        checkCount++;
-                        if (checkAdConditions()) {
-                            loadAd();
-                            clearInterval(checkInterval);
-                        } else if (checkCount >= 30) {
-                            clearInterval(checkInterval);
-                        }
-                    }, 500);
-                    
-                    // 监听窗口大小变化事件
-                    const handleResize = window.debounce(() => {
-                        if (checkAdConditions()) {
-                            loadAd();
-                            window.removeEventListener('resize', handleResize);
-                        }
-                    }, 300);
-                    window.addEventListener('resize', handleResize);
-                } else {
-                    // 如果广告容器不存在，直接尝试加载
-                    loadAd();
-                }
-            }
-            
-            // 等待DOM加载完成后执行
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', setupRightAd);
-            } else {
-                // 如果DOM已经加载完成，延迟一小段时间执行
-                setTimeout(setupRightAd, 700);
-            }
+             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
     </div>
     <div class="container">
@@ -858,141 +636,6 @@
                 <div class="app-description">点击查看更多工具</div>
             </div>
         </div>
-        <!-- 底部谷歌广告预留位 -->
-        <div class="ad-placeholder">
-            <style>
-                .ad-placeholder {
-                    width: 100%;
-                    min-width: 300px;
-                    max-width: 970px;
-                    margin: 20px auto;
-                    display: block;
-                }
-            </style>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-                crossorigin="anonymous"></script>
-            <!-- ToolSite-Bottom -->
-            <ins class="adsbygoogle"
-                style="display:block; min-width:300px; max-width:970px; width:100%; height:90px;" // 添加明确高度
-                data-ad-client="ca-pub-7072630492904461"
-                data-ad-slot="7737658599"
-                data-ad-format="banner" // 更明确的广告格式
-                data-full-width-responsive="true"></ins>
-            <script>
-                // 智能延迟加载广告 - 底部
-                function setupBottomAd() {
-                    // 添加广告加载状态标志，防止重复加载
-                    let adLoaded = false;
-                    let retryCount = 0;
-                    const maxRetries = 3; // 限制重试次数
-                    
-                    function checkAdConditions() {
-                        const adContainer = document.querySelector('.ad-placeholder');
-                        if (!adContainer) return false;
-                        
-                        // 获取广告容器的尺寸
-                        const rect = adContainer.getBoundingClientRect();
-                        
-                        // 检查容器是否有有效的尺寸
-                        if (rect.width >= 300 && rect.height > 0 && window.innerWidth > 0) {
-                            return true;
-                        }
-                        
-                        return false;
-                    }
-                    
-                    function loadAd() {
-                        // 如果广告已经加载或正在加载，则不再尝试
-                        if (adLoaded) return;
-                        
-                        // 如果重试次数过多，停止尝试
-                        if (retryCount >= maxRetries) {
-                            console.log('底部广告加载已达到最大重试次数，停止尝试');
-                            return;
-                        }
-                        
-                        // 标记为已加载，防止重复尝试
-                        adLoaded = true;
-                        retryCount++;
-                        
-                        try {
-                            // 检查是否已经有adsbygoogle对象
-                            if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-                                // 检查ins元素是否已经有广告
-                                const insElements = document.querySelectorAll('.ad-placeholder ins.adsbygoogle');
-                                let hasAd = false;
-                                
-                                insElements.forEach(ins => {
-                                    if (ins.innerHTML.trim() !== '') {
-                                        hasAd = true;
-                                    }
-                                });
-                                
-                                // 只有当ins元素为空时才推送广告
-                                if (!hasAd) {
-                                    (adsbygoogle = window.adsbygoogle || []).push({});
-                                }
-                            }
-                        } catch (e) {
-                            console.log('底部广告加载异常:', e);
-                            // 重置加载状态以便重试
-                            adLoaded = false;
-                            // 异常情况下8秒后重试（指数退避）
-                            setTimeout(loadAd, 1000 * Math.pow(2, retryCount));
-                        }
-                    }
-                    
-                    // 创建IntersectionObserver观察广告容器是否在视口中
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting && checkAdConditions()) {
-                                // 广告容器进入视口且条件满足时，延迟2秒加载
-                                setTimeout(loadAd, 2000);
-                                   
-                                // 停止观察
-                                observer.disconnect();
-                                return true;
-                            }
-                        });
-                    }, { threshold: 0.1 });
-                    
-                    // 开始观察
-                    const adContainer = document.querySelector('.ad-placeholder');
-                    if (adContainer) {
-                        observer.observe(adContainer);
-                    }
-                    
-                    // 初始检查
-                    if (!checkAdConditions()) {
-                        // 如果初始检查失败，添加监听事件
-                        let checkInterval;
-                        
-                        // 设置定时器检查，最多检查30次（15秒）
-                        let checkCount = 0;
-                        checkInterval = setInterval(() => {
-                            checkCount++;
-                            if (checkAdConditions()) {
-                                loadAd();
-                                clearInterval(checkInterval);
-                            } else if (checkCount >= 30) {
-                                clearInterval(checkInterval);
-                            }
-                        }, 500);
-                    } else {
-                        // 如果条件满足，直接加载
-                        loadAd();
-                    }
-                }
-                
-                // 等待DOM加载完成后执行
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', setupBottomAd);
-                } else {
-                    // 如果DOM已经加载完成，延迟一小段时间执行
-                    setTimeout(setupBottomAd, 1500);
-                }
-            </script>
-        </div>
         <div class="footer">
             <p>&copy; 2023 - 2025 GistWillan</p>
             <a href="about.html">关于</a>
@@ -1000,6 +643,21 @@
             <a href="style2.html">简约风格</a>
             <a href="style3.html">现代风格</a>
         </div>
+    </div>
+    <!-- 底部谷歌广告位（实际代码） -->
+    <div class="google-ad-bottom">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+             crossorigin="anonymous"></script>
+        <!-- ToolSite-Bottom -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7072630492904461"
+             data-ad-slot="7737658599"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <!-- “更多工具”的覆盖层 -->
@@ -1057,87 +715,7 @@
     </div>
 
     <script>
-        // 增强版修复解决方案：处理aria-hidden和Google Ads iframe问题
-        
-        // 修复body上的aria-hidden属性问题
-        function monitorAndFixAriaHidden() {
-            // 增加检查频率和持续时间
-            const checkInterval = setInterval(() => {
-                const body = document.body;
-                if (body.hasAttribute('aria-hidden')) {
-                    console.log('检测到body元素上有aria-hidden属性，已移除');
-                    body.removeAttribute('aria-hidden');
-                }
-            }, 200); // 提高检查频率到200ms
-            
-            // 延长检查时间到10秒
-            setTimeout(() => {
-                clearInterval(checkInterval);
-            }, 10000);
-        }
-        
-        // 添加样式来处理可能的Quirks Mode渲染问题
-        function addQuirksModeStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                /* 全局重置样式，帮助处理可能的Quirks Mode渲染问题 */
-                * {
-                    box-sizing: border-box;
-                }
-                
-                /* 为Google Ads iframe添加额外的样式重置 */
-                iframe[src*="googleads"],
-                iframe[src*="doubleclick"],
-                iframe[src*="googlesyndication"] {
-                    border: none !important;
-                    max-width: 100% !important;
-                    overflow: hidden !important;
-                }
-                
-                /* 处理Google Ads的ins元素样式问题 */
-                ins.adsbygoogle {
-                    display: block !important;
-                    max-width: 100% !important;
-                    overflow: hidden !important;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
-        // 尝试优化Google Ads加载以减少Quirks Mode问题
-        function optimizeGoogleAdsLoading() {
-            // 拦截可能导致Quirks Mode的Google Ads脚本加载
-            const originalAppendChild = Element.prototype.appendChild;
-            Element.prototype.appendChild = function(child) {
-                // 检查是否是Google Ads相关的iframe
-                if (child.tagName === 'IFRAME' && 
-                    (child.src && (child.src.includes('googleads') || 
-                                  child.src.includes('doubleclick') || 
-                                  child.src.includes('googlesyndication')))) {
-                    // 添加额外属性来帮助处理渲染
-                    child.setAttribute('loading', 'lazy');
-                    child.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-forms');
-                }
-                return originalAppendChild.call(this, child);
-            };
-        }
-        
-        // 当页面加载完成后执行修复
         document.addEventListener('DOMContentLoaded', () => {
-            // 先检查并修复可能已存在的aria-hidden属性
-            if (document.body.hasAttribute('aria-hidden')) {
-                document.body.removeAttribute('aria-hidden');
-            }
-            
-            // 启动监控，防止后续被动态添加
-            monitorAndFixAriaHidden();
-            
-            // 添加全局样式来处理Quirks Mode渲染问题
-            addQuirksModeStyles();
-            
-            // 优化Google Ads加载
-            optimizeGoogleAdsLoading();
-            
             // 获取“更多工具”文件夹相关DOM元素
             const moreToolsFolder = document.getElementById('moreToolsFolder');
             const moreToolsOverlay = document.getElementById('moreToolsOverlay');
