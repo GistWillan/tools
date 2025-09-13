@@ -6,12 +6,13 @@
     <title>GistWillan的在线工具站点</title>
     <link rel="shortcut icon" href="images/index.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
+     crossorigin="anonymous"></script>
     <style>
         /* CSS 变量定义，用于玻璃效果的背景和边框颜色 */
         :root {
             --glass-bg: rgba(255, 255, 255, 0.6);
             --glass-border: rgba(255, 255, 255, 0.8);
-            --glass-bg-ad: rgba(255, 255, 255, 0.4);
         }
 
         /* 全局 body 样式，设置字体、边距、最小高度和背景渐变 */
@@ -22,58 +23,6 @@
             min-height: 100vh;
             background: linear-gradient(150deg, #f0f2ff 0%, #f6f7ff 100%);
             background-attachment: fixed; /* 固定背景，不随滚动条滚动 */
-        }
-
-        /* 整个站点的外层容器，使用 Grid 布局来排列广告位和主内容区 */
-        .site-wrapper {
-            display: grid;
-            grid-template-columns: 1fr minmax(0, 1200px) 1fr;
-            grid-gap: 20px;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
-        }
-
-        /* 广告位样式，采用和卡片类似的设计，使其融入界面 */
-        .google-ad {
-            border-radius: 14px;
-            background: var(--glass-bg-ad);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: rgba(0, 0, 0, 0.5);
-            line-height: 1.5;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 左右两侧广告位 */
-        .google-ad-left, .google-ad-right {
-            position: sticky;
-            top: 50%; /* 居中：将顶部设置为50% */
-            transform: translateY(-50%); /* 居中：向上平移自身高度的一半 */
-            justify-self: center; /* 让广告位在列内水平居中 */
-            /* 添加固定宽度以解决 Adsense 渲染错误 */
-            width: 200px; 
-        }
-
-        .google-ad-left {
-            grid-column: 1;
-        }
-
-        .google-ad-right {
-            grid-column: 3;
-        }
-
-        .google-ad-bottom {
-            grid-column: 2; /* 位于主内容区下方 */
-            margin-top: 40px;
         }
 
         /* 容器进入动画的关键帧 */
@@ -112,7 +61,6 @@
             border: 1px solid var(--glass-border);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
             animation: container-entry 0.6s cubic-bezier(0.42, 0, 0.32, 1.5) forwards;
-            grid-column: 2; /* 放在 Grid 的第二列 */
         }
 
         /* 页面头部样式 */
@@ -142,12 +90,11 @@
         /* 应用网格布局，用于排列项目卡片 */
         .app-grid {
             display: grid;
-            /* 宽屏下显示4列，满足用户要求 */
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 响应式列布局 */
             gap: 25px;
             margin-top: 30px;
         }
-        
+
         /* 单个应用项目卡片样式，应用玻璃效果和进入动画 */
         .app-item {
             background: var(--glass-bg);
@@ -354,21 +301,16 @@
         body.folder-open {
             overflow: hidden;
         }
-        
-        /* 媒体查询：适用于平板和较小屏幕 */
+
+        /* 响应式隐藏侧边广告位（移动端不显示） */
         @media (max-width: 1200px) {
-            .site-wrapper {
-                grid-template-columns: 1fr; /* 小屏幕下只显示一列 */
-                padding: 15px;
-            }
-            .google-ad-left, .google-ad-right {
-                display: none; /* 隐藏左右两侧广告 */
-            }
-            .container {
-                grid-column: 1; /* 主内容区占据唯一的一列 */
-            }
+            /* .google-ad-left, .google-ad-right { display: none; } 已移除 */
         }
-        
+        @media (max-width: 768px) {
+            /* .google-ad-bottom { height: 80px; } 已移除 */
+        }
+
+        /* 媒体查询：适用于平板和较小屏幕 */
         @media (max-width: 768px) {
             body {
                 padding: 15px;
@@ -381,7 +323,7 @@
                 font-size: 2.2rem;
             }
             .app-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 手机上变为响应式 */
+                grid-template-columns: 1fr; /* 单列布局 */
             }
             .app-item {
                 padding: 20px;
@@ -431,247 +373,194 @@
     </style>
 </head>
 <body>
-    <!-- 整个站点的外层容器，用于放置两侧的广告位和主内容区 -->
-    <div class="site-wrapper">
-        <!-- 左侧广告位 -->
-        <div class="google-ad google-ad-left">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-     crossorigin="anonymous"></script>
-<!-- ToolSite-Side-left -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-7072630492904461"
-     data-ad-slot="5111495259"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+    <div class="container">
+        <div class="header">
+            <h1>在线工具站点</h1>
+            <p>欢迎来到我的在线工具站点主页！</p>
+            <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
         </div>
-
-        <!-- 主内容容器 -->
-        <div class="container">
-            <div class="header">
-                <h1>在线工具站点</h1>
-                <p>欢迎来到我的在线工具站点主页！</p>
-                <p>在这里，我将展示我的在线工具，并分享一些有趣的内容。</p>
+        <div class="app-grid">
+            <div class="app-item">
+                <a href="projects/time.html">
+                    <div class="app-icon">🌏</div>
+                    <div class="app-name">世界时间</div>
+                    <div class="app-description">展示世界各地的当前时间</div>
+                </a>
             </div>
-            <div class="app-grid">
-                <div class="app-item">
-                    <a href="projects/time.html">
-                        <div class="app-icon">🌏</div>
-                        <div class="app-name">世界时间</div>
-                        <div class="app-description">展示世界各地的当前时间</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/tomato.html">
-                        <div class="app-icon">⏰</div>
-                        <div class="app-name">番茄时钟</div>
-                        <div class="app-description">提高工作效率</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/preview.html">
-                        <div class="app-icon">👀</div>
-                        <div class="app-name">HTML预览</div>
-                        <div class="app-description">实时HTML代码预览</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/http.html">
-                        <div class="app-icon">🌐</div>
-                        <div class="app-name">HTTP状态码</div>
-                        <div class="app-description">快速查询HTTP状态</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/bmi.html">
-                        <div class="app-icon">🧍‍♂️</div>
-                        <div class="app-name">BMI计算器</div>
-                        <div class="app-description">计算体质指数</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/info.html">
-                        <div class="app-icon">📃</div>
-                        <div class="app-name">UA解析器</div>
-                        <div class="app-description">解析当前浏览器UA信息</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/date.html">
-                        <div class="app-icon">📅</div>
-                        <div class="app-name">日期计算器</div>
-                        <div class="app-description">计算日期间隔</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/test.html">
-                        <div class="app-icon">🔢</div>
-                        <div class="app-name">进制转换器</div>
-                        <div class="app-description">数制转换工具</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/unit_conversion.html">
-                        <div class="app-icon">📏</div>
-                        <div class="app-name">单位转换器</div>
-                        <div class="app-description">单位换算工具</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/lock.html">
-                        <div class="app-icon">🔐</div>
-                        <div class="app-name">密码生成器</div>
-                        <div class="app-description">随机密码生成</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/screenrecord.html">
-                        <div class="app-icon">🎥</div>
-                        <div class="app-name">屏幕录制器</div>
-                        <div class="app-description">录制窗口或整个屏幕</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/docs.html">
-                        <div class="app-icon">📃</div>
-                        <div class="app-name">文档编辑器</div>
-                        <div class="app-description">在线编辑文档后可下载</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/resume.html">
-                        <div class="app-icon">📃</div>
-                        <div class="app-name">简历生成器</div>
-                        <div class="app-description">实时生成精美简历</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/text.html">
-                        <div class="app-icon">🔐</div>
-                        <div class="app-name">文字加密解密</div>
-                        <div class="app-description">文字加密解密</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/password.html">
-                        <div class="app-icon">🔐</div>
-                        <div class="app-name">密码强度检测</div>
-                        <div class="app-description">检测密码强度</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/qrcode.html">
-                        <div class="app-icon">📷</div>
-                        <div class="app-name">二维码生成器</div>
-                        <div class="app-description">快速生成二维码</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/number.html">
-                        <div class="app-icon">🎲</div>
-                        <div class="app-name">随机数生成器</div>
-                        <div class="app-description">生成随机数</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/morse.html">
-                        <div class="app-icon">📻</div>
-                        <div class="app-name">摩斯电码转换器</div>
-                        <div class="app-description">文字转换摩斯电码</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/tt.html">
-                        <div class="app-icon">⏱️</div>
-                        <div class="app-name">时间戳转换网页</div>
-                        <div class="app-description">转换时间戳</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/pasteboard.html">
-                        <div class="app-icon">📋</div>
-                        <div class="app-name">剪切板文本管理器</div>
-                        <div class="app-description">管理剪切板文字</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/markdown.html">
-                        <div class="app-icon">📋</div>
-                        <div class="app-name">Markdown文本编辑器</div>
-                        <div class="app-description">可预览格式以及保存</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/bluescreen.html">
-                        <div class="app-icon">⚠️</div>
-                        <div class="app-name">Windows11蓝屏代码参考</div>
-                        <div class="app-description">常见蓝屏代码参考表</div>
-                    </a>
-                </div>
-                <div class="app-item">
-                    <a href="projects/username.html">
-                        <div class="app-icon">🎨</div>
-                        <div class="app-name">随机用户名生成器</div>
-                        <div class="app-description">生成随机用户名。</div>
-                    </a>
-                </div>
-
-                <!-- 新增的“语言工具”文件夹卡片 -->
-                <div class="app-item folder-card" id="languageToolsFolder">
-                    <div class="app-icon">🗣️</div> <!-- 语言工具的图标 -->
-                    <div class="app-name">语言工具</div>
-                    <div class="app-description">翻译、词典等语言相关工具</div>
-                </div>
-
-                <div class="app-item folder-card" id="moreToolsFolder">
-                    <div class="app-icon">📁</div>
-                    <div class="app-name">更多工具</div>
-                    <div class="app-description">点击查看更多工具</div>
-                </div>
+            <div class="app-item">
+                <a href="projects/tomato.html">
+                    <div class="app-icon">⏰</div>
+                    <div class="app-name">番茄时钟</div>
+                    <div class="app-description">提高工作效率</div>
+                </a>
             </div>
-            
-            <!-- 底部广告位 -->
-            <div class="google-ad google-ad-bottom">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-     crossorigin="anonymous"></script>
-<!-- ToolSite-Bottom -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-7072630492904461"
-     data-ad-slot="7737658599"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+            <div class="app-item">
+                <a href="projects/preview.html">
+                    <div class="app-icon">👀</div>
+                    <div class="app-name">HTML预览</div>
+                    <div class="app-description">实时HTML代码预览</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/http.html">
+                    <div class="app-icon">🌐</div>
+                    <div class="app-name">HTTP状态码</div>
+                    <div class="app-description">快速查询HTTP状态</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bmi.html">
+                    <div class="app-icon">🧍‍♂️</div>
+                    <div class="app-name">BMI计算器</div>
+                    <div class="app-description">计算体质指数</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/info.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">UA解析器</div>
+                    <div class="app-description">解析当前浏览器UA信息</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/date.html">
+                    <div class="app-icon">📅</div>
+                    <div class="app-name">日期计算器</div>
+                    <div class="app-description">计算日期间隔</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/test.html">
+                    <div class="app-icon">🔢</div>
+                    <div class="app-name">进制转换器</div>
+                    <div class="app-description">数制转换工具</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/unit_conversion.html">
+                    <div class="app-icon">📏</div>
+                    <div class="app-name">单位转换器</div>
+                    <div class="app-description">单位换算工具</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/lock.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">密码生成器</div>
+                    <div class="app-description">随机密码生成</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/screenrecord.html">
+                    <div class="app-icon">🎥</div>
+                    <div class="app-name">屏幕录制器</div>
+                    <div class="app-description">录制窗口或整个屏幕</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/docs.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">文档编辑器</div>
+                    <div class="app-description">在线编辑文档后可下载</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/resume.html">
+                    <div class="app-icon">📃</div>
+                    <div class="app-name">简历生成器</div>
+                    <div class="app-description">实时生成精美简历</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/text.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">文字加密解密</div>
+                    <div class="app-description">文字加密解密</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/password.html">
+                    <div class="app-icon">🔐</div>
+                    <div class="app-name">密码强度检测</div>
+                    <div class="app-description">检测密码强度</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/qrcode.html">
+                    <div class="app-icon">📷</div>
+                    <div class="app-name">二维码生成器</div>
+                    <div class="app-description">快速生成二维码</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/number.html">
+                    <div class="app-icon">🎲</div>
+                    <div class="app-name">随机数生成器</div>
+                    <div class="app-description">生成随机数</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/morse.html">
+                    <div class="app-icon">📻</div>
+                    <div class="app-name">摩斯电码转换器</div>
+                    <div class="app-description">文字转换摩斯电码</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/tt.html">
+                    <div class="app-icon">⏱️</div>
+                    <div class="app-name">时间戳转换网页</div>
+                    <div class="app-description">转换时间戳</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/pasteboard.html">
+                    <div class="app-icon">📋</div>
+                    <div class="app-name">剪切板文本管理器</div>
+                    <div class="app-description">管理剪切板文字</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/markdown.html">
+                    <div class="app-icon">📋</div>
+                    <div class="app-name">Markdown文本编辑器</div>
+                    <div class="app-description">可预览格式以及保存</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/bluescreen.html">
+                    <div class="app-icon">⚠️</div>
+                    <div class="app-name">Windows11蓝屏代码参考</div>
+                    <div class="app-description">常见蓝屏代码参考表</div>
+                </a>
+            </div>
+            <div class="app-item">
+                <a href="projects/username.html">
+                    <div class="app-icon">🎨</div>
+                    <div class="app-name">随机用户名生成器</div>
+                    <div class="app-description">生成随机用户名。</div>
+                </a>
             </div>
 
-            <div class="footer">
-                <p>&copy; 2023 - 2025 GistWillan</p>
-                <a href="about.html">关于</a>
-                <a href="https://github.com/gistwillan">我的GitHub</a>
-                <a href="style2.html">简约风格</a>
-                <a href="style3.html">现代风格</a>
+            <!-- 新增的“语言工具”文件夹卡片 -->
+            <div class="app-item folder-card" id="languageToolsFolder">
+                <div class="app-icon">🗣️</div> <!-- 语言工具的图标 -->
+                <div class="app-name">语言工具</div>
+                <div class="app-description">翻译、词典等语言相关工具</div>
+            </div>
+
+            <div class="app-item folder-card" id="moreToolsFolder">
+                <div class="app-icon">📁</div>
+                <div class="app-name">更多工具</div>
+                <div class="app-description">点击查看更多工具</div>
             </div>
         </div>
-
-        <!-- 右侧广告位 -->
-        <div class="google-ad google-ad-right">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7072630492904461"
-     crossorigin="anonymous"></script>
-<!-- ToolSite-Side-Right -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-7072630492904461"
-     data-ad-slot="2122369838"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+        <div class="footer">
+            <p>&copy; 2023 - 2025 GistWillan</p>
+            <a href="about.html">关于</a>
+            <a href="https://github.com/gistwillan">我的GitHub</a>
+            <a href="style2.html">简约风格</a>
+            <a href="style3.html">现代风格</a>
         </div>
     </div>
 
